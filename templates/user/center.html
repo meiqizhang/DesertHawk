@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}
+    用户中心
+{% endblock %}
+
+{% block mycss %}
+    {{ block.super }}
+    <style>
+        #content {
+            width: 50%;
+            margin-left: 25%;
+            height: 400px;
+            padding: 20px;
+        }
+
+        #content form {
+            margin: 20px;
+            text-align: left
+        }
+
+        #contentForm input {
+            margin-top: 10px;
+            margin-bottom: 20px;
+            width: 300px;
+            height: 30px;
+            border: none;
+            padding: 3px;
+            padding-left: 30px
+        }
+        .icon{
+            width:80px;
+            height: 80px;
+            border: #4bcfef;
+            border-radius: 40px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <div id="content">
+        <div id="contentForm">
+            <h1 class="logo-w3">用户中心</h1>
+            <h2><span>个人信息</span></h2>
+            <P>{{ msg }}</P>
+            <form action="{% url 'user:center' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="text" placeholder="用户名" name="username" required="" value="{{ user.username }}"><br>
+                <input type="email" placeholder="邮箱" name="email" required="" value="{{ user.email }}"><br>
+                <input type="text" placeholder="手机号码" name="mobile" required="" value="{{ user.mobile }}"><br>
+                <img src="{{ user.yunicon }}" alt="" class="icon">
+                <input type="file" name="icon">
+
+                <button>提交更新</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block my_js %}
+    <script>
+
+    </script>
+{% endblock %}

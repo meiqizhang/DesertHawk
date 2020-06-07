@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<form>
+    {% csrf_token %}
+    <div style="width: 500px;margin: 0 auto">
+        <textarea id="content"></textarea>
+    </div>
+    <input type="submit" value="提交"/>
+</form>
+
+<script src="https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="/static/js/kindeditor/kindeditor-all.js"></script>
+
+<script>
+    $(function () {
+
+        KindEditor.create('#content', {
+            {#                items: ['superscript', 'clearhtml', 'quickformat', 'selectall']#}
+            {#                noDisableItems: ["source", "fullscreen"],#}
+            {#                designMode: false#}
+            uploadJson: '/upload_img/',
+            fileManagerJson: '/file_manager/',
+            allowImageRemote: true,
+            allowImageUpload: true,
+            allowFileManager: true,
+            extraFileUploadParams: {
+                csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            filePostName: 'fafafa'
+
+        });
+
+
+    })
+</script>
+
+</body>
+</html>

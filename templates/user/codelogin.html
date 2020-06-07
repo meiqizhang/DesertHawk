@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+    用户登陆
+{% endblock %}
+
+{% block mycss %}
+    {{ block.super }}
+    <style>
+        #content p {
+            color: red;
+        }
+        #content {
+            width: 50%;
+            margin-left: 20%;
+            height: 400px;
+            padding: 20px;
+        }
+
+        #content form {
+            margin: 20px;
+            text-align: left
+        }
+
+        #contentForm {
+            font-size: 15px;
+            margin-top: 50px;
+        }
+
+        #mobile {
+
+            margin-top: 10px;
+            margin-bottom: 40px;
+            width: 200px;
+            height: 30px;
+            border: none;
+            padding: 3px;
+            padding-left: 10px;
+
+        }
+
+        .check_code {
+            margin-top: 10px;
+            width: 200px;
+            margin-bottom: 70px;
+            height: 30px;
+            border: none;
+            padding: 3px;
+            padding-left: 10px;
+        }
+
+        .login {
+            width: 100px;
+            height: 30px;
+            background-color: #aeffda;
+            border: none;
+            font-size: 15px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+
+    <div id="content">
+        <div id="contentForm">
+            <p style="color:red;">{{ msg }}</p>
+            <form action="{% url 'user:code_login' %}" method="post">
+                {% csrf_token %}
+                <input type="text" id="mobile" name="rp_mobile" placeholder="请输入手机号码"><br>
+                <input type="text" placeholder="请输入验证码" name="code" class="check_code">
+                <br>
+                <input type="submit" value="Login" name="login" class="login"><br>
+            </form>
+            <button id="getcode">点击获取验证</button>
+        </div>
+    </div>
+
+
+
+
+{% endblock %}
+
+{% block my_js %}
+    <script type="text/javascript">
+        $(function () {
+            var $getcode = $('#getcode');
+            var $mobile = $('#mobile');
+
+
+            $getcode.click(function () {
+                var mobile = $mobile.val().trim();
+                if (mobile.length === 11) {
+                    console.log(mobile);
+                    $.getJSON('/user/sendcode', {'mobile': mobile}, function (data) {
+
+                        if (data.status == 501) {
+                            flag = confirm(data.msg + '，是否跳转到注册页面进行注册');
+                            if (flag) {
+                                window.location.href = '{% url "user:register" %}';
+                            } else {
+                                alert(data.msg)
+                            }
+                        }
+                        if(data.status == 200){
+                            alert(data.msg)
+                        }
+                    })
+                } else {
+                    alert('请输入正确的手机号码')
+                }
+            })
+        })
+    </script>
+{% endblock %}

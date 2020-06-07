@@ -1,0 +1,355 @@
+{% load static %}
+<head>
+    <style>
+        #box{
+            width: calc(100% - 2px);
+            height: 250px;
+            border: 0px red solid;
+        }
+        #login_btn{
+            width: 50px;
+            height: 50px;
+            /*border: 1px yellow solid;
+            float: left;*/
+        }
+        #login_btn a img{
+            width: 64px;
+            height: 64px;
+            border-radius:50%;
+        }
+        #input{
+            width: 100%;
+            /*height: 150px;*/
+            border: 0px green solid;
+            clear: both;
+            margin-top: 10px;
+        }
+        #input-area{
+            width: calc(100% - 2px);
+            /*height: 140px;*/
+            font-size: 16px;
+            border: 1px solid grey;
+        }
+        #input #input-left{
+            /*width: 10px;
+            height: 300px;
+            border: 1px solid greenyellow;*/
+            float: left;
+            margin-left: 20px;
+        }
+        #input #input-right{
+            /*width: 10px;
+            height: 300px;
+            border: 1px solid greenyellow;*/
+            float: right;
+            margin-right: 60px;
+        }
+        #input-option{
+            margin-top: 10px;
+        }
+        #face {
+            width: 32px;
+            height: 32px;
+            border: 1px #3c3c3c solid;
+            float: left;
+        }
+        #pic {
+            width: 32px;
+            height: 32px;
+            border: 1px #9c3c3c solid;
+            float: left;
+            margin-left: 30px;
+        }
+        /*#submit-comment-btn{
+            width: 120px;
+            height: 35px;
+            border-radius: 5px;
+            color: grey;
+            background-color:#fff;
+            border: 1px solid grey;
+            float: right;
+            text-align: center;
+        }*/
+        /*#submit-comment-btn:hover{
+            border: 1px solid #7d7d7d;
+            background-color: #f0fff0;
+        }*/
+        .dialog {
+            position: fixed;
+            top: 40%;
+            left: 50%;
+            margin-left: 0px;
+            margin-top: 0px;
+            /*width: 0px;
+            height: 0px;*/
+            overflow: hidden;
+            border: 1px solid #999;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 5px 5px 5px #999;
+            /*background: #88f;
+            transition: all 0.05s;*/
+            z-index: 1110;
+            background-image: url("/static/images/login-bg-high-new.png");
+        }
+
+        .dialog span:hover{
+            color: red;
+            cursor: pointer;
+        }
+        .dialog .close {
+            position: absolute;
+            top: 15px;
+            margin-left: 345px;
+
+            width: 12px;
+            height: 12px;
+            /*border: 1px solid #999;
+            background: red;
+            color: #fff;
+            text-align: center;*/
+            background-image: url("/static/images/close-btn.png");
+        }
+
+        .dialog .login-tips {
+            position: absolute;
+            top: 100px;
+            left: 12px;
+            width: 350px;
+            height: 40px;
+            /*border: 1px solid #999;
+            background: green;*/
+            color:#7d7d7d;
+            /*background-image: url("/static/images/dtime.png");*/
+        }
+
+        .dialog .input-phone {
+            position: absolute;
+            top: 140px;
+            left: 16px;
+            width: 340px;
+            height: 40px;
+            /*padding-left: 10px;*/
+            /*border: 1px solid #999;
+            background: green;*/
+            /*color: #fff;*/
+            /*border-radius: 8px;*/
+            border: none;
+
+            /*border: 1px solid grey;*/
+
+            background-image: url("/static/images/phone-input.png");
+        }
+
+        .dialog .input-password {
+            position: absolute;
+            top: 200px;
+            left: 16px;
+            width: 340px;
+            height: 40px;
+            /*border: 1px solid #999;
+            background: green;
+            color: #fff;*/
+            border: none;
+            background-image: url("/static/images/phone-input.png");
+        }
+
+        .dialog .login-btn {
+            position: absolute;
+            top: 260px;
+            left: 16px;
+            width: 350px;
+            height: 40px;
+            /*border: 1px solid #999;
+            background: blue;
+            color: #fff;*/
+            font-size: 18px;
+            text-align: center;
+            line-height: 40px;
+            background-image: url("/static/images/login-btn.png");
+        }
+
+        .dialog .regist-btn {
+            position: absolute;
+            top: 305px;
+            left: 16px;
+            width: 350px;
+            height: 30px;
+            color:#7d7d7d;
+        }
+
+        .dialog .login-with-wechat {
+            position: absolute;
+            top: 350px;
+            left: 90px;
+            width: 48px;
+            height: 48px;
+            /*border: 0px solid #999;*/
+            background-image: url("/static/images/wechat.png");
+        }
+
+        .dialog .login-with-qq {
+            position: absolute;
+            top: 350px;
+            left: 165px;
+            width: 48px;
+            height: 48px;
+            /*border: 1px solid red;
+            border-radius:50%;*/
+            /*-webkit-mask-image: url("/static/images/img-corner.png");*/
+            background-image: url("/static/images/qq.png");
+        }
+
+        .dialog .login-with-phone {
+            position: absolute;
+            top: 350px;
+            left: 240px;
+            width: 48px;
+            height: 48px;
+            /*border: 0px solid #999;*/
+            background-image: url("/static/images/phone.png");
+        }
+
+        .dialog .login-with-github {
+            position: absolute;
+            top: 350px;
+            left: 300px;
+            width: 48px;
+            height: 48px;
+            /*border: 0px solid #999;*/
+            background-image: url("/static/images/github.png");
+        }
+
+        #dialogswitch {
+            display: none;
+        }
+        #dialogswitch:checked+.dialog {
+            margin-left: -150px;
+            margin-top: -100px;
+            width: 384px;
+            height: 474px;
+        }
+
+        #dialoglogin {
+            display: none;
+        }
+        #dialoglogin:checked+.dialog {
+            margin-left: -150px;
+            margin-top: -100px;
+            width: 384px;
+            height: 474px;
+        }
+        .current-user{
+           /* margin-left: 30px;*/
+            /*-webkit-mask-image: url("/static/images/photo-mask.png");
+            mask-image: url("/static/images/photo-mask.png");*/
+        }
+        .current-user img{
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 1px solid red;
+            /*-webkit-mask-image: url("/static/images/photo-mask.png");
+            mask-image: url("/static/images/photo-mask.png")*/
+        }
+    </style>
+</head>
+
+<div>
+    <script>
+        function login_with_qq() {
+            alert('qqqq');
+        }
+        function click_login_btn() {
+            var phone = ($(".input-phone").val());
+            var password = ($(".input-password").val());
+
+            $.ajax({
+                type:'POST',
+                data:{'phone': phone, 'password': password, csrfmiddlewaretoken:'{{ csrf_token }}'},
+                url:'{% url 'user:login' %}',
+                datatype:JSON,      //希望返回Json格式的数据
+                success:function (data) {
+                    $(".visit-header").attr('src', data.user.header_url);
+                },
+                error:function () {
+                    console.log('ajax刷新分页数据失败！');
+                }
+            });
+        }
+
+        function regist_btn() {
+            window.location.reload();
+            //window.location = "/user/regist";
+            window.open("/user/regist");
+            window.location.href = '/user/regist';
+        }
+    </script>
+
+    <div id="box" style="border: 0px solid red">
+        <div id="login_btn">
+            <label for="dialogswitch">
+                <div class="current-user">
+                    {% if user.id %}
+                        <img src="{{ user.header_url }}">
+                    {% else %}
+                        <div style="width: 48px;height:48px; border-radius:50%; border: 1px solid red;">
+                            <div style="padding-left: 10px; padding-top: 13px;color: #f3910e;">登录</div>
+                        </div>
+                    {% endif %}
+                </div>
+            </label>
+
+            {#% if not user.id %#}
+            {% if True %}
+                <input type="checkbox" id="dialogswitch"/>
+
+                <div class="dialog">
+                    <label class="close" for="dialogswitch"></label>
+                    <label class="login-tips" for="dialogswitch">手机登录</label>
+                    <label for="dialogs">
+                        <input class="input-phone" style="padding-left: 10px; size: 340px" type="text" placeholder="手机号">
+                    </label>
+                    <label for="dialogs">
+                        <input class="input-password" style="padding-left: 10px; size: 340px" type="password" placeholder="密码">
+                    </label>
+                    <label class="login-btn" for="dialogswitch" onclick="click_login_btn()">登录评论</label>
+                    <label class="regist-btn" for="dialogswitch">
+                        <span onclick="regist_btn()">前往注册</span>
+                        <span onclick="alert('忘记密码')">忘记密码</span>
+                    </label>
+                    <label class="login-with-wechat" for="dialogswitch"></label>
+                    <label class="login-with-qq" for="dialogswitch" onclick="login_with_qq()"></label>
+                    <label class="login-with-phone" for="dialogswitch"></label>
+                    <label class="github" for="dialogswitch"></label>
+                </div>
+            {% endif %}
+        </div>
+
+        <script src="/static/ckeditor/ckeditor/ckeditor.js"></script>
+        <script src="/static/ckeditor/ckeditor/adapters/jquery.js"></script>
+
+        <div id="input">
+            <textarea id="input-area" name="content" cols="20" rows="2" ></textarea>
+            <script>
+                CKEDITOR.replace('input-area',
+                {
+                    'width': 'auto',
+                    'height': 200,
+                    dialog_backgroundCoverOpacity: 0.5,
+                    resize_enabled: false,
+                    extraPlugins: 'codesnippet',
+                    codeSnippet_theme: 'zenburn',
+                    toolbar :
+                    [
+                        ['Source'],
+                        ['Bold',],
+                        ['Image'],
+                        ['Format', 'Font', 'FontSize', 'TextColor', 'BGColor', 'Smiley', 'Indent'],
+                        ['CodeSnippet']
+                    ]
+                });
+            </script>
+        </div>
+    </div>
+</div>

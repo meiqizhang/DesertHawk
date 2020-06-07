@@ -1,0 +1,133 @@
+{% load static %}
+
+<style>
+    .comment-item {
+        width: auto;
+        height: auto;
+        margin-top: 30px;
+        border: 0px solid green;
+
+    }
+
+    .comment-item > .header {
+        width: 48px;
+        height: 48px;
+        /*border: 1px solid red;*/
+        margin-top:0px;
+        float: left;
+
+    }
+
+    .username {
+        color: grey;
+        float: left;
+        margin-left: 20px;
+    }
+
+    .date {
+        color: grey;
+        float: right;
+    }
+
+    .content {
+        clear: both;
+        width: auto;
+        height: auto;
+        margin-left: 64px;
+    }
+    .reply{
+        clear: both;
+        height: auto;
+        float: right;
+    }
+
+</style>
+
+{% comment %}
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<link href="{% static 'css-theme/' %}{{ THEME }}{{ '/bootstrap.min.css' }}"  rel="stylesheet">
+{% endcomment %}
+
+<script>
+
+    function list_comments(title) {
+        $.ajax({
+            type:'POST',
+            data:{'title': title, csrfmiddlewaretoken:'{{ csrf_token }}'},
+            url:'{% url 'comment:list' %}',
+            datatype:JSON,      //希望返回Json格式的数据
+            success:function (data) {
+                //alert(data.data);
+                if (data.comment.length < 1){
+                    alert("还没有评论")
+                    return true;
+                }
+                for (var i = 0; i < data.comment.length; i++) {
+                    var content_id = "content-" + i;
+                    $("#comment-list").append('' +
+                        '<div class="comment-item">' +
+                            '<img class="header" src="/static/images/user_02.jpg"/>' +
+                            '<div>' +
+                                '<div style="padding-top: 0px">' +
+                                    '<div class="username"><a style="color: red; margin-right: 10px">' + data.comment[i].username + '</a>[' + data.comment[i].address + '网友]</div>' +
+                                    '<div class="date">'+ data.comment[i].create_time + '</div>' +
+                                '</div>' +
+                                    '<div class="content" id=' + content_id + '>' +
+                                        //data.comment[i].content +
+                                    '</div>' +
+                                    '<div class="reply">' +
+                                        '<a>回复</a>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div style="clear: both;border-bottom: 1px dashed grey; padding-top: 10px"></div>' +
+                        '</div>');
+
+                    $("#" + content_id).html(data.comment[i].content);
+                }
+            },
+            error:function () {
+                console.log('ajax刷新分页数据失败！');
+            }
+        });
+    }
+
+</script>
+<div id="comment-list" style="clear: both; margin-top: 50px">
+    <div style="margin-bottom: 10px">最新评论</div>
+    {% for comment in comments %}
+        <div class="comment-item">
+            <img class="header" src="/static/images/user_02.jpg"></img>
+            <div class="content_info">
+
+                <div class="username">[深圳市网友]</div>
+                <div style="float: right" class="date">2020-06-15</div>
+                <textarea class="content">
+                </textarea>
+            </div>
+            <div class="reply">
+                <a>回复</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% comment %}
+<div style="margin-top: 10px">最新评论</div>
+
+<div class="container" style="margin-top: 20px">
+    <div class="row">
+        <div class="col-md-1" style="border: 1px solid red; width: 48px; height: 48px">头像</div>
+        <div class="col-md-11">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2" style="text-align: left; border: 1px solid red;">[上海市网友]</div>
+                    <div class="col-md-2 col-md-offset-5" style="text-align: right; border: 1px solid red; height: 24px">2020年06月21日 12:32:32</div>
+                </div>
+            </div>
+            <div style="width:80%; height:400px;margin-top: 10px; border: 1px solid red">
+                cccccc
+            </div>
+        </div>
+    </div>
+</div>{% endcomment %}

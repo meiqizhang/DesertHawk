@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+    用户登陆
+{% endblock %}
+
+{% block mycss %}
+    {{ block.super }}
+    <style>
+        #content {
+            width: 40%;
+            margin-left: 25%;
+            height: 400px;
+            padding: 20px;
+            background-color: #2a6496;
+            margin-top: 40px;
+            margin-bottom: 40px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 2px #000000;
+        }
+
+        #content form {
+            margin: 20px;
+            text-align: left
+        }
+
+        #contentForm {
+            font-size: 15px;
+            margin-top: 50px;
+        }
+
+        #content p {
+            color: red;
+        }
+
+        .rusername {
+            margin-top: 10px;
+            margin-bottom: 40px;
+            width: 200px;
+            height: 30px;
+            border: none;
+            padding: 3px;
+            padding-left: 10px;
+        }
+
+        .rpassword {
+            margin-top: 10px;
+            width: 200px;
+            margin-bottom: 20px;
+            height: 30px;
+            border: none;
+            padding: 3px;
+            padding-left: 10px;
+        }
+
+        .login {
+            margin-top: 20px;
+            {#width: 100px;#}
+            {#height: 30px;#}
+            background-color: #aeffda;
+            border: none;
+            font-size: 15px;
+        }
+        #btn {
+            background: #2f435e;
+            color: #f2f2f2;
+
+            padding: 10px 30px 10px 30px;
+            font-size: 16px;
+            font-family: 微软雅黑, 宋体, Arial, Helvetica, Verdana, sans-serif;
+            font-weight: bold;
+            border-radius: 3px;
+            border: none;
+        }
+        #btn:hover{
+            background: #9e4177;
+
+        }
+        #check-SMS:hover{
+            color: #aeffda;
+        }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <div id=content>
+        <p >{{ msg }}{{ errors }}</p>
+        <div id="contentForm">
+            <form action="{% url 'user:user_login' %}" method="post">
+                {% csrf_token %}
+                用户名 <br>
+                <input type="text" placeholder="用户名或者邮箱" name="username" required="" class="rusername"><br>
+                密码<br>
+                <input type="password" placeholder="密码" id="password1" name="password" required=""
+                       class="rpassword"><br>
+                <a href="{% url 'user:code_login' %}" id="check-SMS">短信验证登录</a><br>
+                <button class="login" id="btn">
+                    Login
+                </button>
+            </form>
+            <a href="{% url 'user:forget_password' %}"><span>忘记密码？</span></a>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block my_js %}
+
+{% endblock %}

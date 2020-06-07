@@ -1,0 +1,337 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://pv.sohu.com/cityjson?ie=utf-8"></script>
+
+    <script src="https://how2j.cn/study/js/jquery/2.0.0/jquery.min.js"></script>
+    <!--script src="https://how2j.cn/study/js/bootstrap/3.3.6/bootstrap.min.js"></script-->
+
+	<script type="text/javascript">
+        function getAddress() {
+            var ip = returnCitySN.cip; //客户端ip
+            $.getJSON("https://api.map.baidu.com/location/ip?callback=?", {
+                'ak': 'x2CC5dtMtwjAAe6epLt2s1Kxs0BmSxPu',
+                'coor': 'bd09ll',
+                'ip': ip
+            }, function(data) {
+                var x = data.content.point.x;//经度
+                var y = data.content.point.y;//纬度
+                var address = data.content.address;//所在市
+                req = {}
+                req["ip"] = ip;
+                req["x"] = x;
+                req["y"] = y;
+                req["address"] = address
+                setVisit(req)
+            });
+
+            function setVisit(req) {
+                $.ajax({
+                    type:'GET',
+                    data: req,
+                    url:'{% url 'statistic:set' %}',
+                    datatype:JSON,
+                    success:function (data) {
+                    },
+                    error:function () {
+                    }
+                });
+            }
+        }
+        getAddress();
+
+    </script>
+
+    {% block mycss %}
+
+    {% endblock %}
+
+    <meta charset="urt-8">
+    <title>
+        {% block title %}
+            西湖歌舞几时休
+        {% endblock %}
+    </title>
+
+    <meta name="keywords" content="小qiqi的博客" charset="utf-8"/>
+    <meta name="description" content=" 小qiqi的博客" charset="utf-8"/>
+
+    <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/base.css' }}"  rel="stylesheet">
+    <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/index.css' }}" rel="stylesheet">
+
+
+    <script src="{% static 'js/modernizr.js' %}"></script>
+    <script src="{% static 'js/scrollReveal.js' %}"></script>
+
+    <script src="{% static 'js/article/request-image.js' %}"></script>
+
+    <script src="{% static 'js/map/echarts.min.js' %}"></script>
+    <script src="{% static 'js/map/china.js' %}"></script>
+</head>
+<body>
+<header>
+    <style type="text/css">
+        #search_div{
+            float: right;
+        }
+        #search_div button{
+            width: 60px;
+            height: 35px;
+            border-radius: 5px;
+            color: #333;
+            background-color:#fff;
+            border: 1px solid #aaaaaa;
+        }
+        #search_div input{
+            width: 200px;
+            height: 35px;
+            padding-left: 10px;
+            border-radius: 5px;
+            border: 1px solid #aaaaaa;
+        }
+        .my-en {
+            color: red;
+        }
+    </style>
+    <div class="logo" data-scroll-reveal="enter right over 1s">
+        <a href="/" >
+            愿你历尽千帆，归来仍是少年
+        </a>
+
+{% comment %}        <div style="text-align: right">
+            {% if request.user.is_authenticated %}
+                欢迎！<a href="{% url 'user:center' %}">{{ request.session.username }}</a>&nbsp;&nbsp;&nbsp;
+                <a href="{% url 'user:user_logout' %}">注销</a>
+            {% else %}
+                <a href="{% url 'user:user_login' %}">登录</a> &nbsp;&nbsp;&nbsp;
+                <a href="{% url 'user:register' %}">注册</a>
+            {% endif %}
+        </div>{% endcomment %}
+    </div>
+
+    <nav class="topnav" data-scroll-reveal="enter bottom over 0.8s after 0.8s">
+        <span>&nbsp;</span>
+        <span>&nbsp;</span>
+        <span>&nbsp;</span>
+
+        <a href="{% url 'home:home' %}">
+            <span>首页</span>
+            <span class="en" style="color: #BC7A00">Home</span>
+        </a>
+
+        <a href="/about/">
+            <span>关于我</span>
+            <span class="en" style="color: #BC7A00">About</span>
+        </a>
+
+{% comment %}
+        <a href="{% url 'article:write' %}">
+            <span>写博客</span>
+            <span class="en" style="color: #BC7A00">Publish</span>
+        </a>{% endcomment %}
+
+        <!--
+        <a href="learn.html">
+            <span>碎言碎语</span>
+            <span class="en">Doing</span>
+        </a>
+        -->
+
+
+        <a href="{% url 'articles:program:home' %}">
+            <span>程序设计</span>
+            <span class="en" style="color: #BC7A00">Program</span>
+        </a>
+
+{% comment %}        <a href="{% url 'articles:write' %}">
+            <span>旅行摄影</span>
+            <span class="en" style="color: #BC7A00">Travel&Photo</span>
+        </a>{% endcomment %}
+
+{% comment %}        <!--a href="{% url 'articles:write' %}">
+            <span>旅行摄影</span>
+            <span class="en">Life</span>
+        </a-->{% endcomment %}
+
+{% comment %}        <a href="{% url "user:center" %}">
+            <span>个人资料</span>
+            <span class="en">Detail</span>
+        </a>{% endcomment %}
+
+{% comment %}        <a href="{% url 'user:gbook' %}">
+            <span>留言</span>
+            <span class="en" style="color: #BC7A00">Saying</span>
+        </a>{% endcomment %}
+
+{% comment %}        <a href="{% url 'articles:manage' %}">
+            <span>文章管理</span>
+            <span class="en" style="color: #BC7A00">Saying</span>
+        </a>{% endcomment %}
+
+{% comment %}        <div id="search_div">
+            <form method="get" action="{% url 'articles:search' %}" id="search">
+                {% if key_word %}
+                    <input id="key_word" type="text" name="keyword" value={{ key_word }} />
+                {% else %}
+                    <input type="text" name="keyword" placeholder="搜索文章" />
+                {% endif %}
+                <button type="submit">Search</button>
+            </form>
+        </div>{% endcomment %}
+    </nav>
+
+</header>
+<style>
+
+</style>
+
+<script>
+    $(function(){
+        $.ajax({
+                type:'GET',
+                url:'{% url 'statistic:get' %}',
+                datatype:JSON,
+                success:function (data) {
+                    draw(data);
+                },
+                error:function () {
+                    console.log('ajax刷新分页数据失败！');
+                }
+            });
+
+        //初始化echarts实例
+        function draw(data) {
+            result = $.parseJSON(data);
+            visitData = []
+            for (i = 0; i < result.data.length; ++i) {
+                visitData.push([result.data[i].x, result.data[i].y, result.data[i].count])
+            }
+            var optionMap = {
+                /*visualMap: {
+                    bottom: 50, left: 30, min: 0, max: 500, splitNumber: 5,
+                    inRange: {color: ['#d94e5d', '#eac736', '#50a3ba'].reverse()},
+                    textStyle: {color: '#fff00'}
+                },*/
+                geo: {
+                    map: 'china',
+                    label: {
+                        emphasis: {
+                            show: false
+                        }
+                    },
+                    roam: true,
+                    itemStyle: {
+                        normal: {areaColor: '#ffffff', borderColor: 'rgba(66, 203, 232, 0.63)'},
+                        emphasis: {areaColor: '#00ff'}
+                    }
+                },
+                series: [{
+                    type: 'scatter',
+                    coordinateSystem: 'geo',
+                    /*data: convertData([
+                    {name: "海门", value: 405},
+                ])*/
+                    data: visitData,//[[121.15, 31.89, 405]]
+                }]
+            };
+            var myChart = echarts.init(document.getElementById('site-statistic'));
+            myChart.setOption(optionMap);
+        }
+ });
+
+</script>
+        <div style="float: left; width:25%;height:auto; margin: auto;">
+            <div id="site-statistic" style="height: 280px;"></div>
+        </div>
+
+        <div style="position: relative;float: left; margin: auto">
+            <article>
+                <div class="my-container" >
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </article>
+{% comment %}        </div>
+
+        <div style="width:auto; height: auto; float: left; margin: 50px">
+            <div id="calendar" style="height: 200px;margin-top: 4px">
+                <iframe frameborder="0" scrolling="no" marginwidth="0" marginheight="0" width="100%" height="250" src="/calendar"></iframe>
+            </div>
+            <!--div style="height: 100px; border: 1px red solid; margin-top: 20px">
+                <p style="text-align: center">广告位招租</p>
+            </div-->
+        </div>{% endcomment %}
+
+<footer>
+    <span style="color: grey">
+        <a style="color: grey" href="">粤ICP备20045672号</a> | 博客已运行<span class="run_time"></span>
+    </span>
+</footer>
+
+<script>
+    if (!(/msie [6|7|8|9]/i.test(navigator.userAgent))) {
+        (function () {
+            window.scrollReveal = new scrollReveal({reset: true});
+        })();
+    }
+    $(function(){
+        var start_time = 0;
+        $.ajax({
+            type:'GET',
+            url: '/starttime/',
+            datatype:JSON,
+            async: false,
+            success:function (timestamp) {
+                start_time = timestamp;
+                update_run_time();
+            },
+            error:function () {
+                console.log('ajax刷新分页数据失败！');
+            }
+        })
+
+        function update_run_time() {
+            var startDate = parseInt(start_time);
+            var endDate = parseInt(Date.parse(new Date()) / 1000);
+
+            var seconds = endDate - startDate;
+            var years = parseInt(seconds / (24 * 3600 * 356));
+            if (years > 0){
+                seconds = parseInt(seconds % (years * 24 * 3600 * 356));
+            }
+
+            var days = parseInt(seconds / (24 * 3600));
+            if (days > 0) {
+                seconds = parseInt(seconds % (days * 24 * 3600));
+            }
+
+            var hours = parseInt(seconds / 3600);
+            if (hours > 0){
+                seconds = parseInt(seconds % (hours * 3600));
+            }
+
+            var minutes = parseInt(seconds / 60);
+            seconds = parseInt(seconds % 60);
+
+            var run = years + " 年 " + days + " 天 " + hours + " 小时 " + minutes + " 分钟 " + seconds + " 秒";
+
+            $(".run_time").html(run);
+        }
+
+        function showAuto(){
+            if (start_time > 0){
+                update_run_time();
+            }
+        }
+
+        var t = setInterval(showAuto, 1000);
+    })
+
+</script>
+{% block my_js %}
+
+{% endblock %}
+
+</body>
+</html>

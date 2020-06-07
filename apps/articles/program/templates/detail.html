@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+{{ article.title }}
+{% endblock %}
+
+{% block content %}
+    {% block mycss %}
+        {{ block.super }}
+        <script src="https://cdn.bootcss.com/highlight.js/9.15.8/highlight.min.js"></script>
+        <script src="https://cdn.bootcss.com/highlightjs-line-numbers.js/2.7.0/highlightjs-line-numbers.min.js"></script>
+
+        <link type="text/css" href="https://cdn.bootcss.com/highlight.js/9.15.8/styles/github.min.css" rel="stylesheet">
+        <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/article/m.css' }}"  rel="stylesheet">
+        <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/article/info.css' }}"  rel="stylesheet">
+        <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/article/code.css' }}"  rel="stylesheet">
+
+
+        <style>
+            /* for block of numbers */
+            .hljs-ln-numbers {
+              -webkit-touch-callout: none;
+              -webkit-user-select: none;
+              -khtml-user-select: none;
+              -moz-user-select: none;
+              -ms-user-select: none;
+              user-select: none;
+
+              text-align: center;
+              color: #ccc;
+              border-right: 1px solid #CCC;
+              vertical-align: top;
+              padding-right: 5px;
+            }
+
+            .hljs-ln-n {
+              width: 30px;
+            }
+
+            /* for block of code */
+            .hljs-ln .hljs-ln-code {
+              padding-left: 10px;
+              white-space: pre;
+            }
+        </style>
+    {% endblock %}
+
+    <article>
+        <div class="infos" id="article_content">
+            <div class="newsview">
+                <span class="intitle">
+                    <a class="location">您现在的位置是：</a>
+                    <a class="location" href="/">网站首页</a>
+                    <a class="location" href="/articles/program">&gt;&nbsp;程序设计</a>&nbsp
+                    <a class="location" href="">&gt;&nbsp;{{ article.category }}</a>
+                </span>
+
+                <div>
+                    <h1 class="news_title">{{ article.title }}</h1>
+                </div>
+                <div class="news_author">
+                    <span class="au02">{{ article.date }}</span>
+                    <span class="au03">共<b>{{ article.click_num }}</b>人围观</span>
+                </div>
+                <br>
+                <div class="tags">
+                    {% for tag in article.tags %}
+                        <a href="/" target="_blank">{{ tag }}</a>
+                    {% endfor %}
+
+                </div>
+                <div class="news_about"><strong>简介</strong>{{ article.description }}
+                </div>
+
+                <div class="news_infos">
+                    {{ article.content | safe }}
+                </div>
+
+                <script>
+                    hljs.initHighlightingOnLoad();
+                    hljs.initLineNumbersOnLoad();
+                </script>
+            </div>
+
+        <div class="nextinfo">
+            <p>上一篇：
+                <a href="{% url 'articles:program:detail' %}?title={{ article_pre.title | add:'' }}">{{ article_pre.title }}</a>
+            </p>
+            <p>下一篇：
+                <a href="{% url 'articles:program:detail' %}?title={{ article_next.title | add:'' }}">{{ article_next.title }}</a>
+            </p>
+        </div>
+        <div class="otherlink">
+            <h2>相关文章</h2>
+            {% if list_about %}
+                <ul>
+                    {% for article_tag in list_about %}
+                        <li>
+                            <a href="{% url 'articles:program:detail' %}?title={{ article_tag.title }}" target="_blank">{{ article_tag.title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div style="margin: 20px">还没有其他相关文章哟~</div>
+            {% endif %}
+        </div>
+
+        <div style="">
+             <form action="/comment/commit" method="POST" enctype="multipart/form-data">
+                 {% csrf_token %}
+                 {% include "comment.html" %}
+                 <input type="submit" style="width:80px; height:30px; margin-top: 100px;" value="发表评论"/>
+                 <input name="title" type="text" value="{{ article.title }}" style="float:right; visibility: hidden">
+            </form>
+        </div>
+        {% include "comment_list.html" %}
+            <script>
+                list_comments("{{ article.title }}");
+            </script>
+    </article>
+
+    <script>
+        $("document").ready(function(){
+            var img=$("article img");
+            for(var i = 0;i < img.length; i++){
+                var id = img.get(i).id;
+                if (id.length > 0){
+                    set_image(id, id, false);
+                }
+            }
+        })
+    </script>
+{% endblock %}
+
+
+
+

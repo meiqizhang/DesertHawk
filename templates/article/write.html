@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+    写博客
+{% endblock %}
+
+{% block mycss %}
+    {{ block.super }}
+    <style>
+        #article-title{
+            width: 99%;
+            height: 35px;
+            padding-left: 10px;
+            margin-bottom: 30px;
+            border: 1px solid #aaaaaa;
+        }
+        #submit-button{
+            width: 120px;
+            height: 35px;
+            border-radius: 5px;
+            color: #ff5555;
+            background-color:#fff;
+            border: 1px solid #ff5555;
+
+            margin-top: 25px;
+            margin-right: 30px;
+        }
+    </style>
+
+    <script src="/static/js/kindeditor/kindeditor-all-min.js"></script>
+    <script src="/static/js/kindeditor/lang/zh-CN.js"></script>
+    <script src="/static/js/kindeditor/themes/default/default.css"></script>
+{% endblock %}
+
+
+{% block content %}
+     
+    <script src="https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script src="/static/js/kindeditor/kindeditor-all.js"></script>
+    <script>
+        $(function () {
+            var kind = KindEditor.create('#article-content', {
+                width: '100%',       // 文本框宽度(可以百分比或像素)
+                height: '300px',     // 文本框高度(只能像素)
+                fontSizeTable: '30',
+                minWidth: 200,       // 最小宽度（数字）
+                minHeight: 400,      // 最小高度（数字）
+                uploadJson: '/upload_image/',
+                fileManagerJson: '/download_image/',
+                allowImageRemote: true,
+                allowImageUpload: true,
+                allowFileManager: true,
+                extraFileUploadParams: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}"
+                },
+                filePostName: 'fafafa'
+            });
+
+            //$("#article-content").text("cdscscsdc")
+        })
+    </script>
+
+    <form action="/article/upload/" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div style="width: 99%;margin: 0 auto;">
+            <input id="article-title" name="title" placeholder="请输入文章标题"></input>
+            <textarea id="article-content" name="content">
+            </textarea>
+        </div>
+        <input id="submit-button" type="submit" value="发布文章" />
+        <!--input id="submit-button" type="submit" value="保存草稿"/-->
+    </form>
+
+    <script>
+        document.getElementById("article-content").value='' +
+            '***</br>' +
+            'layout:&emsp;&emsp;&emsp;post</br>' +
+            'title:&emsp;&emsp;&emsp;&emsp;文章标题</br>' +
+            'category:&emsp;&emsp;文章分类</br>' +
+            "tags:&emsp;&emsp;&emsp;&emsp;['标签1', '标签2']</br>" +
+            'description:&emsp;文章概述</br>' +
+            '***</br>'
+
+        $(function () {
+            $('#submit-button').click(function () {
+                if (!$('#article-title').val()) {
+                    alert('文章标题不能为空');
+                    return false;
+                }
+                $('form').submit();
+            })
+        })
+
+    </script>
+
+{% endblock %}
+

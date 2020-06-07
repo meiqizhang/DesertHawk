@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style type="text/css">
+        *{
+            margin:0px;
+            padding:0px;
+            list-style-type:none;
+        }
+        #box{
+            left: 0px;
+            width:255px;
+            height:190px;
+            border:2px solid grey;
+            margin:0px auto 0px;
+            border-radius:5px;
+        }
+        #top{
+            width:100%;
+            height:25px;
+            border-bottom:1px solid #3399ff;
+            font-size:7px;
+        }
+        #year{
+            margin:7px 5px;
+ 
+        }
+        #year,#month{
+            text-align:center;
+            margin-right:7px;
+        }
+        #con{
+            width:210px;
+            height:150px;
+            margin:0px auto 0px;
+        }
+        #con ul.week{
+            width:210px;
+            height:22px;
+        }
+        #con ul.week li{
+            width:30px;
+            height:22px;
+            line-height:22px;
+            text-align:center;
+            float:left;
+        }
+        #con ul.week li.weekend{color:red}
+        #con ul.day li{
+            width:30px;
+            height:22px;
+            border-top:1px solid #ddd;
+            float:left;
+            line-height:25px;
+            text-align:center;
+            font-size:10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="box">
+        <div id="top">
+            <li id="year" />
+            <li id="month" />
+        </div>
+        <div id="con">
+            <ul class="week">
+                <li class="weekend">日</li>
+                <li>一</li><li>二</i><li>三</li><li>四</li><li>五</li>
+                <li class="weekend">六</li>
+            </ul>
+            <ul class="day">
+                <li></li><li></li><li></li><li></li>
+                <li></li><li></li><li></li><li></li>
+                <li></li><li></li><li></li><li></li>
+                <li></li><li></li><li></li><li></li>
+                <li></li><li></li><li></li><li></li>
+                <li></li><li></li><li></li><li></li>
+                <li></li><li></li><li></li><li></li>
+                <li></li><li></li><li></li><li></li>
+                <li></li><li></li><li></li><li></li>
+                <li></li><li></li><li></li><li></li>
+                <li></li><li></li>
+            </ul>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    /* 
+       1 自动生成年份和月份；
+       2 默认当前年月；
+    */
+    var oYear = document.getElementById('year');
+    var oMonth = document.getElementById('month');
+    var oday = document.querySelector('.day');
+    var oLi = document.querySelectorAll('.day li');
+    var curDate = new Date();
+    oYear.innerHTML = curDate.getFullYear() + "年" + (curDate.getMonth() + 1) + "月";
+    // 对函数的封装应该考虑掺入的参数，大小类型等
+    function eachFor(start, end, callback){
+        for(var i = start; i <= end ; i++){
+            callback(i);
+        }
+    }
+    function query(){
+        var year = curDate.getFullYear();
+        var month =  curDate.getMonth();
+        
+         console.log(year +"--"+month);
+        // oday.innerHTML = '';
+        if(year && month){
+            console.log(year +"--"+month);
+            // 获取月份的第一天
+            var firstDate = new Date(year,month,1);
+            // 第一天对应是周几
+            var dayOfWeek = firstDate.getDay();
+            // 该月份有多少天
+            var conutDay =  getMonthDays(year,month);
+            console.log("countDay="+conutDay);
+            oLi.forEach(function(el,index){
+                el.innerHTML = '';
+            })
+            eachFor(1,conutDay,function(val){
+                if (val == curDate.getDate()) {
+                    oLi[dayOfWeek + val - 1].innerHTML = "<b><font color='red'>" + val + "</font></b>";
+                }
+                else {
+                    oLi[dayOfWeek + val - 1].innerHTML = val;
+                }
+            });
+        }else{
+            alert('请先选择年份和月份');
+        }
+    }
+    // 是否为闰年 整百年份必须被400整除 非整百年份被4整除就都是闰年
+    function getMonthDays(year,month){
+        var datas = [];
+        if(year%400 ==0 || (year%4==0 && year%100!=0)){
+            datas = [31,29,31,30,31,30,31,31,30,31,30,31];
+        }else{
+            datas = [31,28,31,30,31,30,31,31,30,31,30,31];
+        }
+        console.log(year +"--"+ month +"--"+ datas[month]);
+        return datas[month];
+    }
+    // 初始默认当前时间的年和月进行搜索
+    query();
+</script>
+</html>

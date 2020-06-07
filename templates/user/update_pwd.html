@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+    更新密码
+{% endblock %}
+
+{% block mycss %}
+    {{ block.super }}
+    <style>
+        #content {
+            width: 50%;
+            margin-left: 20%;
+            height: 400px;
+            padding: 20px;
+        }
+
+        #content form {
+            margin: 20px;
+            text-align: left
+        }
+
+        #contentForm {
+            font-size: 15px;
+            margin-top: 50px;
+        }
+
+        #content p {
+            color: red;
+        }
+
+        .rusername {
+            margin-top: 10px;
+            margin-bottom: 40px;
+            width: 200px;
+            height: 30px;
+            border: none;
+            padding: 3px;
+            padding-left: 10px;
+        }
+
+        .rpassword {
+            margin-top: 10px;
+            width: 200px;
+            margin-bottom: 20px;
+            height: 30px;
+            border: none;
+            padding: 3px;
+            padding-left: 10px;
+        }
+
+        .login {
+            margin-top: 20px;
+            width: 100px;
+            height: 30px;
+            background-color: #aeffda;
+            border: none;
+            font-size: 15px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <div id=content>
+        <p >{{ msg }}{{ errors }}</p>
+        <div id="contentForm">
+            <form action="{% url 'user:update_pwd' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" value="{{ c }}" name="code">
+                <input type="password" placeholder="输入新密码" name="password" required="" class="rusername"><br>
+                <input type="password" placeholder="输入确认密码" id="rpassword" name="rpassword" required=""
+                       class="rpassword"><br>
+                <button class="login">
+                    更新密码
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block my_js %}
+
+{% endblock %}

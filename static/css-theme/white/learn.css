@@ -1,0 +1,166 @@
+@charset "gb2312";
+.rnav { }
+.rnav {
+    margin: 30px auto; overflow: hidden; overflow: hidden; padding-left: 100px }
+.rnav li {
+    width: 120px; text-align: center; display: inline-block; margin-bottom: 5px; margin-right: 5px; float: left; height: 40px; line-height: 38px; background: rgba(255,255,255,0.2) }
+.rnav li a {
+    color: #ffff;
+    display: block;
+    -webkit-transition: all 1s;
+    -moz-transition: all 1s;
+    -o-transition: all 1s;
+    transition: all 1s;
+    border: #fff 1px solid
+}
+.rnav ul li a:hover {
+    background: red;
+}
+.rnav li:nth-child(1) {
+    background: #FE5187
+}
+.rnav li:nth-child(2) {
+    background: #339967
+}
+.rnav li:nth-child(3) {
+    background: #FF8151
+}
+.rnav li:nth-child(4) {
+    background: #3594cb
+}
+.rnav li:nth-child(5) {
+    background: #66CC9A
+}
+.rnav li:nth-child(6) {
+    background: #079798
+}
+
+.rnav li:nth-child(7) {
+    background: #BB6622;
+}
+.rnav li:nth-child(8) {
+    background: #39b3d7;
+}
+.rnav li:nth-child(9) {
+    background: #a49e3c;
+}
+.rnav li:nth-child(10) {
+    background: #f9b3d7;
+}
+.rnav li:nth-child(11) {
+    background: #610C9A
+}
+.rnav li:nth-child(12) {
+    background: #079ff8
+}
+
+.rnav li:nth-child(13) {
+    background: #005187
+}
+.rnav li:nth-child(14) {
+    background: #339900
+}
+.rnav li:nth-child(15) {
+    background: #F00151
+}
+.rnav li:nth-child(16) {
+    background: #3004cb
+}
+.rnav li:nth-child(17) {
+    background: #06CC90
+}
+.rnav li:nth-child(18) {
+    background: #009790
+}
+
+.rnav li:nth-child(19) {
+    background: #FE0180
+}
+.rnav li:nth-child(20) {
+    background: #339060
+}
+.rnav li:nth-child(21) {
+    background: #FF8100
+}
+.rnav li:nth-child(22) {
+    background: #05940b
+}
+.rnav li:nth-child(23) {
+    background: #60CC0A
+}
+.rnav li:nth-child(24) {
+    background: #070708
+}
+/* cbp_tmtimeline */
+
+.cbp_tmtimeline {
+    margin: 30px 0 0 0; padding: 0; list-style: none; position: relative;
+}
+.cbp_tmtimeline:before {
+    content: ''; position: absolute; top: 0; bottom: 0; width: 5px; background: #afdcf8; left: 158px; margin-left: -10px;
+}
+.cbp_tmtimeline > li { position: relative;
+}
+.cbp_tmtimeline > li .cbp_tmtime {
+    display: block; width: 100px; padding-right: 30px; position: absolute; margin-left: 20px
+}
+.cbp_tmtimeline > li .cbp_tmtime span {
+    display: block; text-align: right;
+}
+.cbp_tmtimeline > li .cbp_tmtime span:first-child {
+    font-size: 14px; color: #bdd0db;
+}
+.cbp_tmtimeline > li .cbp_tmtime span:last-child {
+    font-size: 22px; color: #3594cb;
+}
+.cbp_tmtimeline > li .cbp_tmlabel {
+    margin: 0 50px 15px 180px;
+    background: #3594cb;
+    color: #fff;
+    padding: 2em;
+    position: relative;
+    border-radius: 5px;
+    height: 150px;
+}
+.cbp_tmtimeline > li .cbp_tmlabel h2 {
+    margin-top: 0px;
+    padding: 0 0 10px 0;
+    font-size: 16px;
+    text-shadow: rgba(7, 84, 152, 0.71) 1px 1px 1px;
+}
+
+.cbp_tmtimeline > li .cbp_tmlabel:after {
+    right: 100%; border: solid transparent;
+    content: " "; height: 0;
+    width: 0; position: absolute;
+    pointer-events: none;
+    border-right-color: #3594cb;
+    border-width: 10px;
+    top: 10px;
+}
+.cbp_tmtimeline > li .cbp_tmicon {
+    width: 10px; height: 10px; font-family: 'ecoico'; speak: none; font-style: normal; font-weight: normal; font-variant: normal; text-transform: none; font-size: 1.4em; line-height: 40px; -webkit-font-smoothing: antialiased; position: absolute; color: #fff; background: #46a4da; border-radius: 50%; box-shadow: 0 0 0 3px #afdcf8; text-align: center; left: 170px; top: 15px; margin: 0 0 0 -25px;
+}
+.blogpic {
+    width: 200px; height: 120px; overflow: hidden; display: block; float: left; margin-right: 20px;
+}
+.blogpic img {
+    width: 100%; height: auto; margin: auto;
+}
+a.readmore {
+    background: #FAFAE9; color: #fff; padding: 5px 10px; float: right; margin: 20px 0 0 0; border-radius: 5px;
+}
+.cbp_tmtimeline li .cbp_tmtime {
+    -webkit-transition: all 1s; -moz-transition: all 1s; -o-transition: all 1s;
+}
+.cbp_tmtimeline li:hover .cbp_tmicon {
+    box-shadow: 0 0 0 3px #ececec;
+}
+
+.cbp_tmtimeline li:hover .cbp_tmtime {
+    background: #afdcf8; border-radius: 20px 0 0 20px;
+}
+
+.cbp_tmtimeline li:hover .cbp_tmtime span {
+    color: #FAFAE9;
+}
