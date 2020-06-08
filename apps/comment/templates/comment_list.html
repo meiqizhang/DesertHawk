@@ -39,6 +39,19 @@
         clear: both;
         height: auto;
         float: right;
+        color: grey;
+        font-size: 12px;
+        text-decoration: underline;
+    }
+
+    .reply > div{
+        float: right;
+        margin-left: 40px;
+    }
+
+    .reply > div:hover{
+        color: red;
+        cursor: pointer;
     }
 
 </style>
@@ -59,9 +72,10 @@
             success:function (data) {
                 //alert(data.data);
                 if (data.comment.length < 1){
-                    alert("还没有评论")
+                    $("#comment-list").append("还没有评论哟，快来评论盖楼呀~");
                     return true;
                 }
+                $("#comment-list").append("<span>评论列表</span>");
                 for (var i = 0; i < data.comment.length; i++) {
                     var content_id = "content-" + i;
                     $("#comment-list").append('' +
@@ -76,7 +90,9 @@
                                         //data.comment[i].content +
                                     '</div>' +
                                     '<div class="reply">' +
-                                        '<a>回复</a>' +
+                                        '<div>顶</div>' +
+                                        '<div>踩</div>' +
+                                        '<div>回复</div>' +
                                     '</div>' +
                                 '</div>' +
                             '</div>' +
@@ -94,7 +110,7 @@
 
 </script>
 <div id="comment-list" style="clear: both; margin-top: 50px">
-    <div style="margin-bottom: 10px">最新评论</div>
+    {% comment %}<div style="margin-bottom: 10px">最新评论</div>
     {% for comment in comments %}
         <div class="comment-item">
             <img class="header" src="/static/images/user_02.jpg"></img>
@@ -109,7 +125,7 @@
                 <a>回复</a>
             </div>
         </div>
-    {% endfor %}
+    {% endfor %}{% endcomment %}
 </div>
 
 {% comment %}

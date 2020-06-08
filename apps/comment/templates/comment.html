@@ -93,6 +93,9 @@
             background-image: url("/static/images/login-bg-high-new.png");
         }
 
+        .dialog span{
+            text-decoration: underline;
+        }
         .dialog span:hover{
             color: red;
             cursor: pointer;
@@ -100,15 +103,14 @@
         .dialog .close {
             position: absolute;
             top: 15px;
-            margin-left: 345px;
-
+            margin-left: 160px;
             width: 12px;
             height: 12px;
-            /*border: 1px solid #999;
-            background: red;
-            color: #fff;
-            text-align: center;*/
             background-image: url("/static/images/close-btn.png");
+        }
+        .dialog .close:hover {
+            top: 14px;
+            margin-left: 162px;
         }
 
         .dialog .login-tips {
@@ -129,15 +131,7 @@
             left: 16px;
             width: 340px;
             height: 40px;
-            /*padding-left: 10px;*/
-            /*border: 1px solid #999;
-            background: green;*/
-            /*color: #fff;*/
-            /*border-radius: 8px;*/
             border: none;
-
-            /*border: 1px solid grey;*/
-
             background-image: url("/static/images/phone-input.png");
         }
 
@@ -147,9 +141,6 @@
             left: 16px;
             width: 340px;
             height: 40px;
-            /*border: 1px solid #999;
-            background: green;
-            color: #fff;*/
             border: none;
             background-image: url("/static/images/phone-input.png");
         }
@@ -160,9 +151,6 @@
             left: 16px;
             width: 350px;
             height: 40px;
-            /*border: 1px solid #999;
-            background: blue;
-            color: #fff;*/
             font-size: 18px;
             text-align: center;
             line-height: 40px;
@@ -184,7 +172,6 @@
             left: 90px;
             width: 48px;
             height: 48px;
-            /*border: 0px solid #999;*/
             background-image: url("/static/images/wechat.png");
         }
 
@@ -258,7 +245,11 @@
 <div>
     <script>
         function login_with_qq() {
-            alert('qqqq');
+            alert("QQ登录暂未开通");
+            return false;
+        }
+        function login_with_wechat() {
+            alert("微信登录暂未开通");
         }
         function click_login_btn() {
             var phone = ($(".input-phone").val());
@@ -315,10 +306,10 @@
                     </label>
                     <label class="login-btn" for="dialogswitch" onclick="click_login_btn()">登录评论</label>
                     <label class="regist-btn" for="dialogswitch">
-                        <span onclick="regist_btn()">前往注册</span>
+                        <span onclick="regist_btn()">前往注册</span>&nbsp;
                         <span onclick="alert('忘记密码')">忘记密码</span>
                     </label>
-                    <label class="login-with-wechat" for="dialogswitch"></label>
+                    <label class="login-with-wechat" for="dialogswitch" onclick="login_with_wechat()"></label>
                     <label class="login-with-qq" for="dialogswitch" onclick="login_with_qq()"></label>
                     <label class="login-with-phone" for="dialogswitch"></label>
                     <label class="github" for="dialogswitch"></label>
