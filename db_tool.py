@@ -158,13 +158,12 @@ def parse_page(path, name, connect):
                 print(e)
                 image = ''
 
-            sql = "insert into t_article(title, category, tags, description, content, `date`, image) values " \
-                  "(%s, %s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE " \
-                  "category=%s, tags=%s, description=%s, content=%s, `date`=%s, image=%s"
+            sql = "insert into t_article(title, first_category, second_category, tags, description, content, `date`, image) values " \
+                  "('程序设计', %s, %s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE " \
+                  "first_category='程序设计', first_category=%s, tags=%s, description=%s, content=%s, `date`=%s, image=%s"
 
             args = (article['title'], article['category'], str(article['tags']), article['description'], article['content'], article['date'], image,
                                       article['category'], str(article['tags']), article['description'], article['content'], article['date'], image)
-            print(args)
 
             try:
                 cursor.execute(sql, args)

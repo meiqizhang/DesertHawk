@@ -27,7 +27,7 @@ SECRET_KEY = '05duh!gv&6^1(8r-76#ne%(taue_!+4dye2dqb*7e24(-ywq%&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['ditanshow.com']
 
 
 # Application definition
