@@ -56,7 +56,7 @@ def login(request):
 
         request.session['user_id'] = row.id
         #request.session['age'] = '18'
-        request.session.set_expiry(0) #30秒后过期
+        request.session.set_expiry(10) #30秒后过期
         # 默认是14天后过期，0表示关闭浏览器过期
 
     except Exception as e:
@@ -69,7 +69,6 @@ def login(request):
 
 #用户注册
 def regist(request):
-    print('xxxxxxxxxxxxxxxxxxxx')
     if request.method == 'GET':
         return render(request, 'templates/register.html')
     if request.method == "POST":

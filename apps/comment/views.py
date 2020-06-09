@@ -18,7 +18,7 @@ def commit(request):
     address = request.session.get("address")
 
     if not user_id:
-        response["status"] = "error";
+        response["status"] = "error"
         response["msg"] = "请先登录"
         return HttpResponse(json.dumps(response), content_type="application/json")
 
