@@ -12,8 +12,12 @@
             var d = new Date();
             d.setTime(d.getTime() + (exdays*24*60*60*1000));
             var expires = "expires=" + d.toGMTString();
-            document.cookie = cname + "=" + cvalue + "; " + expires;
-            alert(expires)
+            if (exdays > 0) {
+                document.cookie = cname + "=" + cvalue + "; " + expires;
+            }
+            else {
+                document.cookie = cname + "=" + cvalue;
+            }
         }
 
         function getCookie(cname) {
@@ -46,7 +50,7 @@
                 req["address"] = address;
 
                 setVisit(req);
-                setCookie("ip", req["ip"], 1);
+                setCookie("ip", req["ip"], 0);
             });
         }
 
@@ -65,6 +69,7 @@
 
         ip = getCookie("ip")
         if (ip === ""){
+            //alert("请求");
             getAddress();
         }
 

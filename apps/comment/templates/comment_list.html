@@ -61,7 +61,52 @@
 <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/bootstrap.min.css' }}"  rel="stylesheet">
 {% endcomment %}
 
+<script src="/static/ckeditor/ckeditor/ckeditor.js"></script>
+<script src="/static/ckeditor/ckeditor/adapters/jquery.js"></script>
+
 <script>
+
+    var reply_input = new Array();
+    function click_reply_btn(input_id) {
+        var reply_div_id = "input-area-div-" + input_id;
+        var reply_input_id = "input-area-" + input_id;
+
+        if ($("#" + reply_div_id).css("display") !== "none"){
+            $("#" + reply_div_id).css("display", "none")
+            return
+        }
+
+        if (reply_input[input_id] !== undefined){
+             $("#" + reply_div_id).css("display", "");
+             return;
+        }
+        else {
+            //alert("create " + reply_input_id);
+            //$("#" + reply_div_id).append('<textarea id=' + reply_input_id + '></textarea>'
+            CKEDITOR.replace(reply_input_id,
+                {
+                    'width': 'auto',
+                    'height': 100,
+                    dialog_backgroundCoverOpacity: 0.5,
+                    resize_enabled: false,
+                    extraPlugins: 'codesnippet',
+                    codeSnippet_theme: 'zenburn',
+                    toolbar:
+                        [
+                            ['Source'],
+                            ['Bold',],
+                            ['Image'],
+                            ['Format', 'Font', 'FontSize', 'TextColor', 'BGColor', 'Smiley', 'Indent'],
+                            ['CodeSnippet']
+                        ]
+                });
+        }
+
+        reply_input[input_id] = 1;
+
+        $("#" + reply_div_id).css("display", "");
+
+    }
 
     function list_comments(title) {
         $.ajax({
@@ -77,7 +122,10 @@
                 }
                 $("#comment-list").append("<span>评论列表</span>");
                 for (var i = 0; i < data.comment.length; i++) {
-                    var content_id = "content-" + i;
+                    var content_id = "content-" + data.comment[i].id;
+                    var reply_div_id = "input-area-div-" + data.comment[i].id;
+                    var reply_input_id = "input-area-" + data.comment[i].id;
+
                     $("#comment-list").append('' +
                         '<div class="comment-item">' +
                             '<img class="header" src="/static/images/user_02.jpg"/>' +
@@ -92,7 +140,10 @@
                                     '<div class="reply">' +
                                         '<div>顶</div>' +
                                         '<div>踩</div>' +
-                                        '<div>回复</div>' +
+                                        '<div id=' + data.comment[i].id + ' onclick="click_reply_btn(this.id)">回复</div>' +
+                                    '</div>' +
+                                    '<div id=' + reply_div_id + ' style="display:none; padding-top:40px;">' +
+                                        '<textarea id=' + reply_input_id + '></textarea>' +
                                     '</div>' +
                                 '</div>' +
                             '</div>' +

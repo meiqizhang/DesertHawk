@@ -43,8 +43,8 @@ def lists(request):
 
     response["comment"] = list()
 
-    comments = Comment.objects.filter(title=title).values("user_name", "address", "content", "create_time")
+    comments = Comment.objects.filter(title=title).values("id", "user_name", "address", "content", "create_time")
     for c in comments:
-        response["comment"].append({"username": c["user_name"], "address": c["address"], "create_time": c["create_time"], "content": c["content"]})
+        response["comment"].append({"id": c["id"], "username": c["user_name"], "address": c["address"], "create_time": c["create_time"], "content": c["content"]})
 
     return HttpResponse(json.dumps(response), content_type="application/json")
