@@ -95,7 +95,7 @@ def detail(request):
     if article_next:
         article_next = article_next['title']
 
-    user_id = request.session.get('user_id')
+    user_id = request.session.get('user_id', '')
     if user_id:
         print("get user id=%s from session" % user_id)
         header_url = VisitUser.objects.get(id=user_id).header_url

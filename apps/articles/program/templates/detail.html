@@ -116,7 +116,7 @@
         </div>
         {% include "comment_list.html" %}
             <script>
-                list_comments("{{ article.title }}");
+                list_comments("{{ article.title }}", "{{ user.id }}");
             </script>
     </article>
 
