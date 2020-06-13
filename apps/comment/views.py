@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from apps.comment.models import Comment
-from apps.user.models import VisitUser
+from apps.user.models import UserProfile
 
 
 def commit(request):
@@ -25,7 +25,7 @@ def commit(request):
 
     try:
         time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
-        username = VisitUser.objects.get(id=user_id).username
+        username = UserProfile.objects.get(id=user_id).username
         Comment.objects.create(title=title, user_name=username, content=content, ip=ip_str, address=address, create_time=time_now).save()
     except Exception as e:
         print(e)

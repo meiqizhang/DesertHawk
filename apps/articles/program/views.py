@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from apps.articles.models import Article, Tag
-from apps.user.models import VisitUser
+from apps.user.models import UserProfile
 
 
 def home(request):
@@ -84,8 +84,6 @@ def detail(request):
     abouts = sorted(list(set(abouts)))
     abouts.remove(title)
 
-    print(abouts)
-
     id = article['id']
     article_pre = Article.objects.filter(id__lt=id).values("title").order_by("-id").first()
     article_next = Article.objects.filter(id__gt=id).values("title").order_by("id").first()
@@ -96,20 +94,20 @@ def detail(request):
         article_next = article_next['title']
 
     user_id = request.session.get('user_id', '')
+    header = "/static/images/anonymous.jpg"
+
+    print("get user id from sessoion=%s" % user_id)
     if user_id:
-        print("get user id=%s from session" % user_id)
-        header_url = VisitUser.objects.get(id=user_id).header_url
-    else:
-        header_url = "/static/images/anonymous.jpg"
-
-
-    #comments = Comment.objects.filter(title=title).values("user_name", "content", "create_time")
+        if UserProfile.objects.filter(user_id=user_id).first():
+            header = UserProfile.objects.get(user_id=user_id).header
+        else:
+            user_id = None
 
     return render(request, 'templates/detail.html', context={'article': article,
                                                     'list_about': abouts,
                                                     'article_pre': article_pre,
                                                     'article_next': article_next,
-                                                    'user': {'id': user_id, 'header_url': header_url}
+                                                    'user': {'id': user_id, 'header': header}
                                                     })
 
 

@@ -110,7 +110,7 @@
              <form action="/comment/commit" method="POST" enctype="multipart/form-data">
                  {% csrf_token %}
                  {% include "comment.html" %}
-                 <input type="submit" style="width:80px; height:30px; margin-top: 110px;" value="发表评论"/>
+                 <input type="submit" style="width:80px; height:30px; margin-top: 10px;" value="发表评论"/>
                  <input name="title" type="text" value="{{ article.title }}" style="float:right; visibility: hidden">
             </form>
         </div>

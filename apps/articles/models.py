@@ -83,8 +83,8 @@ class Article(models.Model):
     #    models.Model.__init__(self, args, kwargs)
 
     title = models.CharField(max_length=128, verbose_name='标题')
-    first_category = models.CharField(max_length=32, verbose_name="一级分类")
-    second_category = models.CharField(max_length=32, verbose_name="二级分类")
+    first_category = models.CharField(max_length=32, default="程序设计", verbose_name="一级分类")
+    second_category = models.CharField(max_length=32, default="", verbose_name="二级分类")
     tags = models.CharField(max_length=64, verbose_name='文章标签')
     description = models.CharField(max_length=256, verbose_name='简介')
     content = RichTextUploadingField(verbose_name='内容')

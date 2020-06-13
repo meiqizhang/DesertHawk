@@ -73,33 +73,50 @@
 
                 <input type="text" placeholder="请输入用户名" name="username" required=""><br>
                 <p>
-                    <input type="text" placeholder="请输入手机号码" name="phone" required="" style="width: 210px;">
-                    <input type="button" value="发送验证码" id="send_code" style="width: 80px;height: 35px">
+                    <input type="text" id="input-phone" placeholder="请输入手机号码" name="phone" required="" style="width: 210px;">
+                    <input type="button" value="发送验证码" id="send_code" style="width: 80px;height: 36px">
                 </p>
 
-                <input type="password" placeholder="4位验证码" id="verification_code" name="verification_code" required=""><br>
-                <input type="password" placeholder="请输入密码" id="password1" name="password1" required=""><br>
-                <input type="password" placeholder="请确认密码" id="password2" name="password2" required=""><br>
+                <input type="text" placeholder="4位验证码" id="verification_code" name="verification_code" required=""><br>
+                <input type="password" placeholder="请输入密码" id="password" name="password" required=""><br>
+                <input type="password" placeholder="请确认密码" id="password1" name="password1" required=""><br>
 
                 <button id="btn">提交注册</button>
             </form>
         </div>
         <script type="text/javascript">
+            var baseTime = 90;
+            var tryTimes = 1;
+
             $(function () {
                 $("#send_code").css({"padding-left": "0px"});
             });
             $("#send_code").click(function(){
-                $(this).val('60s');
-                var time = 10;
+                var phone = $("#input-phone").val()
+                $.ajax({
+                    type:'POST',
+                    data:{'phone': phone, csrfmiddlewaretoken:'{{ csrf_token }}'},
+                    url:'{% url 'user:send_code' %}',
+                    datatype:JSON,      //希望返回Json格式的数据
+                    success:function (data) {
+                        //alert(data.data);
+                    },
+                    error:function () {
+                        console.log('ajax刷新分页数据失败！');
+                    }
+                });
+
+                var waitTime = baseTime * tryTimes;
                 var intervalId = window.setInterval(function () {
-                     if (time === 0){
-                         alert("超时");
+                     if (waitTime === 0){
+                         //alert("超时");
                          clearInterval(intervalId);
                          $("#send_code").val('发送验证码');
+                         tryTimes += 1
                          return ;
                      }
-                     $("#send_code").val(time + 's');
-                     time--;
+                     $("#send_code").val(waitTime + 's');
+                     waitTime -= 1;
                 }, 1000);
             });
         </script>
@@ -109,18 +126,18 @@
 {% block my_js %}
     <script>
         window.onload = function () {
+            document.getElementById('password').onchange = validatePassword;
             document.getElementById('password1').onchange = validatePassword;
-            document.getElementById('password2').onchange = validatePassword;
             //document.getElementById('send_code').textContent = "60s";
         };
 
         function validatePassword() {
-            var pass2 = document.getElementById("password2").value;
+            var pass = document.getElementById("password").value;
             var pass1 = document.getElementById("password1").value;
-            if (pass1 != pass2)
-                document.getElementById('password2').setCustomValidity("输入两次密码不一致");
+            if (pass != pass1)
+                document.getElementById('password1').setCustomValidity("输入两次密码不一致");
             else
-                document.getElementById('password2').setCustomValidity("");
+                document.getElementById('password1').setCustomValidity("");
 
         }
     </script>

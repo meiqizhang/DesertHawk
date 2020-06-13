@@ -10,6 +10,7 @@ import pymysql
 from django.core.files.storage import Storage
 from django.http import HttpResponse
 from django.shortcuts import render
+from qcloud_cos import CosConfig, CosS3Client
 
 from apps.articles.models import ContentImage
 from DesertHawk.settings import START_TIME, BLOG_ROOT, DATABASES
@@ -205,7 +206,7 @@ class StorageObject(Storage):
         self.file = None
 
     def _new_name(self, name):
-        new_name = "file/{0}/{1}.{2}".format(self.now.strftime("%Y/%m/%d"), str(uuid.uuid4()).replace('-', ''),
+        new_name = "{0}/{1}.{2}".format(self.now.strftime("%Y/%m/%d"), str(uuid.uuid4()).replace('-', ''),
                                              name.split(".").pop())
         return new_name
 
@@ -213,12 +214,24 @@ class StorageObject(Storage):
         return self.file
 
     def _save(self, name, content):
-        """
-        上传文件到七牛
-        """
-        # 构建鉴权对象
-        print("save......................")
-        return "http://127.0.0.1:8080/articles/d_icon/?title=STL%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98%E6%80%BB%E7%BB%93%EF%BC%88%E5%B9%B2%E8%B4%A7%EF%BC%89"
+        new_name = self._new_name(name)
+        secret_id = os.environ["COS_SECRET_ID"]
+        secret_key = os.environ["COS_SECRET_KEY"]
+        region = 'ap-beijing'  # 替换为用户的 Region
+        token = None  # 使用临时密钥需要传入 Token，默认为空，可不填
+        scheme = 'http'  # 指定使用 http/https 协议来访问 COS，默认为 https，可不填
+        config = CosConfig(Region=region, SecretId=secret_id, SecretKey=secret_key, Token=token, Scheme=scheme)
+        # 2. 获取客户端对象
+        client = CosS3Client(config)
+
+        response = client.put_object(
+            Bucket='content-image-1251916339',
+            Body=content,
+            Key=new_name,
+            EnableMD5=False
+        )
+        print("upload image %s as %s to cos return %s" (name, new_name, response['ETag']))
+        return "https://content-image-1251916339.cos.ap-beijing.myqcloud.com/" + name
 
     def exists(self, name):
         # 验证文件是否存在，因为我这边会去生成一个新的名字去存储到七牛，所以没有必要验证

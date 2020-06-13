@@ -46,24 +46,15 @@ function set_image(key, id, isThumb = true){
 }
 
 
-function set_image_xxx(key, id, isThumb = true){
-    var url = ""
-    if (isThumb) {
-        url = encodeURI("/articles/d_icon/?title=" + key);
-    }
-    else {
-        url = encodeURI("/download_image/?md5=" + key);
-    }
-
+function image_download_and_set(id, url){
     url = url.replace(/\+/g, "%2B");//"+"转义
     url = url.replace(/\&/g, "%26");//"&"
     url = url.replace(/\#/g, "%23");//"#"
 
     var xhr = new XMLHttpRequest();  
     xhr.open('GET', url, true);                                                                        
-    xhr.responseType = "blob";  
-    //xhr.setRequestHeader("client_type", "DESKTOP_WEB");  
-    //xhr.setRequestHeader("desktop_web_access_key", _desktop_web_access_key);  
+    xhr.responseType = "blob"; 
+    alert("xxxx");
     xhr.onload = function () {  
         var blob = this.response;  
         if (blob.size > 1) {

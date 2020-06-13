@@ -2,13 +2,15 @@
 import hashlib
 import json
 import socket
-import struct
+import requests
 import urllib
+import time
 from urllib.parse import urlencode
 
 from django.contrib.auth import logout,login,authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.db import connection
 from django.db.models import Q, QuerySet
@@ -18,7 +20,8 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from django.urls import reverse
 
-from apps.user.models import VisitUser
+from apps.user.models import UserProfile, SMSStatus
+
 
 def set_cookie(request):
     obj = HttpResponse('ok')    #obj=render(request,...)
@@ -34,6 +37,7 @@ def login(request):
     response["msg"] = "成功"
     response["user"] = dict()
 
+    """
     phone = request.POST.get("phone", None)
     password = request.POST.get("password", None)
 
@@ -50,7 +54,7 @@ def login(request):
     md5password = s1.hexdigest()
 
     try:
-        row = VisitUser.objects.get(phone=phone, password=md5password)
+        row = UserProfile.objects.get(phone=phone, password=md5password)
         response["user"]["id"] = row.id
         response["user"]["header_url"] = row.header_url
 
@@ -65,81 +69,84 @@ def login(request):
         response["msg"] = "用户名或密码错误"
         return HttpResponse(json.dumps(response), content_type="application/json")
 
-    return HttpResponse(json.dumps(response), content_type="application/json")
+    #return HttpResponse(json.dumps(response), content_type="application/json")
+    """
+
+    if request.method == 'GET':
+        return render(request, 'login.html')
+    elif request.method == 'POST':
+        name_phone = request.POST.get("name_phone", None)
+        password = request.POST.get("password", None)
+
+        login_type = request.POST.get("login_type", None)
+        print("login type=%s" % login_type)
+
+        if not login_type:
+            login_type = 'username'
+
+        if login_type == 'sms':
+            return login_with_sms_code(request)
+
+        users = None
+
+        print("login with user_key=%s,  password=%s" % (name_phone, password))
+        if not password or len(password) < 1:
+            return "12"
+
+        user_id = None
+        users = User.objects.filter(username=name_phone).values().first()
+        if users:
+            user_id = users["id"]
+        else:
+            user_id = UserProfile.objects.filter(phone=name_phone).first()
+
+        if not user_id:
+            print("username an phone both None")
+            return "1"
+
+        if user_id:
+            users = User.objects.filter(id=user_id)
+            if users.first().check_password(password):
+                request.session['username'] = User.objects.get(id=user_id).username
+                response["user"] = dict()
+                response["user"]["header"] = UserProfile.objects.get(user_id=user_id).header
+                request.session['user_id'] = user_id
+
+                return HttpResponse(json.dumps(response), content_type="application/json")
+            else:
+                print(User.objects.get(id=user_id).password, make_password(password) )
+                response["status"] = "error"
+                response["msg"] = "密码错误，请重新输入"
+                return HttpResponse(json.dumps(response), content_type="application/json")
+        else:
+            response["status"] = "error"
+            response["msg"] = "用户不存在，请重新输入账号登录"
+            return HttpResponse(json.dumps(response), content_type="application/json")
+
 
 #用户注册
 def regist(request):
     if request.method == 'GET':
         return render(request, 'templates/register.html')
     if request.method == "POST":
-        #return render(request, 'register.html', context={'msg': '注册成功，即将跳转到登陆页面', 'yes': 1})
-
-        username = request.POST.get("username")
-        password = request.POST.get('password1')
-        phone = request.POST.get('phone')
-
-        if VisitUser.objects.filter(username=username).exists():
-            return render(request, 'templates/register.html', context={'msg': '该用户名已经被注册', 'yes': 0})
-
-        if VisitUser.objects.filter(phone=phone).exists():
-            return render(request, 'templates/register.html', context={'msg': '该手机号已经被注册', 'yes': 0})
-
-        s1 = hashlib.sha1()
-        s1.update(password.encode("utf8"))
-        md5password = s1.hexdigest()
-
-        VisitUser.objects.create(password=md5password, username=username, phone=phone)
-
-        return render(request, 'templates/register.html', context={'msg': '注册成功，即将跳转到登陆页面', 'yes': 1})
-
-        """
         username = request.POST.get('username')
-        mobile =  request.POST.get('mobile')
-        Password = request.POST.get('Password')
-        email = request.POST.get('email')
-        users = UserProfile.objects.filter(Q(username=username)|Q(mobile=mobile)).exists()
+        phone = request.POST.get('phone')
+        password = request.POST.get('password')
+        print(request.POST)
+        users = UserProfile.objects.filter(Q(user__username=username) | Q(phone=phone)).exists()
         if users:
-            # return HttpResponse('注册失败')
             return render(request, 'register.html', context={'msg': '注册失败，请重新填写', 'yes':0})
         else:
+            User.objects.create(username=username, password=make_password(password))
+
+            print(password, make_password(password))
+
             user = UserProfile()
-            user.username = username
-            user.mobile = mobile
-            user.email = email
-            user.password = make_password(Password)
+            user.user_id = User.objects.get(username=username).id
+            user.phone = phone
+            user.header = "https://user-header-1251916339.cos.ap-beijing.myqcloud.com/default.jpg"
             user.save()
             return render(request, 'register.html', context={'msg': '注册成功，即将跳转到登陆页面', 'yes':1})
-        """
-
-
-def user_login(request):
-    if request.method == 'GET':
-        return render(request, 'login.html')
-    elif request.method == 'POST':
-        username = request.POST.get('username')
-        users = UserProfile.objects.filter(username=username)
-        if users:
-            password = request.POST.get('password')
-            #方式一（通用的方式）
-            # if users.first().check_password(password):
-            #     request.session['username'] = username
-            #     return redirect(reverse('index'))
-            #
-            # else:
-            #     return render(request, 'login.html', context={'msg':'密码错误'})
-
-            #方式二，前提继承了Abstrack
-            user = authenticate(username=username, password=password)
-            if user:
-                login(request, user) #将用户对象保存在底层的request中
-                request.session['username'] = username
-                # return render(request, 0'login.html', context={'msg':'密码错误'})
-                return redirect(reverse('index'))
-            else:
-                return render(request, 'login.html', context={'msg':'密码错误'})
-
-        else:
-            return render(request, 'login.html', context={'msg': '用户名不存在'})
 
 
 #注销账户
@@ -153,56 +160,102 @@ def user_logout(request):
 def gbook(request):
     return render(request, 'gbook.html', context={'msg': '用户名不存在'})
 
+def util_sendmsg(mobile):
+    url = 'https://api.netease.im/sms/sendcode.action'
+    data = {
+        'mobile':mobile,
+    }
+    AppSecret = '2d3508e39e0a'
+    AppKey = '8518de238c896b267ecc3be18781f113'
+    #json类型
+    Nonce = 'qweqdqwd12e01029i0dw0qwd'
+    CurTime = str(int((time.time() * 1000)))
+    content =AppSecret + Nonce + CurTime
+    CheckSum = hashlib.sha1(content.encode()).hexdigest()
+    headers = {
+        'AppKey':AppKey,
+        'Nonce':Nonce,
+        'CurTime':CurTime,
+        'CheckSum':CheckSum
+    }
+
+    response = requests.post(url, data=data, headers=headers)
+    str_result = response.text
+    json_result = json.loads(str_result)
+
+    return json_result
 
 def send_code(request):
-    mobile = request.GET.get('mobile')
-    user = UserProfile.objects.filter(mobile=mobile).first()
-    if user:
-        json_result = util_sendmsg(mobile)
-        # 发送验证码，第三方
-        print(mobile)
-        status = json_result.get('code')
-        data = {
-            'status':200,
-            'msg':"ok"
-        }
-        if status == 200:
-            check_code = json_result.get('obj')
-            #使用session保存
-            request.session[mobile] = check_code
-            data['status'] = 200
-            data['msg'] = '验证码发送成功'
-        else:
-            data['status'] = 500
-            data['msg'] = '验证码发送失败'
+    mobile = request.POST.get('phone')
+    time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
 
-        return JsonResponse(data=data)
+    json_result = util_sendmsg(mobile)
+    # 发送验证码，第三方
+    print(mobile)
+    status = json_result.get('code')
+    data = {
+        'status': 200,
+        'msg': "ok"
+    }
+    if status == 200:
+        check_code = json_result.get('obj')
+        #使用session保存
+        request.session[mobile] = check_code
+        data['status'] = 200
+        data['msg'] = '验证码发送成功'
 
     else:
-        data = {
-            'status':501,
-            'msg':"用户不存在"
-        }
-        return JsonResponse(data=data)
+        data['status'] = 500
+        data['msg'] = '验证码发送失败'
+
+    check_code = int(time.time()) % 10000
+    print("code=%d" % check_code)
+
+    SMSStatus(phone=mobile, code=check_code, create_time=time_now).save()
+
+    return HttpResponse(json.dumps(data), content_type="application/json")
 
 
-def code_login(request):
-    if request.method == 'GET':
-        return render(request, 'codelogin.html')
-    elif request.method == 'POST':
-        mobile = request.POST.get('rp_mobile')
-        code = request.POST.get('code')
+def login_with_sms_code(request):
+    response = dict()
+    response["status"] = "success"
+    response["msg"] = "登录成功"
+    response["user"] = dict()
 
-        #根据mobile去session取值
-        check_code = request.session.get(mobile)
-        if code == check_code:
-            user = UserProfile.objects.filter(mobile=mobile).first()
-            if user:
-                login(request, user)
-                # request.session['username'] = user.username
-            return redirect(reverse('index'))
-        else:
-            return render(request, 'codelogin.html', context={'msg':'验证码输入有误'})
+    mobile = request.POST.get('name_phone', None)
+    code = request.POST.get('code', None)
+    print(mobile, code)
+
+    user = UserProfile.objects.filter(phone=mobile).values("user_id").first()
+    if not user:
+        response["status"] = "error"
+        response["msg"] = "该手机还没有注册~"
+        return HttpResponse(json.dumps(response), content_type="application/json")
+
+    row = SMSStatus.objects.filter(phone=mobile, code=code).order_by("-id").values("create_time").first()
+    if row:
+        create_time = row["create_time"]
+        print("code %s create time=%s" % (code, create_time))
+    else:
+        response["status"] = "error"
+        response["msg"] = "验证码错误~"
+        return HttpResponse(json.dumps(response), content_type="application/json")
+
+    request.session['user_id'] = user["user_id"]
+
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+
+    #根据mobile去session取值
+    check_code = request.session.get(mobile)
+    if code == check_code:
+        user = UserProfile.objects.filter(mobile=mobile).first()
+        if user:
+            login(request, user)
+            # request.session['username'] = user.username
+        return redirect(reverse('index'))
+    else:
+        return render(request, 'codelogin.html', context={'msg':'验证码输入有误'})
 
 
 def forget_password(request):

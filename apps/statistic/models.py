@@ -23,7 +23,7 @@ class SiteStatistic(models.Model):
     city = models.CharField(max_length=32, verbose_name="市/区")
     x = models.FloatField(verbose_name='经度')
     y = models.FloatField(verbose_name='维度')
-    visit_time = models.CharField(max_length=32, verbose_name="访问时间")
+    visit_time = models.CharField(max_length=32, default='', verbose_name="访问时间")
 
     class Meta:
         db_table = 't_site_statistic'

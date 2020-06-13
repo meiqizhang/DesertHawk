@@ -129,17 +129,17 @@ CKEDITOR_CONFIGS = {
         'tabSpaces': 4,
         'extraPlugins': 'codesnippet',
         'toolbar': (['div', 'Source', '-', 'Save', 'NewPage', 'Preview', '-', 'Templates'],
-                    ['Cut', 'Copy','Paste','PasteText','PasteFromWord','-','Print','SpellChecker','Scayt'],
-                    ['Undo', 'Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],
-                    ['Form', 'Checkbox','Radio','TextField','Textarea','Select','Button', 'ImageButton','HiddenField'],
-                    ['Bold', 'Italic','Underline','Strike','-','Subscript','Superscript'],
-                    ['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
-                    ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
-                    ['Link','Unlink','Anchor'],
-                    ['Image','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak'],
-                    ['Styles','Format','Font','FontSize'],
-                    ['TextColor','BGColor'],
-                    ['Maximize','ShowBlocks','-','About', 'pbckcode'],
+                    ['Cut', 'Copy', 'Paste','PasteText','PasteFromWord', '-', 'Print', 'SpellChecker', 'Scayt'],
+                    ['Undo', 'Redo', '-', 'Find', 'Replace', '-', 'SelectAll','RemoveFormat'],
+                    ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea','Select', 'Button', 'ImageButton', 'HiddenField'],
+                    ['Bold', 'Italic', 'Underline', 'Strike', '-', 'Subscript', 'Superscript'],
+                    ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote'],
+                    ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+                    ['Link', 'Unlink', 'Anchor'],
+                    ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'],
+                    ['Styles', 'Format', 'Font','FontSize'],
+                    ['TextColor', 'BGColor'],
+                    ['Maximize', 'ShowBlocks', '-', 'About', 'pbckcode'],
                     ['CodeSnippet'],
                     ),
     }
@@ -176,7 +176,9 @@ MEDIA_URL = '/media/'
 THUMB_URL = '/articles/thumb/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_UPLOAD_PATH = ""
+
 IMAGES_URL = '/images/'
-CKEDITOR_STORAGE_BACKEND = 'DesertHawk.view.StorageObject'
+CKEDITOR_STORAGE_BACKEND = 'DesertHawk.view.StorageObject'  # 自定义ckedit上传路径
 #STATICFILES_STORAGE = ''
 #DEFAULT_FILE_STORAGE = ''
