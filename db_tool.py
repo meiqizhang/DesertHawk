@@ -159,8 +159,8 @@ def parse_page(path, name, connect):
                 image = ''
 
             sql = "insert into t_article(title, first_category, second_category, tags, description, content, `date`, image) values " \
-                  "('程序设计', %s, %s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE " \
-                  "first_category='程序设计', first_category=%s, tags=%s, description=%s, content=%s, `date`=%s, image=%s"
+                  "(%s, '程序设计', %s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE " \
+                  "first_category='程序设计', second_category=%s, tags=%s, description=%s, content=%s, `date`=%s, image=%s"
 
             args = (article['title'], article['category'], str(article['tags']), article['description'], article['content'], article['date'], image,
                                       article['category'], str(article['tags']), article['description'], article['content'], article['date'], image)

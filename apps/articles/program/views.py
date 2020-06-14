@@ -67,7 +67,7 @@ def home(request):
 
 def detail(request):
     title = request.GET.get('title')
-    article = Article.objects.filter(title=title, first_category="程序设计").values("id", "title", "date", "second_category", "description", "tags", "content").first()
+    article = Article.objects.filter(title=title, first_category="程序设计").values("id", "title", "date", "second_category", "description", "tags", "content", "click_num").first()
 
     if not article:
         return render(request, "404.html")
