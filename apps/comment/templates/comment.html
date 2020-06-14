@@ -74,15 +74,11 @@
             left: 50%;
             margin-left: 0px;
             margin-top: 0px;
-            /*width: 0px;
-            height: 0px;*/
             overflow: hidden;
             border: 1px solid #999;
             text-align: center;
             border-radius: 10px;
             box-shadow: 5px 5px 5px #999;
-            /*background: #88f;
-            transition: all 0.05s;*/
             z-index: 1110;
             background-image: url("/static/images/login-bg-high-new.png");
         }
@@ -113,20 +109,17 @@
             left: 12px;
             width: 350px;
             height: 40px;
-            /*border: 1px solid #999;
-            background: green;*/
             color:#7d7d7d;
-            /*background-image: url("/static/images/dtime.png");*/
         }
 
         .dialog .input-phone {
             position: absolute;
             top: 140px;
             left: 16px;
-            width: 340px;
+            width: 345px;
             height: 40px;
-            border: none;
-            background-image: url("/static/images/phone-input.png");
+            border: 1px solid grey;
+            border-radius: 10px;
         }
 
         .dialog .input-code {
@@ -139,21 +132,19 @@
             size: 280px;
             border: solid 1px grey;
             border-radius: 10px;
-            /*background-image: url("/static/images/phone-input.png");*/
         }
 
         .dialog .send-code {
             position: absolute;
             top: 200px;
-            left: 275px;
-            width: 80px;
+            left: 260px;
+            width: 100px;
             height: 40px;
             padding-right: 10px;
             size: 80px;
             border: solid 1px grey;
             text-align: center;
             border-radius: 10px;
-           /* background-image: url("/static/images/phone-input.png");*/
         }
         .dialog .send-code:hover {
             /*background: #5a7b8c;*/
@@ -162,10 +153,10 @@
             position: absolute;
             top: 200px;
             left: 16px;
-            width: 340px;
+            width: 345px;
             height: 40px;
-            border: none;
-            background-image: url("/static/images/phone-input.png");
+            border: 1px solid grey;
+            border-radius: 10px;
         }
 
         .code-login > span{
@@ -227,7 +218,6 @@
             left: 215px;
             width: 48px;
             height: 48px;
-            /*border: 0px solid #999;*/
             background-image: url("/static/images/github.png");
         }
         .dialog .login-with-github:hover {
@@ -258,27 +248,18 @@
             height: 474px;
         }
 
-        #dialoglogin {
-            display: none;
-        }
         #dialoglogin:checked+.dialog {
             margin-left: -150px;
             margin-top: -100px;
             width: 384px;
             height: 474px;
         }
-        .current-user{
-           /* margin-left: 30px;*/
-            /*-webkit-mask-image: url("/static/images/photo-mask.png");
-            mask-image: url("/static/images/photo-mask.png");*/
-        }
+
         .current-user img{
             width: 48px;
             height: 48px;
             border-radius: 50%;
             border: 1px solid white;
-            /*-webkit-mask-image: url("/static/images/photo-mask.png");
-            mask-image: url("/static/images/photo-mask.png")*/
         }
 
     </style>
@@ -376,33 +357,41 @@
             });
         }
 
+        function click_header_btn(){
+            var status = $("#login-dialog").css("visibility");
+            if (status === 'hidden') {
+                $("#login-dialog").css("visibility", 'visible');
+            }
+            else {
+                $("#login-dialog").css("visibility", 'hidden');
+            }
+        }
         function regist_btn() {
             window.location.reload();
-            //window.location = "/user/regist";
             window.open("/user/regist");
-            //window.location.href = '/user/regist';
         }
     </script>
 
-        <div id="login_btn">
-            <label for="dialogswitch">
-                <div class="current-user">
-                    {% if user.id %}
-                        <img src="{{ user.header }}">
-                    {% else %}
-                        <div style="width: 48px;height:48px; border-radius:50%; border: 1px solid red;">
-                            <div class="login-logo">登录</div>
-                        </div>
-                    {% endif %}
-                </div>
-            </label>
+    <div id="login_btn" >
+        <label for="dialogswitch">
+            <div class="current-user">
+                {% if user.id %}
+                    <img src="{{ user.header }}">
+                {% else %}
+                    <div style="width: 48px;height:48px; border-radius:50%; border: 1px solid red;">
+                        <div class="login-logo">登录</div>
+                    </div>
+                {% endif %}
+            </div>
+        </label>
+    </div>
 
-            {#% if not user.id %#}
-            {% if True %}
-                <input type="checkbox" id="dialogswitch"/>
-
-                <div class="dialog">
-                    <label class="close" for="dialogswitch"></label>
+    {#% if not user.id %#}
+    <div id="login-dialog" style="visibility: hidden">
+        {% if True %}
+            <input type="checkbox" id="dialogswitch"  onclick="click_header_btn()"/>
+            <div class="dialog">
+                <label class="close" for="dialogswitch"></label>
                     <label class="login-tips" for="dialogswitch">用户名登录</label>
                     <label for="dialogs">
                         <input class="input-phone" style="padding-left: 10px; size: 340px" type="text" placeholder="请输入用户名">
@@ -427,33 +416,31 @@
                         <label class="login-with-phone" for="dialogswitch" onclick="return login_with_phone()"></label>
                     </label>
                 </div>
-            {% endif %}
-        </div>
-
-        <script src="/static/ckeditor/ckeditor/ckeditor.js"></script>
-        <script src="/static/ckeditor/ckeditor/adapters/jquery.js"></script>
-
-        <div id="input">
-            <textarea id="input-area" name="content" cols="20" rows="2" ></textarea>
-            <script>
-                CKEDITOR.replace('input-area',
-                {
-                    'width': 'auto',
-                    'height': 200,
-                    dialog_backgroundCoverOpacity: 0.5,
-                    resize_enabled: false,
-                    extraPlugins: 'codesnippet',
-                    codeSnippet_theme: 'zenburn',
-                    toolbar :
-                    [
-                        ['Source'],
-                        ['Bold',],
-                        ['Image'],
-                        ['Format', 'Font', 'FontSize', 'TextColor', 'BGColor', 'Smiley', 'Indent'],
-                        ['CodeSnippet']
-                    ]
-                });
-            </script>
-        </div>
+        {% endif %}
+    </div>
+    <script src="/static/ckeditor/ckeditor/ckeditor.js"></script>
+    <script src="/static/ckeditor/ckeditor/adapters/jquery.js"></script>
+    <div id="input">
+        <textarea id="input-area" name="content" cols="20" rows="2" >
+        </textarea>
+        <script>
+            CKEDITOR.replace('input-area',
+            {
+                'width': 'auto',
+                'height': 200,
+                dialog_backgroundCoverOpacity: 0.5,
+                resize_enabled: false,
+                extraPlugins: 'codesnippet',
+                codeSnippet_theme: 'zenburn',
+                toolbar :
+                [
+                    ['Source'],
+                    ['Bold',],
+                    ['Image'],
+                    ['Format', 'Font', 'FontSize', 'TextColor', 'BGColor', 'Smiley', 'Indent'],
+                    ['CodeSnippet']
+                ]
+            });
+        </script>
     </div>
 </div>

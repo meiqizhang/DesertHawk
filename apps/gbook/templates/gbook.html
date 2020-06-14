@@ -99,7 +99,7 @@
             type:'POST',
             data:{'parent': -1, csrfmiddlewaretoken:'{{ csrf_token }}'},
             url:'{% url 'gbook:list' %}',
-            datatype:JSON,      //希望返回Json格式的数据
+            datatype:JSON,
 
             success:function(data) {
                 //alert(data)

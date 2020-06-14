@@ -122,7 +122,8 @@
     padding: 2em;
     position: relative;
     border-radius: 5px;
-    height: 150px;
+    height: 200px;
+    border: 0px dashed grey;
 }
 .cbp_tmtimeline > li:nth-child(odd) .cbp_tmlabel {
     background: salmon;

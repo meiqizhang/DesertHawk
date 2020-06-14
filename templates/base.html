@@ -2,9 +2,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<link href="https://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+
     <script src="https://pv.sohu.com/cityjson?ie=utf-8"></script>
     <script src="https://how2j.cn/study/js/jquery/2.0.0/jquery.min.js"></script>
-    
+    <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
 	<script type="text/javascript">
         function setCookie(cname, cvalue, exdays) {
             var d = new Date();
@@ -272,66 +275,66 @@
  });
 
 </script>
-        <div style="float: left; width:25%;height:auto; margin: auto;">
-            <div id="site-statistic" style="height: 280px;"></div>
+<div class="container" style="width: 100%; border: 0px solid grey">
+    <div class="row">
+        <div class="col-sm-3 " style="border: 0px solid red">
+            <div class="container" style="width: 100%; border: 0px solid grey">
+                <div class="row">
+                    <div id="site-statistic" class="col-sm-12 col-md-12" style="height: 280px;"></div>
+                </div>
+            </div>
         </div>
-
-        <div style="position: relative;float: left; margin: auto">
+        <div class="col-sm-6 col-md-6" style="border: 0px solid red">
             <article>
                 <div class="my-container" >
                     {% block content %}
                     {% endblock %}
                 </div>
             </article>
-{% comment %}        </div>
+        </div>
+        <div class="col-sm-3 col-md-3 " style="border: 0px solid red">
+        </div>
+    </div>
+</div>
 
-        <div style="width:auto; height: auto; float: left; margin: 50px">
-            <div id="calendar" style="height: 200px;margin-top: 4px">
-                <iframe frameborder="0" scrolling="no" marginwidth="0" marginheight="0" width="100%" height="250" src="/calendar"></iframe>
-            </div>
-            <!--div style="height: 100px; border: 1px red solid; margin-top: 20px">
-                <p style="text-align: center">广告位招租</p>
-            </div-->
-        </div>{% endcomment %}
-
-<div class="container footer_href">
-        <div class="row">
-            <div class="col-sm-7 col-sm-offset-3 col-xs-10 col-xs-offset-1">
-                <div class="row">
-                    <div class="col-sm-3 col-xs-3">
-                        <h4>关于我</h4>
-                        <ul>
-                            <li><a href="https://github.com/shihao1010" target="_blank">github</a></li>
-                            <li><a href="https://blog.csdn.net/duke10" target="_blank">csdn</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-sm-3 col-xs-3">
-                        <h4>CDN资源库</h4>
-                        <ul>
-                            <li><a href="https://www.bootcdn.cn/" target="_blank">bootcdn</a></li>
-                            <li><a href="http://cdn.code.baidu.com/" target="_blank">baiducdn</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-sm-3 col-xs-3">
-                        <h4>常用教程</h4>
-                        <ul>
-                            <li><a href="http://www.w3school.com.cn/" target="_blank">w3school</a></li>
-                            <li><a href="http://www.runoob.com/" target="_blank">菜鸟教程</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-sm-3 col-xs-3">
-                        <h4>云服务器</h4>
-                        <ul>
-                            <li><a href="https://www.aliyun.com/product/ecs?spm=5176.10695662.744563.1.4b46700c6yzYOh" target="_blank">阿里云</a></li>
-                            <li><a href="https://cloud.tencent.com/product/cvm" target="_blank">腾讯云</a></li>
-                        </ul>
-                    </div>
+<div class="container footer_href" style="margin-top: 30px; color: #000000; font-size: 14px">
+    <div class="row">
+        <div class="col-sm-7 col-sm-offset-3 col-xs-10 col-xs-offset-1">
+            <div class="row">
+                <div class="col-sm-3 col-xs-3">
+                    <h4>关于我</h4>
+                    <ul>
+                        <li style="margin-top: 10px"><a style="color: grey" href="" target="_blank">github</a></li>
+                        <li style="margin-top: 5px"><a style="color: grey" href="" target="_blank">csdn</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-3 col-xs-3">
+                    <h4>CDN资源库</h4>
+                    <ul>
+                        <li style="margin-top:10px"><a style="color: grey" href="" target="_blank">bootcdn</a></li>
+                        <li style="margin-top:5px"><a style="color: grey" href="" target="_blank">baiducdn</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-3 col-xs-3">
+                    <h4>常用教程</h4>
+                    <ul>
+                        <li style="margin-top: 10px"><a style="color: grey" href="" target="_blank">w3school</a></li>
+                        <li style="margin-top: 5px"><a style="color: grey" href="" target="_blank">菜鸟教程</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-3 col-xs-3">
+                    <h4>云服务器</h4>
+                    <ul>
+                        <li style="margin-top: 10px"><a style="color: grey" href="" target="_blank">阿里云</a></li>
+                        <li style="margin-top: 5px"><a style="color: grey" href="https://cloud.tencent.com/product/cvm" target="_blank">腾讯云</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-<footer style="margin-top: 60px; margin-bottom: 10px">
+<footer style="margin-top: 10px; margin-bottom: 10px">
     <span style="color: grey">
         <a style="color: grey" href="">粤ICP备20045672号</a> | 博客已运行<span class="run_time"></span>
     </span>
