@@ -245,7 +245,7 @@
     -o-transition: all 1s;
 }
 .cbp_tmtimeline li:hover .cbp_tmicon {
-    box-shadow: 0 0 0 3px red;
+    box-shadow: 0 0 0 3px white;
 }
 .cbp_tmtimeline li:hover .cbp_tmtime {
     background: #c0d592;
