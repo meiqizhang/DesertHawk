@@ -8,6 +8,7 @@ import uuid
 
 import pymysql
 from django.core.files.storage import Storage
+from django.db import connection
 from django.http import HttpResponse
 from django.shortcuts import render
 from qcloud_cos import CosConfig, CosS3Client
@@ -15,6 +16,8 @@ from qcloud_cos import CosConfig, CosS3Client
 from apps.articles.models import ContentImage
 from DesertHawk.settings import START_TIME, BLOG_ROOT, DATABASES
 from django.views.decorators.csrf import csrf_exempt
+
+from apps.statistic.models import SiteStatistic
 
 
 def calendar(request):
@@ -64,7 +67,6 @@ def content_image_manager(request):
             return HttpResponse(image)
 
     elif request.method == 'POST':
-        print("upload image")
         image_meta = request.FILES.get('fafafa')
         image_name = image_meta.name
         image_size = image_meta.size
@@ -115,8 +117,6 @@ def index(request):
 
 
 def set_statistic(request):
-    print(request.GET)
-
     ip_str = request.GET.get("ip", None)
     if ip_str and isinstance(ip_str, list):
         ip_str = ip_str[0]
@@ -172,7 +172,6 @@ def set_statistic(request):
     response = dict()
     response["status"] = "OK"
     response["ip"] = request.META['REMOTE_ADDR']
-    print(response)
 
     get_statistic(request)
 

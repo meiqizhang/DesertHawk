@@ -1,10 +1,12 @@
 from django.urls import path
-from apps.comment.views import commit, lists, reply
+from apps.comment import views
 
 app_name = 'comment'
 
 urlpatterns = [
-    path('list', lists, name='list'),
-    path('commit', commit, name='commit'),
-    path('reply', reply, name='reply'),
+    path('list', views.lists, name='list'),
+    path('commit', views.commit, name='commit'),
+    path('reply', views.reply, name='reply'),
+    path('ding', views.ding, name='ding'),
+    path('cai', views.cai, name='cai'),
 ]

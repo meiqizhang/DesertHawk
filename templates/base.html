@@ -3,10 +3,8 @@
 <html>
 <head>
     <script src="https://pv.sohu.com/cityjson?ie=utf-8"></script>
-
     <script src="https://how2j.cn/study/js/jquery/2.0.0/jquery.min.js"></script>
-    <!--script src="https://how2j.cn/study/js/bootstrap/3.3.6/bootstrap.min.js"></script-->
-
+    
 	<script type="text/javascript">
         function setCookie(cname, cvalue, exdays) {
             var d = new Date();
@@ -51,6 +49,7 @@
 
                 setVisit(req);
                 setCookie("ip", req["ip"], 0);
+                setCookie("address", req["address"], 0);
             });
         }
 
@@ -191,10 +190,10 @@
             <span class="en">Detail</span>
         </a>{% endcomment %}
 
-{% comment %}        <a href="{% url 'user:gbook' %}">
+        <a href="{% url 'gbook:list' %}">
             <span>留言</span>
             <span class="en" style="color: #BC7A00">Saying</span>
-        </a>{% endcomment %}
+        </a>
 
 {% comment %}        <a href="{% url 'articles:manage' %}">
             <span>文章管理</span>
@@ -295,7 +294,44 @@
             </div-->
         </div>{% endcomment %}
 
-<footer>
+<div class="container footer_href">
+        <div class="row">
+            <div class="col-sm-7 col-sm-offset-3 col-xs-10 col-xs-offset-1">
+                <div class="row">
+                    <div class="col-sm-3 col-xs-3">
+                        <h4>关于我</h4>
+                        <ul>
+                            <li><a href="https://github.com/shihao1010" target="_blank">github</a></li>
+                            <li><a href="https://blog.csdn.net/duke10" target="_blank">csdn</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-3 col-xs-3">
+                        <h4>CDN资源库</h4>
+                        <ul>
+                            <li><a href="https://www.bootcdn.cn/" target="_blank">bootcdn</a></li>
+                            <li><a href="http://cdn.code.baidu.com/" target="_blank">baiducdn</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-3 col-xs-3">
+                        <h4>常用教程</h4>
+                        <ul>
+                            <li><a href="http://www.w3school.com.cn/" target="_blank">w3school</a></li>
+                            <li><a href="http://www.runoob.com/" target="_blank">菜鸟教程</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-3 col-xs-3">
+                        <h4>云服务器</h4>
+                        <ul>
+                            <li><a href="https://www.aliyun.com/product/ecs?spm=5176.10695662.744563.1.4b46700c6yzYOh" target="_blank">阿里云</a></li>
+                            <li><a href="https://cloud.tencent.com/product/cvm" target="_blank">腾讯云</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<footer style="margin-top: 60px; margin-bottom: 10px">
     <span style="color: grey">
         <a style="color: grey" href="">粤ICP备20045672号</a> | 博客已运行<span class="run_time"></span>
     </span>

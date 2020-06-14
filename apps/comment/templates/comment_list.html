@@ -65,7 +65,6 @@
 <script src="/static/ckeditor/ckeditor/adapters/jquery.js"></script>
 
 <script>
-
     var reply_input = new Array();
     function click_reply_btn(input_id, isLogin) {
         if (!isLogin){
@@ -106,9 +105,38 @@
         }
 
         reply_input[input_id] = 1;
-
         $("#" + reply_div_id).css("display", "");
     }
+
+    function comment_ding(id) {
+         $.ajax({
+            type:'POST',
+            data:{'id': id.substring(5), csrfmiddlewaretoken: '{{ csrf_token }}'},
+            url:'{% url 'comment:ding' %}',
+            datatype:JSON,
+            success:function(data) {
+                $("#" + id).text("顶(" + data.data.ding + ")");
+            },
+            error:function () {
+                console.log('ajax刷新分页数据失败！');
+            }
+        });
+    }
+    function comment_cai(id) {
+        $.ajax({
+            type:'POST',
+            data:{'id': id.substring(4), csrfmiddlewaretoken: '{{ csrf_token }}'},
+            url:'{% url 'comment:cai' %}',
+            datatype:JSON,
+             success:function(data) {
+                $("#" + id).text("踩(" + data.data.cai + ")");
+            },
+            error:function () {
+                console.log('ajax刷新分页数据失败！');
+            }
+        });
+     }
+
 
     function create_comment_item(comment, isReply, userId) {
         var content_id = "content-" + comment.id;
@@ -126,15 +154,15 @@
                 '<img class="header" src="/static/images/user_02.jpg"/>' +
                 '<div>' +
                     '<div style="padding-top: 0px">' +
-                        '<div class="username"><a style="color: red; margin-right: 10px">' + comment.username + '</a>[' + comment.address + '网友]</div>' +
+                        '<div class="username"><a style="color: red; margin-right: 10px">' + comment.user_name + '</a>[' + comment.address + '网友]</div>' +
                         '<div class="date">'+ comment.create_time + '</div>' +
                     '</div>' +
                         '<div class="content" id=' + content_id + '>' +
                             comment.content +
                         '</div>' +
                         '<div class="reply" style="display:' + displayStatus + '">' +
-                            '<div>顶</div>' +
-                            '<div>踩</div>' +
+                            '<div id="ding-' + comment.id + '" onclick="comment_ding(this.id)">顶(' + comment.ding + ')</div>' +
+                            '<div id="cai-' + comment.id + '" onclick="comment_cai(this.id)">踩(' + comment.cai + ')</div>' +
                             '<div id=' + comment.id + ' onclick="click_reply_btn(this.id, ' + userId + ')">回复</div>' +
                         '</div>' +
                         '<div id=' + reply_div_id + ' style="display:none; padding-top:40px;">' +
@@ -202,41 +230,5 @@
     }
 
 </script>
-<div id="comment-list" style="clear: both; margin-top: 50px">
-    {% comment %}<div style="margin-bottom: 10px">最新评论</div>
-    {% for comment in comments %}
-        <div class="comment-item">
-            <img class="header" src="/static/images/user_02.jpg"></img>
-            <div class="content_info">
-
-                <div class="username">[深圳市网友]</div>
-                <div style="float: right" class="date">2020-06-15</div>
-                <textarea class="content">
-                </textarea>
-            </div>
-            <div class="reply">
-                <a>回复</a>
-            </div>
-        </div>
-    {% endfor %}{% endcomment %}
+<div id="comment-list" style="clear: both; margin-top: 50px; margin-left: 30px; margin-right: 30px">
 </div>
-
-{% comment %}
-<div style="margin-top: 10px">最新评论</div>
-
-<div class="container" style="margin-top: 20px">
-    <div class="row">
-        <div class="col-md-1" style="border: 1px solid red; width: 48px; height: 48px">头像</div>
-        <div class="col-md-11">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-2" style="text-align: left; border: 1px solid red;">[上海市网友]</div>
-                    <div class="col-md-2 col-md-offset-5" style="text-align: right; border: 1px solid red; height: 24px">2020年06月21日 12:32:32</div>
-                </div>
-            </div>
-            <div style="width:80%; height:400px;margin-top: 10px; border: 1px solid red">
-                cccccc
-            </div>
-        </div>
-    </div>
-</div>{% endcomment %}

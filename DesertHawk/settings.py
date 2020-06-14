@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+import logging  # 引入logging模块
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(filename)s [line:%(lineno)d] - %(levelname)s: %(message)s')
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import time
 
@@ -47,6 +51,7 @@ INSTALLED_APPS = [
     'apps.user',
     'apps.home',
     'apps.comment',
+    'apps.gbook',
     'apps.administrator',
     'DesertHawk',
 ]
@@ -72,6 +77,7 @@ TEMPLATES = [
                  os.path.join(BASE_DIR, 'apps/articles/program'),
                  os.path.join(BASE_DIR, 'apps/comment'),
                  os.path.join(BASE_DIR, 'apps/user'),
+                 os.path.join(BASE_DIR, 'apps/gbook'),
                  ],
         'APP_DIRS': True,
         'OPTIONS': {

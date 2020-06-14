@@ -1,11 +1,13 @@
 import json
+import logging
 import time
 
+from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from apps.comment.models import Comment
-from apps.user.models import UserProfile
+from apps.user.views import get_user_info_from_cookie
 
 
 def commit(request):
@@ -25,7 +27,7 @@ def commit(request):
 
     try:
         time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
-        username = UserProfile.objects.get(id=user_id).username
+        username = User.objects.get(id=user_id).username
         Comment.objects.create(title=title, user_name=username, content=content, ip=ip_str, address=address, create_time=time_now).save()
     except Exception as e:
         print(e)
@@ -52,11 +54,11 @@ def lists(request):
 
     response["comment"] = list()
 
-    comments = Comment.objects.filter(title=title, parent_id=parent).values("id", "user_name", "address", "content", "create_time")
+    comments = Comment.objects.filter(title=title, parent_id=parent).values()
     for c in comments:
-        response["comment"].append({"id": c["id"], "username": c["user_name"], "address": c["address"], "create_time": c["create_time"], "content": c["content"]})
+        response["comment"].append(c)
 
-    print("list comment title=%s, parent=%s, result=%d" % (title, parent, len(comments)))
+    logging.info("list comment title=%s, parent=%s, result=%d" % (title, parent, len(comments)))
 
     return HttpResponse(json.dumps(response), content_type="application/json")
 
@@ -85,4 +87,51 @@ def reply(request):
     if title or len(title) > 0:
        return redirect(current_url)
 
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+
+def ding(request):
+    response = dict()
+    response["status"] = "success"
+    response["msg"] = "ok"
+
+    user = get_user_info_from_cookie(request)
+    id = request.POST.get("id", None)
+
+    logging.info("user %s ip=%s, address=%s ding the comment [%s]" % (user["username"], user["ip"], user["address"], id))
+
+    gbook = Comment.objects.filter(id=id).values("ding").first()
+    if gbook:
+        Comment.objects.filter(id=id).update(ding=gbook["ding"] + 1)
+    else:
+        logging.error("the %s comment not exist" % id)
+        response["status"] = "error"
+        response["msg"] = "是不是点错了~"
+        return HttpResponse(json.dumps(response), content_type="application/json")
+
+    response["data"] = dict()
+    response["data"]["ding"] = gbook["ding"] + 1
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+def cai(request):
+    response = dict()
+    response["status"] = "success"
+    response["msg"] = "ok"
+
+    user = get_user_info_from_cookie(request)
+    id = request.POST.get("id", None)
+
+    logging.info("user %s ip=%s, address=%s cai the comment [%s]" % (user["username"], user["ip"], user["address"], id))
+
+    gbook = Comment.objects.filter(id=id).values("cai").first()
+    if gbook:
+        Comment.objects.filter(id=id).update(cai=gbook["cai"] + 1)
+    else:
+        logging.error("the %s comment not exist" % id)
+        response["status"] = "error"
+        response["msg"] = "是不是点错了~"
+        return HttpResponse(json.dumps(response), content_type="application/json")
+
+    response["data"] = dict()
+    response["data"]["cai"] = gbook["cai"] + 1
     return HttpResponse(json.dumps(response), content_type="application/json")

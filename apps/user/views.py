@@ -31,6 +31,14 @@ def set_cookie(request):
     return obj
 
 
+def get_user_info_from_cookie(request):
+    user = dict()
+    user["username"] = request.COOKIES.get("username")
+    user["ip"] = request.COOKIES.get("ip")
+    user["address"] = request.COOKIES.get("address")
+
+    return user
+
 def login(request):
     response = dict()
     response["status"] = "success"
@@ -107,10 +115,12 @@ def login(request):
         if user_id:
             users = User.objects.filter(id=user_id)
             if users.first().check_password(password):
-                request.session['username'] = User.objects.get(id=user_id).username
                 response["user"] = dict()
                 response["user"]["header"] = UserProfile.objects.get(user_id=user_id).header
+
+                # 将用户信息添加到session
                 request.session['user_id'] = user_id
+                request.session['username'] = User.objects.get(id=user_id).username
 
                 return HttpResponse(json.dumps(response), content_type="application/json")
             else:
@@ -132,7 +142,7 @@ def regist(request):
         username = request.POST.get('username')
         phone = request.POST.get('phone')
         password = request.POST.get('password')
-        print(request.POST)
+
         users = UserProfile.objects.filter(Q(user__username=username) | Q(phone=phone)).exists()
         if users:
             return render(request, 'register.html', context={'msg': '注册失败，请重新填写', 'yes':0})
@@ -157,8 +167,6 @@ def user_logout(request):
     logout(request)
     return redirect(reverse('index'))
 
-def gbook(request):
-    return render(request, 'gbook.html', context={'msg': '用户名不存在'})
 
 def util_sendmsg(mobile):
     url = 'https://api.netease.im/sms/sendcode.action'

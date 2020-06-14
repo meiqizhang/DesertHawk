@@ -23,6 +23,8 @@ class Comment(models.Model):
     title = models.CharField(max_length=128, verbose_name="标题")
     parent_id = models.IntegerField(verbose_name="父级id")
     user_name = models.CharField(max_length=32, verbose_name="用户")
+    ding = models.IntegerField(default=0)
+    cai = models.IntegerField(default=0)
     content = RichTextField(verbose_name="评论内容")
     create_time = models.CharField(max_length=32, verbose_name="创建时间")
 

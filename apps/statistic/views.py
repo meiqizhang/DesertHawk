@@ -30,9 +30,6 @@ def set_statistic(request):
     y = request.GET.get("y", '0')
     address = request.GET.get("address", "")
 
-    request.session["ip"] = ip_str
-    request.session["address"] = address
-
     province, city = '', ''
 
     if len(address) > 0:

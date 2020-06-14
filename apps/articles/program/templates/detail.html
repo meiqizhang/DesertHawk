@@ -115,9 +115,10 @@
             </form>
         </div>
         {% include "comment_list.html" %}
-            <script>
-                list_comments("{{ article.title }}", "{{ user.id }}");
-            </script>
+        <script>
+            list_comments("{{ article.title }}", "{{ user.id }}");
+        </script>
+        <br><br>
     </article>
 
     <script>
