@@ -9,6 +9,8 @@ from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
 #from apps.articles.views import upload_icon
+from qcloud_cos import CosConfig, CosS3Client
+
 from DesertHawk.settings import BASE_DIR
 from db_tool import db_connect
 
@@ -87,7 +89,7 @@ class Article(models.Model):
     second_category = models.CharField(max_length=32, default="", verbose_name="二级分类")
     tags = models.CharField(max_length=64, verbose_name='文章标签')
     description = models.CharField(max_length=256, verbose_name='简介')
-    content = RichTextUploadingField(verbose_name='内容')
+    content = RichTextUploadingField(verbose_name='文章正文')
     date = models.CharField(max_length=32, verbose_name='发表日期')
     click_num = models.IntegerField(default=0, verbose_name='点击量')
     love_num = models.IntegerField(default=0, verbose_name='点赞量')
@@ -97,6 +99,27 @@ class Article(models.Model):
         db_table = 't_article'
         verbose_name = '文章表'
         verbose_name_plural = verbose_name
+
+    def save(self, *args, **kwargs):
+        secret_id = os.environ["COS_SECRET_ID"]
+        secret_key = os.environ["COS_SECRET_KEY"]
+        region = 'ap-beijing'  # 替换为用户的 Region
+        token = None  # 使用临时密钥需要传入 Token，默认为空，可不填
+        scheme = 'http'  # 指定使用 http/https 协议来访问 COS，默认为 https，可不填
+        config = CosConfig(Region=region, SecretId=secret_id, SecretKey=secret_key, Token=token, Scheme=scheme)
+        # 2. 获取客户端对象
+        client = CosS3Client(config)
+
+        response = client.put_object(
+            Bucket='content-image-1251916339',
+            Body=self.content,
+            Key=self.title,
+            EnableMD5=False
+        )
+        #print("upload image %s as %s to cos return %s" (name, new_name, response['ETag']))
+        #return "https://content-image-1251916339.cos.ap-beijing.myqcloud.com/" + name
+
+        super().save(*args, **kwargs)
 
 
 """

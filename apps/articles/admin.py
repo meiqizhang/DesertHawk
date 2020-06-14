@@ -21,14 +21,19 @@ class ArticleAdmin(admin.ModelAdmin):
         except Exception as e:
             tags = []
 
+        print(tags)
         show_list = ''
-        for tag in tags:
-            show_list += '<span style="margin: 10px; padding: 4px; border: 1px solid grey">' + tag + '</span>'
+        if isinstance(tags, list):
+            for tag in tags:
+                show_list += '<span style="margin: 10px; padding: 4px; border: 1px solid grey">' + tag + '</span>'
+        else:
+            show_list = '<span style="color: red">无效标题</span>'
         return mark_safe(show_list)
 
     def admin_image(self, obj):
         return mark_safe('<img src="%s" style="width: 150px; height: 80px" />' % ("/articles/d_icon/?title=" + obj.title))
 
+    list_per_page = 10
     tag_list.short_description = "标签"
     admin_image.short_description = "封面图片"
     admin_image.allow_tags = True

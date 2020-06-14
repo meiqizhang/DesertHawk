@@ -387,25 +387,25 @@
     </div>
 
     {#% if not user.id %#}
-    <div id="login-dialog" style="visibility: hidden">
+    <div id="login-dialog" style="visibility: hidden;">
         {% if True %}
             <input type="checkbox" id="dialogswitch"  onclick="click_header_btn()"/>
-            <div class="dialog">
+            <div class="dialog" style="font-weight: lighter">
                 <label class="close" for="dialogswitch"></label>
                     <label class="login-tips" for="dialogswitch">用户名登录</label>
                     <label for="dialogs">
-                        <input class="input-phone" style="padding-left: 10px; size: 340px" type="text" placeholder="请输入用户名">
+                        <input class="input-phone" style="padding-left: 10px; size: 340px;font-weight: lighter" type="text" placeholder="请输入用户名">
                     </label>
-                    <label class="code-login" for="dialogs" style="visibility: hidden">
+                    <label class="code-login" for="dialogs" style="visibility: hidden;font-weight: lighter">
                         <input class="input-code" type="text" placeholder="输入手机验证码">
                         <span class="send-code" onclick="send_code()"><div class="code-timer" style="margin-top: 8px; margin-left: 4px">&nbsp;发送验证码</div></span>
                     </label>
 
                     <label for="dialogs">
-                        <input class="input-password" style="padding-left: 10px; size: 340px" type="password" placeholder="请输入密码">
+                        <input class="input-password" style="padding-left: 10px; size: 340px;font-weight: lighter" type="password" placeholder="请输入密码">
                     </label>
                     <label class="login-btn" for="dialogswitch" onclick="click_login_btn()">登录评论</label>
-                    <label class="regist-btn" for="dialogswitch">
+                    <label class="regist-btn" for="dialogswitch" style="font-weight: lighter">
                         <span onclick="regist_btn()">前往注册</span>&nbsp;
                         <span onclick="alert('忘记密码暂未开通');return false;">忘记密码</span>
                     </label>
