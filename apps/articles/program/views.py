@@ -76,6 +76,8 @@ def detail(request):
         print(article['tags'])
         article['tags'] = eval(article['tags'])
 
+    Article.objects.filter(title=title).update(click_num=article["click_num"] + 1)
+
     abouts = list()
     if 'tags' in article:
         for tag in article['tags']:
