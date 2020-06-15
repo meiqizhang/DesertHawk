@@ -84,7 +84,8 @@ def detail(request):
             abouts += list(Tag.objects.filter(tag=tag).values_list("title", flat=True))
 
     abouts = sorted(list(set(abouts)))
-    abouts.remove(title)
+    if title in abouts:
+        abouts.remove(title)
 
     id = article['id']
     article_pre = Article.objects.filter(id__lt=id).values("title").order_by("-id").first()

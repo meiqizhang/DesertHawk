@@ -31,7 +31,7 @@ SECRET_KEY = '05duh!gv&6^1(8r-76#ne%(taue_!+4dye2dqb*7e24(-ywq%&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ditanshow.com', "127.0.0.1", "49.233.13.41"]
+ALLOWED_HOSTS = ['www.ditanshow.com', 'ditanshow.com', "127.0.0.1", "49.233.13.41"]
 
 
 # Application definition

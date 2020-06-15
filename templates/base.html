@@ -277,14 +277,14 @@
 </script>
 <div class="container" style="width: 100%; border: 0px solid grey">
     <div class="row">
-        <div class="col-sm-3 " style="border: 0px solid red">
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="border: 0px solid red">
             <div class="container" style="width: 100%; border: 0px solid grey">
                 <div class="row">
                     <div id="site-statistic" class="col-sm-12 col-md-12" style="height: 280px;"></div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-md-6" style="border: 0px solid red">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="border: 0px solid green">
             <article>
                 <div class="my-container" >
                     {% block content %}
@@ -292,7 +292,7 @@
                 </div>
             </article>
         </div>
-        <div class="col-sm-3 col-md-3 " style="border: 0px solid red">
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="border: 0px solid grey">
         </div>
     </div>
 </div>
@@ -371,19 +371,33 @@
             if (years > 0){
                 seconds = parseInt(seconds % (years * 24 * 3600 * 356));
             }
+            else {
+				years = 0;
+			}
 
             var days = parseInt(seconds / (24 * 3600));
             if (days > 0) {
                 seconds = parseInt(seconds % (days * 24 * 3600));
             }
+			else{
+				days = 0;
+			}
 
             var hours = parseInt(seconds / 3600);
             if (hours > 0){
                 seconds = parseInt(seconds % (hours * 3600));
             }
+			else{
+				hours = 0;
+			}
 
             var minutes = parseInt(seconds / 60);
-            seconds = parseInt(seconds % 60);
+			if (minutes > 0){
+				seconds = parseInt(seconds % 60);
+			}
+			else{
+				minutes = 0;
+			}
 
             var run = years + " 年 " + days + " 天 " + hours + " 小时 " + minutes + " 分钟 " + seconds + " 秒";
 
