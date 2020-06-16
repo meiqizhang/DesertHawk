@@ -18,6 +18,7 @@ from django.urls import path, include
 from DesertHawk.view import get_start_time
 
 urlpatterns = [
+    path(r'mdeditor/', include('libs.mdeditor.urls')),
     path('admin/', admin.site.urls),
     path('starttime/', get_start_time),
     path('statistic/', include(('apps.statistic.urls', 'statistic'), namespace='statistic')),

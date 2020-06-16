@@ -2,18 +2,16 @@ from django.contrib import admin
 
 # Register your models here.
 from django.utils.safestring import mark_safe
-
-from apps.articles.models import Article, Tag
-
-
-class TagAdmin(admin.ModelAdmin):
-    list_display = ["title", "tag"]
+from apps.articles.models import Article, Tag, Category
 
 
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ["title", "first_category", "second_category", "tag_list", "date", "click_num", "love_num", "admin_image"]
-
+    list_display = ["title", "first_category", "second_category", "tag_list", "date", "click_num", "love_num", "admin_image", "location"]
+    #raw_id_fields = ["first_category"]
     readonly_fields = ['admin_image']
+
+    def location(self, obj):
+        pass
 
     def tag_list(self, obj):
         try:
@@ -39,5 +37,14 @@ class ArticleAdmin(admin.ModelAdmin):
     admin_image.allow_tags = True
 
 
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ["category"]
+
+
+class TagAdmin(admin.ModelAdmin):
+    list_display = ["title", "tag"]
+
+
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Article, ArticleAdmin)
+admin.site.register(Category, CategoryAdmin)

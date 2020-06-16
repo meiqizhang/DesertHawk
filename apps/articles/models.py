@@ -13,6 +13,7 @@ from qcloud_cos import CosConfig, CosS3Client
 
 from DesertHawk.settings import BASE_DIR
 from db_tool import db_connect
+from libs.mdeditor.fields import MDTextField
 
 """
 CREATE TABLE `t_tag` (
@@ -80,6 +81,17 @@ class SaveIcon(Storage):
         return "https://pic1.zhimg.com/80/v2-635f64d3b355482ec8853610479d3a14_720w.png"
 
 
+class Category(models.Model):
+    id = models.IntegerField(primary_key=True)
+    category = models.CharField(max_length=64, verbose_name="一级分类")
+    create_time = models.DateTimeField(auto_created=True)
+
+    class Meta:
+        db_table = 't_category'
+        verbose_name = '文章一级分类表'
+        verbose_name_plural = verbose_name
+
+
 class Article(models.Model):
     #def __init__(self, *args, **kwargs):
     #    models.Model.__init__(self, args, kwargs)
@@ -89,11 +101,13 @@ class Article(models.Model):
     second_category = models.CharField(max_length=32, default="", verbose_name="二级分类")
     tags = models.CharField(max_length=64, verbose_name='文章标签')
     description = models.CharField(max_length=256, verbose_name='简介')
-    content = RichTextUploadingField(verbose_name='文章正文')
+    content = MDTextField(verbose_name='文章正文')
     date = models.CharField(max_length=32, verbose_name='发表日期')
     click_num = models.IntegerField(default=0, verbose_name='点击量')
     love_num = models.IntegerField(default=0, verbose_name='点赞量')
     image = models.ImageField(storage=SaveIcon(), verbose_name='文章图标')
+
+    #first_category = models.ForeignKey(to=Category, on_delete=models.DO_NOTHING, verbose_name=u'文章类别')
 
     class Meta:
         db_table = 't_article'

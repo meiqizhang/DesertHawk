@@ -6,6 +6,7 @@ from django.shortcuts import render
 
 from apps.articles.models import Article, Tag
 from apps.user.models import UserProfile
+from apps.user.views import get_user_info_from_cookie
 
 
 def home(request):
@@ -105,6 +106,8 @@ def detail(request):
         else:
             user_id = None
 
+    user = get_user_info_from_cookie(request)
+    
     return render(request, 'templates/detail.html', context={'article': article,
                                                     'list_about': abouts,
                                                     'article_pre': article_pre,
