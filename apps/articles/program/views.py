@@ -1,5 +1,6 @@
 import json
 
+import markdown2
 from django.db import connection
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -74,8 +75,10 @@ def detail(request):
         return render(request, "404.html")
 
     if 'tags' in article:
-        print(article['tags'])
-        article['tags'] = eval(article['tags'])
+        try:
+            article['tags'] = eval(article['tags'])
+        except Exception as e:
+            article['tags'] = []
 
     Article.objects.filter(title=title).update(click_num=article["click_num"] + 1)
 
@@ -108,7 +111,10 @@ def detail(request):
             user_id = None
 
     user = get_user_info_from_cookie(request)
-    
+
+    article['content'] = markdown2.markdown(article['content'].replace("\r\n", '  \n'),
+                                            extras=["code-friendly"])
+
     return render(request, 'templates/detail.html', context={'article': article,
                                                     'list_about': abouts,
                                                     'article_pre': article_pre,
