@@ -84,8 +84,7 @@ article {
 
 .my-container {
     background: url(../../images/articlebg.png) repeat;
-    /*box-shadow: #FAFAE9 1px 1px 10px;
-    border: 1px solid grey;*/
+    /*box-shadow: #FAFAE9 1px 1px 10px;*/
     box-shadow: 0px 0px 10px #1AAB8A inset;
     border:1px solid #FAFAE9;
 }

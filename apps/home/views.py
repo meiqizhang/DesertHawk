@@ -9,6 +9,7 @@ from DesertHawk.settings import BLOG_ROOT, DATABASES
 from django.views.decorators.csrf import csrf_exempt
 
 from apps.articles.models import ContentImage, Article
+from apps.statistic.models import SiteStatistic
 
 
 def index(request):
@@ -96,7 +97,9 @@ def content_image_manager(request):
 
 def home(request):
     if 'page_id' not in request.GET:
-        return render(request, 'index.html')
+        visit_count = SiteStatistic.objects.filter().count()
+
+        return render(request, 'index.html', context={"visit_count": visit_count})
 
     page_id = request.GET.get("page_id", "1")
     page_id = int(page_id)
@@ -116,8 +119,6 @@ def home(request):
     context["result"] = articles
     context['page_id'] = page_id,  # 当前页面
     context['total_pages'] = total_pages  # 页面总数
-
-    print("request No.%d page, return %d articles" % (page_id, len(articles)))
 
     return HttpResponse(json.dumps(context), content_type="application/json")
 

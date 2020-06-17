@@ -103,8 +103,18 @@
                     url = url.replace(/\&/g, "%26");//"&"
                     url = url.replace(/\#/g, "%23");//"#"
 
-                     $('.blog').append('' +
-                         '<figure style="margin-left: 40px">' +
+                    var figure = '';
+                    if (i === 0) {
+                        figure = '<figure style="margin-left: 25px">';
+                    }
+                    else if (i === 1){
+                        figure = '<figure style="margin-left: 25px">';
+                    }
+                    else if (i === 2) {
+                        figure = '<figure style="margin-left: 25px">';
+                    }
+
+                     $('.blog').append(figure +
                              '<ul>' +
                                 '<a href="' + url + '" target="_blank">'+
                                     '<img id="image-' + i +  '" style="width: 100%; height: auto; margin: auto;" src="/static/images/loading.gif">' +

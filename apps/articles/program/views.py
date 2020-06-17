@@ -130,7 +130,7 @@ def detail(request):
 
     renderer = HighlightRenderer()
     markdown = mistune.Markdown(renderer=renderer)
-    article['content'] = markdown(article['content'])
+    article['content'] = mistune.markdown(article['content'])
 
     return render(request, 'templates/detail.html', context={'article': article,
                                                     'list_about': abouts,

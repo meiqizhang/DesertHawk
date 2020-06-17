@@ -29,6 +29,7 @@
                 datatype:JSON,
                 success:function (data) {
                     f1(data);
+                    location.replace("#category=" + category);
                 },
                 error:function () {
                     console.log('ajax刷新分页数据失败！');
