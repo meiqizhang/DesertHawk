@@ -125,8 +125,9 @@ def parse_page(path, name, connect):
             else:
                 article['tags'] = []
 
-            article['content'] = markdown2.markdown(fp.read(0xffffffff).replace("\r\n", '  \n'),
-                                                    extras=["code-friendly"])
+            article["content"] = fp.read(0xffffffff)
+            #article['content'] = markdown2.markdown(fp.read(0xffffffff).replace("\r\n", '  \n'),
+            #                                        extras=["code-friendly"])
             '''markdown.markdown(fp.read(0xffffffff).split("---")[2].replace("\r\n", '  \n'),
                                      extensions=['extra',
                                                  'codehilite',
