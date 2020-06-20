@@ -6,6 +6,8 @@ app_name = 'articles'
 
 urlpatterns = [
     path('program/', include(('apps.articles.program.urls', 'program'), namespace='program')),
+    path('travel/', include(('apps.articles.travel.urls', 'travel'), namespace='travel')),
+    path('mindsay/', include(('apps.articles.mindsay.urls', 'mindsay'), namespace='mindsay')),
     path("d_icon/", views.download_icon),
     path("u_icon/", views.upload_icon),
 

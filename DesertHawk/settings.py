@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'apps.statistic',
     'apps.articles',
     'apps.articles.program',
+    'apps.articles.travel',
     'apps.user',
     'apps.home',
     'apps.comment',

@@ -1,15 +1,11 @@
 import json
 import logging
-import time
 
 from django import db
-from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from DesertHawk.settings import cos_client
 from apps.articles.models import Article
-
 
 
 @csrf_exempt

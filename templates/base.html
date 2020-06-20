@@ -159,29 +159,21 @@
             <span class="en" style="color: #BC7A00">About</span>
         </a>
 
-{% comment %}
-        <a href="{% url 'article:write' %}">
-            <span>写博客</span>
-            <span class="en" style="color: #BC7A00">Publish</span>
-        </a>{% endcomment %}
-
-        <!--
-        <a href="learn.html">
-            <span>碎言碎语</span>
-            <span class="en">Doing</span>
-        </a>
-        -->
-
 
         <a href="{% url 'articles:program:home' %}">
             <span>程序设计</span>
             <span class="en" style="color: #BC7A00">Program</span>
         </a>
 
-{% comment %}        <a href="{% url 'articles:write' %}">
+        <a href="{% url 'articles:travel:home' %}">
             <span>旅行摄影</span>
-            <span class="en" style="color: #BC7A00">Travel&Photo</span>
-        </a>{% endcomment %}
+            <span class="en" style="color: #BC7A00">Travel</span>
+        </a>
+
+        <a href="{% url 'articles:mindsay:home' %}">
+            <span>碎言碎语</span>
+            <span class="en" style="color: #BC7A00">Saying</span>
+        </a>
 
 {% comment %}        <!--a href="{% url 'articles:write' %}">
             <span>旅行摄影</span>
