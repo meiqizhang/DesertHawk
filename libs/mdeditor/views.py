@@ -8,6 +8,7 @@ import uuid
 from django.views import generic
 from django.conf import settings
 from django.http import JsonResponse
+from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
@@ -75,6 +76,7 @@ class UploadView(generic.View):
                                                  MDEDITOR_CONFIGS['image_folder'],
                                                  file_full_name)})
 
+    @xframe_options_exempt
     def post(self, request, *args, **kwargs):
         upload_image = request.FILES.get("editormd-image-file", None)
         media_root = settings.MEDIA_ROOT
@@ -125,4 +127,4 @@ class UploadView(generic.View):
         logging.info("upload image %s as %s to cos return %s" % (file_name, new_name, response['ETag']))
         url = "https://content-image-1251916339.cos.ap-beijing.myqcloud.com/" + new_name
 
-        return JsonResponse({'success': 1,'message': "上传成功！",'url': url})
+        return JsonResponse({'success': 1, 'message': "上传成功！", 'url': url})
