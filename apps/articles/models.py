@@ -116,7 +116,7 @@ class Article(models.Model):
         response = cos_client.put_object(
             Bucket='article-1251916339',
             Body=self.content,
-            Key=self.title,
+            Key=self.title + '.md',
             EnableMD5=False
         )
         super().save(*args, **kwargs)

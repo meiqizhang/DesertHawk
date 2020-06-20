@@ -64,7 +64,7 @@
                      <form action="{% url 'gbook:add' %}" method="POST" enctype="multipart/form-data">
                          {% csrf_token %}
                          {% include "comment.html" %}
-                         <span style="padding-left: 30px">
+                         <span style="padding-left: 0px">
                             <input type="submit" style="width:80px; height:30px; margin-top: 10px;" value="提交留言"/>
                          </span>
                     </form>

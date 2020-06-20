@@ -72,9 +72,12 @@
 
 .nextinfo {
     line-height: 24px; width: 100%; overflow: hidden;
+    margin-top: 30px;
 }
 .nextinfo p {
-    padding: 4px 10px; border-radius: 5px; margin: auto 20px;
+    /*padding: 8px 0px;*/
+    border-radius: 5px;
+    /*margin: auto 20px;*/
 }
 .nextinfo a{
     color: #000;
@@ -90,7 +93,11 @@
     width: 100%; overflow: hidden;  color: black;
 }
 .otherlink h2 {
-    border-bottom: #000 2px solid; line-height: 40px; font-size: 14px; padding-left: 40px; color: #000
+    border-bottom: #000 2px solid;
+    line-height: 40px;
+    font-size: 14px;
+    padding-left: 0px;
+    color: #000
 }
 .otherlink ul {
     margin: 10px 0; overflow:hidden; padding:0 20px ;color: black;
