@@ -240,6 +240,7 @@
     overflow: hidden;
     display: block; float: left;
     margin-right: 20px;
+    border: 1px solid grey;
 }
 .blogpic img {
     width: 100%;
