@@ -1,4 +1,5 @@
 import os
+import time
 
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.core.files import File
@@ -113,10 +114,11 @@ class Article(models.Model):
         verbose_name_plural = verbose_name
 
     def save(self, *args, **kwargs):
+        time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
         response = cos_client.put_object(
             Bucket='article-1251916339',
             Body=self.content,
-            Key=self.title + '.md',
+            Key=self.title + '-%s.md' % time_now,
             EnableMD5=False
         )
         super().save(*args, **kwargs)
