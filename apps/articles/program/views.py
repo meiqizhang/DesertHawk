@@ -9,6 +9,7 @@ from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters import html
 
+from DesertHawk.settings import JsonCustomEncoder
 from apps.articles.models import Article, Tag
 from apps.user.models import UserProfile
 from apps.user.views import get_user_info_from_cookie
@@ -41,10 +42,8 @@ def home(request):
     if second_category == '全部':
         articles = Article.objects.all().order_by('-date').values("title", "description", "date")
     else:
-        articles = Article.objects.filter(first_category="程序设计",second_category=second_category).order_by('-date').values("title", "description", "date")
+        articles = Article.objects.filter(first_category="程序设计",second_category=second_category).order_by("-click_num").order_by('-date').values("title", "description", "date")
 
-    #articles = Article.objects.filter(category=category).order_by('click_num').values('title', 'click_num', 'date')
-    print(articles)
     page_size = 7
     total_pages = int(len(articles) / page_size)
     if len(articles) % page_size != 0:
@@ -68,7 +67,7 @@ def home(request):
     if not second_category or len(second_category) < 1:
         return render(request, 'learn.html', context={'articles': articles})
     else:
-        return HttpResponse(json.dumps(context), content_type="application/json")
+        return HttpResponse(json.dumps(context, cls=JsonCustomEncoder), content_type="application/json")
 
 
 class HighlightRenderer(mistune.Renderer):

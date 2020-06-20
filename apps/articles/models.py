@@ -11,7 +11,7 @@ from django.utils.safestring import mark_safe
 #from apps.articles.views import upload_icon
 from qcloud_cos import CosConfig, CosS3Client
 
-from DesertHawk.settings import BASE_DIR
+from DesertHawk.settings import BASE_DIR, cos_client
 from db_tool import db_connect
 from libs.mdeditor.fields import MDTextField
 
@@ -65,7 +65,7 @@ CREATE TABLE `t_article` (
 ) ENGINE=INNODB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 """
 
-class SaveIcon(Storage):
+"""class SaveIcon(Storage):
 
     def save(self, name, content, max_length=None):
         #content = File(content, name)
@@ -79,7 +79,7 @@ class SaveIcon(Storage):
 
     def url(self, name):
         return "https://pic1.zhimg.com/80/v2-635f64d3b355482ec8853610479d3a14_720w.png"
-
+"""
 
 class Category(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -93,20 +93,18 @@ class Category(models.Model):
 
 
 class Article(models.Model):
-    #def __init__(self, *args, **kwargs):
-    #    models.Model.__init__(self, args, kwargs)
-
     title = models.CharField(max_length=128, verbose_name='标题')
     first_category = models.CharField(max_length=32, default="程序设计", verbose_name="一级分类")
     second_category = models.CharField(max_length=32, default="", verbose_name="二级分类")
     tags = models.CharField(max_length=64, verbose_name='文章标签')
     description = models.CharField(max_length=256, verbose_name='简介')
     content = MDTextField(verbose_name='文章正文')
-    date = models.CharField(max_length=32, verbose_name='发表日期')
+    date = models.DateTimeField(verbose_name='发表日期')
     click_num = models.IntegerField(default=0, verbose_name='点击量')
     love_num = models.IntegerField(default=0, verbose_name='点赞量')
-    image = models.ImageField(storage=SaveIcon(), verbose_name='文章图标')
-
+    #image = models.ImageField(verbose_name='文章图标')
+    location = models.CharField(max_length=32, verbose_name="地理位置")
+    status = models.IntegerField(default=0, verbose_name="文章状态")
     #first_category = models.ForeignKey(to=Category, on_delete=models.DO_NOTHING, verbose_name=u'文章类别')
 
     class Meta:
@@ -115,26 +113,13 @@ class Article(models.Model):
         verbose_name_plural = verbose_name
 
     def save(self, *args, **kwargs):
-        secret_id = os.environ["COS_SECRET_ID"]
-        secret_key = os.environ["COS_SECRET_KEY"]
-        region = 'ap-beijing'  # 替换为用户的 Region
-        token = None  # 使用临时密钥需要传入 Token，默认为空，可不填
-        scheme = 'http'  # 指定使用 http/https 协议来访问 COS，默认为 https，可不填
-        config = CosConfig(Region=region, SecretId=secret_id, SecretKey=secret_key, Token=token, Scheme=scheme)
-        # 2. 获取客户端对象
-        client = CosS3Client(config)
-
-        response = client.put_object(
-            Bucket='content-image-1251916339',
+        response = cos_client.put_object(
+            Bucket='article-1251916339',
             Body=self.content,
             Key=self.title,
             EnableMD5=False
         )
-        #print("upload image %s as %s to cos return %s" (name, new_name, response['ETag']))
-        #return "https://content-image-1251916339.cos.ap-beijing.myqcloud.com/" + name
-
         super().save(*args, **kwargs)
-
 
 """
 CREATE TABLE `t_site_statistic` (

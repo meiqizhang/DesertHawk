@@ -14,7 +14,7 @@ from django.shortcuts import render
 from qcloud_cos import CosConfig, CosS3Client
 
 from apps.articles.models import ContentImage
-from DesertHawk.settings import START_TIME, BLOG_ROOT, DATABASES
+from DesertHawk.settings import START_TIME, BLOG_ROOT, DATABASES, cos_client
 from django.views.decorators.csrf import csrf_exempt
 
 from apps.statistic.models import SiteStatistic
@@ -49,68 +49,6 @@ def content_image(request):
 
     return HttpResponse(response["image"])
 
-@csrf_exempt
-def content_image_manager(request):
-    if request.method == 'GET':
-        print("download image")
-        md5 = request.GET.get('md5', '')
-
-        if md5 and len(md5) > 0:
-            response = dict()
-            record = ContentImage.objects.filter(md5=md5).values("image").first()
-            if record:
-                image = record['image']
-            else:
-                print("not found md5=%s image" % md5)
-                image = ''
-
-            return HttpResponse(image)
-
-    elif request.method == 'POST':
-        image_meta = request.FILES.get('fafafa')
-        image_name = image_meta.name
-        image_size = image_meta.size
-        image_buffer = image_meta.read()
-
-        response = dict()
-        if image_size > 1024 * 1024 * 4: # > 4MB
-            response["error"] = 1
-            response["url"] = ""
-            response["message"] = "图片不能超过4MB"
-            return HttpResponse(json.dumps(response))
-
-        md5hash = hashlib.md5(image_buffer)
-        md5 = md5hash.hexdigest()
-
-        save_path = os.path.join(BLOG_ROOT, "posts/images/" + md5 + '.' + image_name.split('.')[-1])
-        print("save as %s" % save_path)
-
-        with open(save_path, "wb") as fp:
-            fp.write(image_buffer)
-
-        if ContentImage.objects.filter(md5=md5).first():
-            print("image already in database, md5=%s" % md5)
-        else:
-            #ContentImage(md5=md5, image=image_buffer).save()
-            database = DATABASES.get("default")
-            connect = pymysql.Connect(
-                host=database['HOST'],
-                port=int(database['PORT']),
-                user=database['USER'],
-                passwd=database['PASSWORD'],
-                db=database['NAME'],
-                charset='utf8',
-            )
-            sql = "insert into t_content_image (`md5`, `image`) values (%s, %s) ON DUPLICATE KEY UPDATE `image`=%s"
-            cursor = connect.cursor()
-            cursor.execute(sql, (md5, image_buffer, image_buffer))
-            connect.commit()
-
-        response["error"] = 0
-        response["url"] = "/download_image/?md5=" + md5
-        response["message"] = "上传成功"
-
-        return HttpResponse(json.dumps(response))
 
 def index(request):
     return render(request, 'index.html')  # 只返回页面，数据全部通过ajax获取
@@ -177,6 +115,7 @@ def set_statistic(request):
 
     return HttpResponse(json.dumps(response))
 
+
 def get_statistic(request):
     sql = "SELECT `x`, `y`, COUNT(*) AS count FROM `t_site_statistic` GROUP BY `x`, `y`"
     cursor = connection.cursor()
@@ -199,6 +138,7 @@ def get_statistic(request):
 
     return HttpResponse(json.dumps(response))
 
+
 class StorageObject(Storage):
     def __init__(self):
         self.now = datetime.datetime.now()
@@ -214,16 +154,8 @@ class StorageObject(Storage):
 
     def _save(self, name, content):
         new_name = self._new_name(name)
-        secret_id = os.environ["COS_SECRET_ID"]
-        secret_key = os.environ["COS_SECRET_KEY"]
-        region = 'ap-beijing'  # 替换为用户的 Region
-        token = None  # 使用临时密钥需要传入 Token，默认为空，可不填
-        scheme = 'http'  # 指定使用 http/https 协议来访问 COS，默认为 https，可不填
-        config = CosConfig(Region=region, SecretId=secret_id, SecretKey=secret_key, Token=token, Scheme=scheme)
-        # 2. 获取客户端对象
-        client = CosS3Client(config)
 
-        response = client.put_object(
+        response = cos_client.put_object(
             Bucket='content-image-1251916339',
             Body=content,
             Key=new_name,

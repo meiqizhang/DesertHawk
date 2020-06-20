@@ -9,10 +9,15 @@ https://docs.djangoproject.com/en/2.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
-
+import datetime
+import decimal
+import json
 import os
 
 import logging  # 引入logging模块
+
+from qcloud_cos import CosConfig, CosS3Client
+
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(filename)s [line:%(lineno)d] - %(levelname)s: %(message)s')
 
@@ -89,6 +94,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',  # 在模板中可以使用{{ Media——URL}}
                 'DesertHawk.context_processors.theme',  # 在模板中可以使用{{ Media——URL}}
+                'DesertHawk.context_processors.visit_count',
             ],
         },
     },
@@ -154,31 +160,27 @@ CKEDITOR_CONFIGS = {
 
 MDEDITOR_CONFIGS = {
     'default': {
-        'width': '90% ',  # Custom edit box width
-        'heigth': 500,  # Custom edit box height
+        'width': '90%',  # 自定义编辑框宽度
+        'heigth': 500,  # 自定义编辑框高度
         'toolbar': ["undo", "redo", "|",
                     "bold", "del", "italic", "quote", "ucwords", "uppercase", "lowercase", "|",
                     "h1", "h2", "h3", "h5", "h6", "|",
                     "list-ul", "list-ol", "hr", "|",
-                    "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table", "datetime"
-                                                                                                           "emoji",
-                    "html-entities", "pagebreak", "goto-line", "|",
+                    "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table", "datetime",
+                    "emoji", "html-entities", "pagebreak", "goto-line", "|",
                     "help", "info",
-                    "||", "preview", "watch", "fullscreen"],  # custom edit box toolbar
-        'upload_image_formats': ["jpg", "jpeg", "gif", "png", "bmp", "webp"],  # image upload format type
-        'image_folder': 'editor',  # image save the folder name
-        'theme': 'gray',  # edit box theme, dark / default
-        'preview_theme': 'default',  # Preview area theme, dark / default
-        'editor_theme': 'pastel-on-dark',  # edit area theme, pastel-on-dark / default
-        'toolbar_autofixed': True,  # Whether the toolbar capitals
-        'search_replace': True,  # Whether to open the search for replacement
-        'emoji': True,  # whether to open the expression function
-        'tex': True,  # whether to open the tex chart function
-        'flow_chart': True,  # whether to open the flow chart function
-        'sequence': True,  # Whether to open the sequence diagram function
-        'watch': True,  # Live preview
-        'lineWrapping': False,  # lineWrapping
-        'lineNumbers': False  # lineNumbers
+                    "||", "preview", "watch", "fullscreen"],  # 自定义编辑框工具栏
+        'upload_image_formats': ["jpg", "jpeg", "gif", "png", "bmp", "webp"],  # 图片上传格式类型
+        'image_floder': 'editor',  # 图片保存文件夹名称
+        'theme': 'gray',  # 编辑框主题 ，dark / default
+        'preview_theme': 'default',  # 预览区域主题， dark / default
+        'editor_theme': 'pastel-on-dark',  # edit区域主题，pastel-on-dark / default
+        'toolbar_autofixed': True,  # 工具栏是否吸顶
+        'search_replace': True,  # 是否开启查找替换
+        'emoji': True,  # 是否开启表情功能
+        'tex': True,  # 是否开启 tex 图表功能
+        'flow_chart': True,  # 是否开启流程图功能
+        'sequence': True  # 是否开启序列图功能
     }
 }
 
@@ -222,3 +224,22 @@ MKEDITOR_STORAGE_BACKEND = 'DesertHawk.view.StorageObject'  # 自定义ckedit上
 
 #STATICFILES_STORAGE = ''
 #DEFAULT_FILE_STORAGE = ''
+
+secret_id = os.environ["COS_SECRET_ID"]
+secret_key = os.environ["COS_SECRET_KEY"]
+region = 'ap-beijing'  # 替换为用户的 Region
+token = None  # 使用临时密钥需要传入 Token，默认为空，可不填
+scheme = 'http'  # 指定使用 http/https 协议来访问 COS，默认为 https，可不填
+config = CosConfig(Region=region, SecretId=secret_id, SecretKey=secret_key, Token=token, Scheme=scheme)
+# 2. 获取客户端对象
+cos_client = CosS3Client(config)
+
+
+class JsonCustomEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, decimal.Decimal):
+            return float(obj)
+        elif isinstance(obj, datetime.date):
+            return obj.strftime('%Y-%m-%d %H:%M:%S')
+        else:
+            return json.JSONEncoder.default(self, obj)

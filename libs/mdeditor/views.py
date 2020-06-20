@@ -10,8 +10,8 @@ from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from qcloud_cos import CosConfig, CosS3Client
 
+from DesertHawk.settings import cos_client
 from .configs import MDConfig
 
 # TODO 此处获取default配置，当用户设置了其他配置时，此处无效，需要进一步完善
@@ -115,16 +115,7 @@ class UploadView(generic.View):
 
         new_name = "{0}/{1}.{2}".format(time.strftime("%Y/%m/%d"), str(uuid.uuid4()).replace('-', ''), file_extension)
 
-        secret_id = os.environ["COS_SECRET_ID"]
-        secret_key = os.environ["COS_SECRET_KEY"]
-        region = 'ap-beijing'   # 替换为用户的 Region
-        token = None            # 使用临时密钥需要传入 Token，默认为空，可不填
-        scheme = 'http'         # 指定使用 http/https 协议来访问 COS，默认为 https，可不填
-        config = CosConfig(Region=region, SecretId=secret_id, SecretKey=secret_key, Token=token, Scheme=scheme)
-        # 2. 获取客户端对象
-        client = CosS3Client(config)
-
-        response = client.put_object(
+        response = cos_client.put_object(
             Bucket='content-image-1251916339',
             Body=upload_image.read(),
             Key=new_name,

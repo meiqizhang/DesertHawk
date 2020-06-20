@@ -232,7 +232,8 @@
                 scrollReveal.init();    //使用js动态写入的html,必须init初始化才能正常使用scrollReveal动画效果
 
                 for (i =0 ; i < data.result.length; i++) {
-                    set_image(data.result[i].title, "image-" + i);
+                    image_download_and_set("image-" + i, "/articles/d_icon/?title=" + data.result[i].title);
+                    //set_image(data.result[i].title, "image-" + i)
                 }
             }
         });

@@ -2,12 +2,11 @@ function set_image(key, id, isThumb = true){
     /*$.ajax({
         type:'POST',
         data:{'title': title},
-        //url:'{% url 'article:article_image' %}',
-        url: '/article/article_image/',
+        url: '/articles/d_icon/?title=' + key,
         datatype:JSON,
         async: false,
         success:function (imageBase64) {
-            $("#" + id).attr("src", "data:image/png;base64," + imageBase64);
+            $("#" + id).attr("src", imageBase64);
         },
         error:function () {
             console.log('ajax刷新分页数据失败！');
@@ -54,7 +53,6 @@ function image_download_and_set(id, url){
     var xhr = new XMLHttpRequest();  
     xhr.open('GET', url, true);                                                                        
     xhr.responseType = "blob"; 
-    alert("xxxx");
     xhr.onload = function () {  
         var blob = this.response;  
         if (blob.size > 1) {
