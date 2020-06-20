@@ -91,7 +91,7 @@
                 <a href="{% url 'articles:program:detail' %}?title={{ article_next.title | add:'' }}">{{ article_next.title }}</a>
             </p>
         </div>
-        <div class="otherlink">
+        <div class="otherlink" style="margin-top: 20px;">
             <h2>相关文章</h2>
             {% if list_about %}
                 <ul>
@@ -102,13 +102,13 @@
                     {% endfor %}
                 </ul>
             {% else %}
-                <div style="margin-top: 20px; margin-bottom: 30px">还没有其他相关文章哟~</div>
+                <div>还没有其他相关文章哟~</div>
             {% endif %}
         </div>
-
-        <div style="">
+        <div style="margin-top:30px; border-top: #000 2px solid;">
              <form action="/comment/commit" method="POST" enctype="multipart/form-data">
                  {% csrf_token %}
+                 <div style="padding-bottom: 30px"></div>
                  {% include "comment.html" %}
                  <input type="submit" style="width:80px; height:30px; margin-top: 10px;" value="发表评论"/>
                  <input name="title" type="text" value="{{ article.title }}" style="float:right; visibility: hidden">
