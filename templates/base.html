@@ -124,9 +124,6 @@
             border-radius: 5px;
             border: 1px solid #aaaaaa;
         }
-        .my-en {
-            color: red;
-        }
     </style>
     <div class="logo" data-scroll-reveal="enter right over 1s">
         <a href="/" >
@@ -175,28 +172,13 @@
             <span class="en" style="color: #BC7A00">Saying</span>
         </a>
 
-{% comment %}        <!--a href="{% url 'articles:write' %}">
-            <span>旅行摄影</span>
-            <span class="en">Life</span>
-        </a-->{% endcomment %}
-
-{% comment %}        <a href="{% url "user:center" %}">
-            <span>个人资料</span>
-            <span class="en">Detail</span>
-        </a>{% endcomment %}
-
         <a href="{% url 'gbook:list' %}">
             <span>留言</span>
             <span class="en" style="color: #BC7A00">Saying</span>
         </a>
 
-{% comment %}        <a href="{% url 'articles:manage' %}">
-            <span>文章管理</span>
-            <span class="en" style="color: #BC7A00">Saying</span>
-        </a>{% endcomment %}
-
-{% comment %}        <div id="search_div">
-            <form method="get" action="{% url 'articles:search' %}" id="search">
+        <div id="search_div">
+            <form method="get" action="" id="search">
                 {% if key_word %}
                     <input id="key_word" type="text" name="keyword" value={{ key_word }} />
                 {% else %}
@@ -204,7 +186,7 @@
                 {% endif %}
                 <button type="submit">Search</button>
             </form>
-        </div>{% endcomment %}
+        </div>
     </nav>
 
 </header>

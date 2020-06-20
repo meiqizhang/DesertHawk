@@ -142,10 +142,18 @@
     width: 10px; height: 10px; font-family: 'ecoico'; speak: none; font-style: normal; font-weight: normal; font-variant: normal; text-transform: none; font-size: 1.4em; line-height: 40px; -webkit-font-smoothing: antialiased; position: absolute; color: #fff; background: #46a4da; border-radius: 50%; box-shadow: 0 0 0 3px #afdcf8; text-align: center; left: 170px; top: 15px; margin: 0 0 0 -25px;
 }
 .blogpic {
-    width: 200px; height: 120px; overflow: hidden; display: block; float: left; margin-right: 20px;
+    width: 200px;
+    /*height: 150px;*/
+    overflow: hidden;
+    display: block; float: left; margin-right: 20px;
+    border: 1px solid grey;
 }
 .blogpic img {
-    width: 100%; height: auto; margin: auto;
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    background-repeat:repeat;
+
 }
 a.readmore {
     background: #FAFAE9; color: #fff; padding: 5px 10px; float: right; margin: 20px 0 0 0; border-radius: 5px;
