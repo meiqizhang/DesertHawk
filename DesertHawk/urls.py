@@ -25,6 +25,7 @@ urlpatterns = [
     path('comment/', include(('apps.comment.urls'), namespace='comment')),
     path('user/', include(('apps.user.urls'), namespace='user')),
     path('gbook/', include(('apps.gbook.urls'), namespace='gbook')),
+    path('aboutme/', include(('apps.aboutme.urls'), namespace='aboutme')),
 
     # #path('xadmin/', xadmin.site.urls),
     # path('calendar/', common.calendar),

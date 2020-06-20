@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'ckeditor',
     'ckeditor_uploader',
+    'apps.aboutme',
     'apps.statistic',
     'apps.articles',
     'apps.articles.program',
@@ -85,6 +86,7 @@ TEMPLATES = [
                  os.path.join(BASE_DIR, 'apps/comment'),
                  os.path.join(BASE_DIR, 'apps/user'),
                  os.path.join(BASE_DIR, 'apps/gbook'),
+                 os.path.join(BASE_DIR, 'apps/aboutme'),
                  ],
         'APP_DIRS': True,
         'OPTIONS': {

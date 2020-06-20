@@ -14,15 +14,17 @@
 
 .about-banner {
     height: 250px;
-    width: 100%;
+    margin-top: 30px;
+    margin-left: 30px;
+    margin-right: 200px;
+    margin-bottom: 30px;
     text-align: center;
     overflow: hidden;
-    margin: 30px; line-height: 30px;
+    line-height: 30px;
     text-shadow: #fff 1px 1px 1px;
-    background: url(../../images/1.jpg)   center;;
+    background: url(../../images/1.jpg) center;
     color: #0333;
     font-size: 18px;
-    padding: 40px 0 0 0;
 }
 
 .about-banner > p{
@@ -76,10 +78,12 @@
 .time_axis {
     background: #1CA368;
     height: 6px;
-    width: 100%;
     animation: time_a 5s; -moz-animation: time_a 5s; /* Firefox */
     -webkit-animation: time_a 5s; /* Safari and Chrome */
     -o-animation: time_a 5s; /* Opera */
+
+    margin-left: 30px;
+    margin-right: 200px;
 }
 .timelist{
     float:left;

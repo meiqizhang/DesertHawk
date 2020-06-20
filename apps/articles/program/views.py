@@ -1,4 +1,5 @@
 import json
+import logging
 
 import markdown2
 from django.db import connection
@@ -115,7 +116,7 @@ def detail(request):
     user_id = request.session.get('user_id', '')
     header = "/static/images/anonymous.jpg"
 
-    print("get user id from sessoion=%s" % user_id)
+    logging.info("get user id from sessoion=%s" % user_id)
     if user_id:
         if UserProfile.objects.filter(user_id=user_id).first():
             header = UserProfile.objects.get(user_id=user_id).header
