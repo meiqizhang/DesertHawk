@@ -34,7 +34,12 @@ def download_icon(request):
 @csrf_exempt
 def upload_icon(request):
 
-    title = request.POST.get("title")
+    title = request.POST.get("title", None)
+    if not title:
+        id = request.POST.get("id", None)
+        if id:
+            title = Article.objects.get(id=id).title
+
     file = request.FILES.get('file')
     image = file.read()
     response = dict()
@@ -52,7 +57,7 @@ def upload_icon(request):
 
 
     imgtype = file.name.split('.')[-1]
-    response = cos_client.put_object(
+    ret = cos_client.put_object(
             Bucket='article-surface-1251916339',
             Body=image,
             Key="%s.%s" % (title, imgtype),
