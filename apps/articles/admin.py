@@ -61,7 +61,13 @@ class ArticleAdmin(admin.ModelAdmin):
         return mark_safe(html)
 
     def article_surface(self, obj):
-        return mark_safe('<img src="%s" style="width: 150px; height: 80px" onclick="alert()"/>' % ("/articles/d_icon/?title=" + obj.title))
+        url = "/articles/d_icon/?title=" + obj.title
+
+        url = url.replace('+', "%2B")
+        url = url.replace('&', "%26")
+        url = url.replace('#', "%23")
+
+        return mark_safe('<img src="%s" style="width: 150px; height: 80px" onclick="alert()"/>' % url)
         #record = Article.objects.raw("select id, image from t_article where title=%s", [obj.title])[0]
         return mark_safe('<img src="%s" style="width: 150px; height: 80px" onclick="alert()"/>' % (record.image))
 
