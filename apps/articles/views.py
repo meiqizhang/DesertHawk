@@ -5,6 +5,7 @@ from django import db
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
+from DesertHawk.settings import cos_client
 from apps.articles.models import Article
 
 
@@ -49,7 +50,7 @@ def upload_icon(request):
         response["msg"] = str(e)
         logging.error("update article image failed, title=%s, e=%s" % (title, e))
 
-    """
+
     imgtype = file.name.split('.')[-1]
     response = cos_client.put_object(
             Bucket='article-surface-1251916339',
@@ -59,9 +60,7 @@ def upload_icon(request):
         )
 
     try:
-        print(file.name)
         url = "https://article-surface-1251916339.cos.ap-beijing.myqcloud.com/%s.%s" % (title, imgtype)
-        print(url)
 
         with db.connection.cursor() as cur:
             ret = cur.execute("update t_article set image=%s where title=%s", [url, title])
@@ -72,6 +71,6 @@ def upload_icon(request):
         response["status"] = "error"
         response["msg"] = str(e)
         logging.error("update article image failed, title=%s, e=%s" % (title, e))
-    """
+
     return HttpResponse(json.dumps(response), content_type="application/json")
 
