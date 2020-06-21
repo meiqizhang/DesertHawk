@@ -1,21 +1,16 @@
 import datetime
-import hashlib
 import json
-import os
 import socket
 import struct
 import uuid
 
-import pymysql
 from django.core.files.storage import Storage
 from django.db import connection
 from django.http import HttpResponse
 from django.shortcuts import render
-from qcloud_cos import CosConfig, CosS3Client
 
 from apps.articles.models import ContentImage
 from DesertHawk.settings import START_TIME, BLOG_ROOT, DATABASES, cos_client
-from django.views.decorators.csrf import csrf_exempt
 
 from apps.statistic.models import SiteStatistic
 
@@ -27,27 +22,9 @@ def calendar(request):
 def about_me(request):
     return render(request, "about.html")
 
+
 def get_start_time(request):
-    print(START_TIME)
     return HttpResponse(START_TIME)
-
-def index(request):
-    return render(request, 'index.html')  # 只返回页面，数据全部通过ajax获取
-
-def content_image(request):
-    md5 = request.GET.get('md5')
-
-    record = ContentImage.objects.filter(md5=md5).values("image").first()
-    response = dict()
-
-    if record:
-        image = record['image']
-        response["status"] = "success"
-        response["image"] = image
-    else:
-        response["status"] = "error"
-
-    return HttpResponse(response["image"])
 
 
 def index(request):

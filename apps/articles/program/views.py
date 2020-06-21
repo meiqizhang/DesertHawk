@@ -17,19 +17,26 @@ from apps.user.views import get_user_info_from_cookie
 
 
 def home(request):
-    page_id = request.GET.get('page_id', '1')
-    second_category = request.GET.get("category", '')
+    categories = [{"name": "全部", "cat": "全部"}]
 
-    if len(second_category) == 0:
+    if request.method == 'GET':
+        second_category = request.GET.get("category", "全部")
         sql = "SELECT DISTINCT(second_category) FROM t_article where first_category='程序设计'"
         cursor = connection.cursor()
         cursor.execute(sql)
-        categories = ["全部"]
 
         for row in cursor.fetchall():
-            categories.append(row[0])
+            cat = row[0]
+            cat = cat.replace("+", "%2B")
+            cat = cat.replace('&', "%26")
+            cat = cat.replace('#', "%23")
+            categories.append({"name": row[0], "cat": cat})
 
-        return render(request, 'templates/program.html', context={"categories": categories})
+        return render(request, 'templates/program.html', context={"categories": categories, "second_category": second_category})
+
+    page_id = request.POST.get('page_id', '1')
+    second_category = request.POST.get("category", "全部")
+    logging.info("list category=%s, page id=%s" % (second_category, page_id))
 
     try:
         page_id = int(page_id)
@@ -58,18 +65,22 @@ def home(request):
     context = dict()
     context["status"] = 'success'
     context['msg'] = 'ok'
-    context["result"] = articles
+    context["articles"] = articles
     context['page_id'] = page_id
     context['total_pages'] = total_pages
     context['category'] = second_category
     context["page_size"] = page_size
 
+    return HttpResponse(json.dumps(context, cls=JsonCustomEncoder), content_type="application/json")
+
+    return render(request, 'templates/program.html', context={"context": context, "categories": categories})
+
     # print("request No.%d page, return %d articles" % (page_id, len(articles)))
-    if not second_category or len(second_category) < 1:
+    """if not second_category or len(second_category) < 1:
         return render(request, 'learn.html', context={'articles': articles})
     else:
         return HttpResponse(json.dumps(context, cls=JsonCustomEncoder), content_type="application/json")
-
+    """
 
 class HighlightRenderer(mistune.Renderer):
     def block_code(self, code, lang):
