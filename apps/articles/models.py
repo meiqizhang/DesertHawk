@@ -100,7 +100,7 @@ class Article(models.Model):
     tags = models.CharField(max_length=64, verbose_name='文章标签')
     description = models.CharField(max_length=256, verbose_name='简介')
     content = MDTextField(verbose_name='文章正文')
-    date = models.DateTimeField(verbose_name='发表日期', auto_now=True)
+    date = models.DateTimeField(verbose_name='发表日期')
     click_num = models.IntegerField(default=0, verbose_name='点击量')
     love_num = models.IntegerField(default=0, verbose_name='点赞量')
     #image = models.ImageField(verbose_name='文章图标')
