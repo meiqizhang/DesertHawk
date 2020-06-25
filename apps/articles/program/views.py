@@ -48,9 +48,9 @@ def home(request):
         return HttpResponse(json.dumps(context))
 
     if second_category == '全部':
-        articles = Article.objects.all().order_by('-date').values("title", "description", "date")
+        articles = Article.objects.filter(status=1).order_by('-date').values("title", "description", "date")
     else:
-        articles = Article.objects.filter(first_category="程序设计",second_category=second_category).order_by('-date').values("title", "description", "date")
+        articles = Article.objects.filter(first_category="程序设计",second_category=second_category, status=1).order_by('-date').values("title", "description", "date")
 
     page_size = 7
     total_pages = int(len(articles) / page_size)
