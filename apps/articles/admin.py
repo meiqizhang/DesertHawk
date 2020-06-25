@@ -9,7 +9,7 @@ from apps.articles.models import Article, Tag, Category
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ["title", "first_category", "second_category", "tag_list", "date", "article_status", "click_num", "love_num", "article_surface", "upload_image", "location"]
     #raw_id_fields = ["first_category"]
-    readonly_fields = ["article_surface", "love_num", "click_num", "location", "date"]
+    readonly_fields = ["article_surface", "love_num", "click_num", "location"]
 
     def location(self, obj):
         pass
