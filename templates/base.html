@@ -238,11 +238,48 @@
                 },
                 series: [{
                     type: 'scatter',
+                    //symbolSize: 10,
                     coordinateSystem: 'geo',
                     /*data: convertData([
                     {name: "海门", value: 405},
                 ])*/
                     data: visitData,//[[121.15, 31.89, 405]]
+                    symbolSize: function (data) {
+                        //return  data[2] * 1;
+                        var size = new Array()
+                        size[1] = 6 ;
+                        size[2] = 8;
+                        size[3] = 10;
+
+                        var idx = parseInt(data[2] / 10 + 1);
+                        if (idx > 3){
+                            idx = 3;
+                        }
+                        
+                        return size[idx];
+                    },
+                    itemStyle: { //基调颜色
+                        normal: {
+                            color: function (data) {
+                                console.info(data)
+                                console.info()
+                                var color = new Array()
+
+                                color[1] = "#ff8080";
+                                color[2] = "#ff5b5b";
+                                color[3] = "#ff2f2f";
+
+                                var idx = parseInt(data.data[2] / 10 + 1)
+                                console.info(idx)
+                                if (idx > 3) {
+                                    return "#FF0000";
+                                }
+                                else {
+                                    return color[idx];
+                                }
+                            }
+                        }
+                    },
                 }]
             };
             var myChart = echarts.init(document.getElementById('site-statistic'));
