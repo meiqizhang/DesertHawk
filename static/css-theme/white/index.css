@@ -1,13 +1,11 @@
 @charset "gb2312";
 /* blog */
-.blog {
-    /*margin: 30px 20px;*/
 
+.blog {
     margin-top: 30px;
     margin-bottom: 30px;
     margin-left: 20px;
     margin-right: 20px;
-
     overflow: hidden;
     border: 0px solid red;
 }
@@ -46,7 +44,7 @@
     background: url(../../images/yu.png) no-repeat center;
     overflow: hidden;
     height: 256px;
-    margin-bottom: 20px
+    margin-bottom: 20px;
 }
 .blog figure ul span {
     opacity: 0

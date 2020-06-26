@@ -6,10 +6,6 @@
     border: 0px solid red;
 }
 
-.newsview {
-    /*padding: 20px;
-    margin: 20px 20px;*/
-}
 .intitle {
     line-height: 40px; height: 40px;
     font-size: 14px;
@@ -52,6 +48,7 @@
     text-align: justify;
     color: black;
     padding-right: 20px;
+    border: 0px solid red;
 }
 .news_infos a {
     color: #00A000;
@@ -65,7 +62,8 @@
 }
 
 .news_infos img {
-    max-width: 650px
+    max-width: 650px;
+    border: 0px dashed green;
 }
 .share { padding: 20px;
 }

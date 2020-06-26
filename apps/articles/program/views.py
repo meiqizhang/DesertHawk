@@ -83,13 +83,18 @@ def home(request):
     """
 
 class HighlightRenderer(mistune.Renderer):
-    def block_code(self, code, lang):
+    """    def block_code(self, code, lang):
         if not lang:
             return '\n<pre><code>%s</code></pre>\n' % \
                 mistune.escape(code)
         lexer = get_lexer_by_name(lang, stripall=True)
         formatter = html.HtmlFormatter()
-        return highlight(code, lexer, formatter)
+        return highlight(code, lexer, formatter)"""
+
+    def image(self, src, title, alt_text):
+        img = '<div style="text-align:center;"><img style="margin:auto" src="%s"></div>' % src
+        print(img)
+        return img
 
 def detail(request):
     title = request.GET.get('title')
@@ -141,7 +146,9 @@ def detail(request):
 
     renderer = HighlightRenderer()
     markdown = mistune.Markdown(renderer=renderer)
-    article['content'] = mistune.markdown(article['content'])
+    article['content'] = markdown(article['content'])
+
+    #article['content'] = mistune.markdown(article['content'])
 
     return render(request, 'templates/detail.html', context={'article': article,
                                                     'list_about': abouts,
