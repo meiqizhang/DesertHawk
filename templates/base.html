@@ -250,10 +250,11 @@
                         size[1] = 6 ;
                         size[2] = 8;
                         size[3] = 10;
+                        size[4] = 12;
 
                         var idx = parseInt(data[2] / 10 + 1);
-                        if (idx > 3){
-                            idx = 3;
+                        if (idx > 4){
+                            idx = 4;
                         }
                         
                         return size[idx];
@@ -265,9 +266,10 @@
                                 console.info()
                                 var color = new Array()
 
-                                color[1] = "#ff8080";
-                                color[2] = "#ff5b5b";
-                                color[3] = "#ff2f2f";
+                                color[1] = "#ff7676";
+                                color[2] = "#ff5555";
+                                color[3] = "#ff2828";
+                                color[4] = "#ca0000";
 
                                 var idx = parseInt(data.data[2] / 10 + 1)
                                 console.info(idx)
