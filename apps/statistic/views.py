@@ -1,34 +1,24 @@
 import json
+import logging
 import socket
 import struct
 import time
 
 from django.db import connection
 from django.http import HttpResponse
-from django.shortcuts import render
 
 # Create your views here.
 from apps.statistic.models import SiteStatistic
 
+
 def set_statistic(request):
 
     ip_str = request.GET.get("ip", None)
-    if ip_str and isinstance(ip_str, list):
-        ip_str = ip_str[0]
-    else:
-        try:
-            ip_str = request.META['HTTP_X_FORWARDED_FOR']
-        except KeyError as err:
-            print(err)
-        else:
-            ip_str = ip_str.split(",")[0]
-            #request.META['REMOTE_ADDR'] = ip_str
-    #ip_str = request.META['REMOTE_ADDR']
-    print(ip_str)
-
     x = request.GET.get("x", '0')
     y = request.GET.get("y", '0')
     address = request.GET.get("address", "")
+
+    logging.info("recv visit info, ip=%s, x=%s, y=%s, address=%s" % (ip_str, x, y, address))
 
     province, city = '', ''
 
@@ -64,13 +54,13 @@ def set_statistic(request):
         ip_int = socket.ntohl(struct.unpack('I',socket.inet_aton(ip_str))[0])
         SiteStatistic(ip_int=ip_int, ip_str=ip_str, province=province, city=city, x=x, y=y, visit_time=time_now).save()
     except Exception as e:
-        print("catch an exception when update statistic, e=%s" % e)
+        logging.error("catch an exception when update statistic, e=%s" % e)
 
     response = dict()
     response["status"] = "OK"
-    response["ip"] = request.META['REMOTE_ADDR']
 
     return HttpResponse(json.dumps(response))
+
 
 def get_statistic(request):
     sql = "SELECT `x`, `y`, COUNT(*) AS count FROM `t_site_statistic` GROUP BY `x`, `y`"
