@@ -247,14 +247,15 @@
                     symbolSize: function (data) {
                         //return  data[2] * 1;
                         var size = new Array()
-                        size[1] = 6 ;
-                        size[2] = 8;
-                        size[3] = 10;
-                        size[4] = 12;
+                        size[1] = 4 ;
+                        size[2] = 6 ;
+                        size[3] = 8;
+                        size[4] = 10;
+                        size[5] = 12;
 
                         var idx = parseInt(data[2] / 10 + 1);
-                        if (idx > 4){
-                            idx = 4;
+                        if (idx > 5){
+                            idx = 5;
                         }
                         
                         return size[idx];
