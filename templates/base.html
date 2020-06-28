@@ -223,6 +223,14 @@
                     inRange: {color: ['#d94e5d', '#eac736', '#50a3ba'].reverse()},
                     textStyle: {color: '#fff00'}
                 },*/
+                 tooltip: {
+                     /*返回需要的信息*/
+                     formatter: function (param) {
+                         var value = param.value;
+                         return '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 16px;padding-bottom: 7px;margin-bottom: 7px;"> ' + value[2] + '(' + value[1] + ')' +
+                             '</div>';
+                     }
+                 },
                 geo: {
                     map: 'china',
                     label: {

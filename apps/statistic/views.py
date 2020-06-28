@@ -8,7 +8,7 @@ from django.db import connection
 from django.http import HttpResponse
 
 # Create your views here.
-from apps.statistic.models import SiteStatistic
+from apps.statistic.models import SiteStatistic, CityCoordinate
 
 
 def set_statistic(request):
@@ -28,12 +28,12 @@ def set_statistic(request):
             city = address
         if '自治区' in address:    # 自治区
             address = address.split('自治区')
-            province = address[0]
+            province = address[0] + "自治区"
             if len(address) > 1:
                 city = address[1]
         if '省' in address:
             address = address.split('省')
-            province = address[0]
+            province = address[0] + "省"
             if len(address) > 1:
                 city = address[1]
 
@@ -53,6 +53,19 @@ def set_statistic(request):
     try:
         ip_int = socket.ntohl(struct.unpack('I',socket.inet_aton(ip_str))[0])
         SiteStatistic(ip_int=ip_int, ip_str=ip_str, province=province, city=city, x=x, y=y, visit_time=time_now).save()
+
+        row = CityCoordinate.objects.filter(x=x, y=y).first()
+        logging.info(row)
+        #logging.info(len(row))
+
+        if CityCoordinate.objects.filter(x=x, y=y).first():
+            if len(province) > 0:
+                CityCoordinate.objects.filter(x=x, y=y).update(province=province)
+            if len(city) > 0:
+                CityCoordinate.objects.filter(x=x, y=y).update(city=city)
+        else:
+            CityCoordinate(province=province, city=city, x=x, y=y).save()
+            logging.info("add city coordinate, x=%s, y=%s, city=%s, province=%s" % (x, y, city, province))
     except Exception as e:
         logging.error("catch an exception when update statistic, e=%s" % e)
 
