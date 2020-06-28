@@ -215,7 +215,7 @@
             result = $.parseJSON(data);
             visitData = []
             for (i = 0; i < result.data.length; ++i) {
-                visitData.push([result.data[i].x, result.data[i].y, result.data[i].count])
+                visitData.push([result.data[i].x, result.data[i].y, result.data[i].count, result.data[i].city])
             }
             var optionMap = {
                 /*visualMap: {
@@ -227,8 +227,9 @@
                      /*返回需要的信息*/
                      formatter: function (param) {
                          var value = param.value;
-                         return '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 16px;padding-bottom: 7px;margin-bottom: 7px;"> ' + value[2] + '(' + value[1] + ')' +
-                             '</div>';
+                         return '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 16px;padding-bottom: 7px;margin-bottom: 7px;"> ' +
+                                    value[3] + '(' + value[2] + ')' +
+                                '</div>';
                      }
                  },
                 geo: {
@@ -271,8 +272,6 @@
                     itemStyle: { //基调颜色
                         normal: {
                             color: function (data) {
-                                console.info(data)
-                                console.info()
                                 var color = new Array()
 
                                 color[1] = "#ff7676";
@@ -281,7 +280,6 @@
                                 color[4] = "#ca0000";
 
                                 var idx = parseInt(data.data[2] / 10 + 1)
-                                console.info(idx)
                                 if (idx > 4) {
                                     return color[4];
                                 }

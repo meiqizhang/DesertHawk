@@ -17,6 +17,7 @@ CREATE TABLE `t_site_statistic` (
 
 """
 class SiteStatistic(models.Model):
+    id = models.IntegerField(primary_key=True)
     ip_int = models.IntegerField(verbose_name="IP的10分进制")
     ip_str = models.CharField(max_length=32)
     province = models.CharField(max_length=32, verbose_name="省份")

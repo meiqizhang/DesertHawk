@@ -89,6 +89,16 @@ def get_statistic(request):
         for index, value in enumerate(r):
             pos[keys[index]] = value
 
+        if 'x' in pos and 'y' in pos:
+            x = pos['x']
+            y = pos['y']
+            try:
+                record = CityCoordinate.objects.get(x=x, y=y)
+                pos["city"] = record.city
+            except Exception as e:
+                logging.error("catch an exception, e=%s" % e)
+                pos["city"] = "未知"
+
         result.append(pos)
 
     response = dict()
