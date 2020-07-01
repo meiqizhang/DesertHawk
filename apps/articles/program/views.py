@@ -91,9 +91,12 @@ class HighlightRenderer(mistune.Renderer):
         formatter = html.HtmlFormatter()
         return highlight(code, lexer, formatter)"""
 
+    def block_quote(self, text):  # 引用块
+        html = '<blockquote style="color:gray; font-size:14px;font-style:italic">%s</blockquote>' % text
+        return html
+
     def image(self, src, title, alt_text):
         img = '<div style="text-align:center;"><img style="margin:auto" src="%s"></div>' % src
-        print(img)
         return img
 
 def detail(request):
