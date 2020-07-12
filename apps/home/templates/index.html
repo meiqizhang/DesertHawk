@@ -114,22 +114,26 @@
                         figure = '<figure style="margin-left: 25px">';
                     }
 
-                     $('.blog').append(figure +
-                             '<ul style="padding: 0; margin: 0;">' +
-                                '<a href="' + url + '" target="_blank">'+
-                                    '<img id="image-' + i +  '" style="width: 100%; height: auto; margin: auto;" src="/static/images/loading.gif">' +
-                                    '<img src="/static/images/hot.png" style="width:16px;height:24px; position:absolute; top:0px; right: 0px">' +
-                                    '<span>点击查看详情</span>' +
-                                '</a>' +
-                             '</ul>' +
-                            '<p>' +
-                                '<a href="' + url + '" target="_blank">'+data.result[i].title + '</a>' +
-                            '</p>' +
-                            '<figcaption>' +
-                                data.result[i].description +
-                            '</figcaption>' +
-                         '</figure>'
-                     )
+					var description = data.result[i].description;
+					if (description.length > 100) {
+						description = description.substring(0, 100) + "......";
+					}
+                    $('.blog').append(figure +
+                            '<ul style="padding: 0; margin: 0;">' +
+                               '<a href="' + url + '" target="_blank">'+
+                                   '<img id="image-' + i +  '" style="width: 100%; height: auto; margin: auto;" src="/static/images/loading.gif">' +
+                                   '<img src="/static/images/hot.png" style="width:16px;height:24px; position:absolute; top:0px; right: 0px">' +
+                                   '<span>点击查看详情</span>' +
+                               '</a>' +
+                            '</ul>' +
+                           '<p>' +
+                               '<h2><a href="' + url + '" target="_blank">'+data.result[i].title + '</a></h2>' +
+                           '</p>' +
+                           '<figcaption>' +
+                               description +
+                           '</figcaption>' +
+                        '</figure>'
+                    )
                 }
 
                 for (; i < data.result.length; i++) {
