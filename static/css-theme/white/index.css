@@ -13,7 +13,7 @@
     background: #ececec;
     border: #FFF 10px solid;
     width: 28%;
-    height: 430px;
+    height: 360px;
     float: left;
     margin: 0 8px 0;
     overflow: hidden;
@@ -23,7 +23,7 @@
 .blog figure img {
     display: block;
     margin: auto;
-    height: 256px;
+    /*height: 280px;*/
     overflow: hidden;
 }
 .blog figure p {
@@ -45,7 +45,7 @@
 .blog figure ul {
     background: url(../../images/yu.png) no-repeat center;
     overflow: hidden;
-    height: 256px;
+    height: 160px;
     margin-bottom: 20px;
 }
 .blog figure ul span {
