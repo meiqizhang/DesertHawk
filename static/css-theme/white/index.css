@@ -16,7 +16,8 @@
     height: 430px;
     float: left;
     margin: 0 8px 0;
-    overflow: hidden
+    overflow: hidden;
+    border: 1px solid red;
 }
 
 .blog figure img {
@@ -39,6 +40,7 @@
     padding: 10px;
     line-height: 22px;
     color: #666;
+    font-size: 10px;
 }
 .blog figure ul {
     background: url(../../images/yu.png) no-repeat center;
