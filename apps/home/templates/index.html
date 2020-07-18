@@ -145,6 +145,11 @@
                     url = url.replace(/\&/g, "%26");//"&"
                     url = url.replace(/\#/g, "%23");//"#"
 
+                    var description = data.result[i].description;
+					if (description.length > 90) {
+						description = description.substring(0, 90) + "......";
+					}
+
                     $('.cbp_tmtimeline').append('' +
                         '<li>' +
                             '<time class="cbp_tmtime">'+
@@ -159,7 +164,7 @@
                                         '<img id="image-' + i + '" src="/static/images/loading.gif">' +
                                     '</span>' +
                                     '<a href="' + url + '">'+
-                                        data.result[i].description +
+                                        description +
                                     '</a>' +
                                 '</p>' +
                                 '<a href="' + url + '"  class="readmore" target="_blank">阅读全文&gt;&gt;</a>' +

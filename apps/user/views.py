@@ -181,10 +181,10 @@ def util_sendmsg(mobile):
     content =AppSecret + Nonce + CurTime
     CheckSum = hashlib.sha1(content.encode()).hexdigest()
     headers = {
-        'AppKey':AppKey,
-        'Nonce':Nonce,
-        'CurTime':CurTime,
-        'CheckSum':CheckSum
+        'AppKey': AppKey,
+        'Nonce': Nonce,
+        'CurTime': CurTime,
+        'CheckSum': CheckSum
     }
 
     response = requests.post(url, data=data, headers=headers)
@@ -192,6 +192,7 @@ def util_sendmsg(mobile):
     json_result = json.loads(str_result)
 
     return json_result
+
 
 def send_code(request):
     mobile = request.POST.get('phone')
