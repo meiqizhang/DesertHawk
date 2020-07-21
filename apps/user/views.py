@@ -1,10 +1,13 @@
 #from captcha.models import CaptchaStore
+#encoding=utf-8
+
 import hashlib
 import json
 import socket
 import requests
 import urllib
 import time
+import random
 from urllib.parse import urlencode
 
 from django.contrib.auth import logout,login,authenticate
@@ -21,6 +24,9 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from apps.user.models import UserProfile, SMSStatus
+
+
+from qcloudsms_py import SmsSingleSender
 
 
 def set_cookie(request):
@@ -168,59 +174,44 @@ def user_logout(request):
     return redirect(reverse('index'))
 
 
-def util_sendmsg(mobile):
-    url = 'https://api.netease.im/sms/sendcode.action'
-    data = {
-        'mobile':mobile,
-    }
-    AppSecret = '2d3508e39e0a'
-    AppKey = '8518de238c896b267ecc3be18781f113'
-    #json类型
-    Nonce = 'qweqdqwd12e01029i0dw0qwd'
-    CurTime = str(int((time.time() * 1000)))
-    content =AppSecret + Nonce + CurTime
-    CheckSum = hashlib.sha1(content.encode()).hexdigest()
-    headers = {
-        'AppKey': AppKey,
-        'Nonce': Nonce,
-        'CurTime': CurTime,
-        'CheckSum': CheckSum
-    }
+def get_code():
+    code = ''
+    for i in range(4):
+        code += str(random.randint(0, 9))
+    return code
 
-    response = requests.post(url, data=data, headers=headers)
-    str_result = response.text
-    json_result = json.loads(str_result)
 
-    return json_result
+def util_sendmsg(mobile, check_code):
+    APPID = '1400391229'
+    APPKEY = '24a1787bee0af73c550716ab46e5b352'
+
+    sender = SmsSingleSender(APPID, APPKEY)
+    TEMPLATE_ID = 667205
+    SMS_SIGN = "ditanshow网"
+
+    try:
+        params = [check_code]
+        response = sender.send_with_param(86, mobile, TEMPLATE_ID, params, sign=SMS_SIGN, extend="", ext="")
+        print("response=%s" % response)
+
+    except Exception as e:
+        print('sms error: %s' % e)
+        return False
+
+    if response and response['result'] == 0:
+        return True
 
 
 def send_code(request):
     mobile = request.POST.get('phone')
     time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
-
-    json_result = util_sendmsg(mobile)
-    # 发送验证码，第三方
-    print(mobile)
-    status = json_result.get('code')
-    data = {
-        'status': 200,
-        'msg': "ok"
-    }
-    if status == 200:
-        check_code = json_result.get('obj')
-        #使用session保存
-        request.session[mobile] = check_code
-        data['status'] = 200
-        data['msg'] = '验证码发送成功'
-
+    data = {'status': 200, 'msg': "ok"}
+    check_code = get_code()
+    if util_sendmsg(mobile, check_code):
+        SMSStatus(phone=mobile, code=check_code, create_time=time_now).save()
     else:
-        data['status'] = 500
-        data['msg'] = '验证码发送失败'
-
-    check_code = int(time.time()) % 10000
-    print("code=%d" % check_code)
-
-    SMSStatus(phone=mobile, code=check_code, create_time=time_now).save()
+        print("send message to %s failed, mobile=%s" % mobile)
+        data = {'status': 200, 'msg': "发送短信失败"}
 
     return HttpResponse(json.dumps(data), content_type="application/json")
 
@@ -251,6 +242,7 @@ def login_with_sms_code(request):
         return HttpResponse(json.dumps(response), content_type="application/json")
 
     request.session['user_id'] = user["user_id"]
+    request.session['username'] = User.objects.get(id=user["user_id"]).username
 
     return HttpResponse(json.dumps(response), content_type="application/json")
 

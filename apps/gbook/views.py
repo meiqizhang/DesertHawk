@@ -46,8 +46,10 @@ def add(request):
     parent_id = request.POST.get("parent", "-1")
     content = request.POST.get("content")
 
-    ip_str = request.COOKIES.get("ip")
-    address = request.COOKIES.get("address")
+    ip_str = request.POST.get("ip")
+    address = request.POST.get("address")
+    ip_str=''
+    address=''
 
     username = request.session.get("username", None)
 
@@ -56,7 +58,7 @@ def add(request):
     if not username:
         response["status"] = "error"
         response["msg"] = "登录后才能留言哟~"
-        return HttpResponse(json.dumps(response), content_type="application/json")
+        return HttpResponse(json.dumps(response).encode("utf-8"), content_type="application/json")
 
     try:
         time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
@@ -65,6 +67,7 @@ def add(request):
         print("catch an exception when add msg into gbook, user_id=%s, e=%s" % (username, e))
 
     return HttpResponse(json.dumps(response), content_type="application/json")
+
 
 def ding(request):
     response = dict()

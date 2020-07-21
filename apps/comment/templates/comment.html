@@ -336,9 +336,27 @@
             var code = ($(".input-code").val());
             var password = ($(".input-password").val());
 
+            var address_info = {}
+            var ip = returnCitySN.cip; //客户端ip
+            $.getJSON("https://api.map.baidu.com/location/ip?callback=?", {
+                'ak': 'x2CC5dtMtwjAAe6epLt2s1Kxs0BmSxPu',
+                'coor': 'bd09ll',
+                'ip': ip
+            }, function(data) {
+                var x = data.content.point.x;//经度
+                var y = data.content.point.y;//纬度
+                var address = data.content.address;//所在市
+                address_info["ip"] = ip;
+                address_info["x"] = x;
+                address_info["y"] = y;
+                address_info["address"] = address;
+            });
+
             $.ajax({
                 type:'POST',
-                data:{'login_type': login_type, 'name_phone': name_phone, 'password': password, 'code': code, csrfmiddlewaretoken:'{{ csrf_token }}'},
+                data:{'ip': address_info['ip'], 'address': address_info['address'], 'login_type': login_type,
+                    'name_phone': name_phone, 'password': password, 'code': code, csrfmiddlewaretoken:'{{ csrf_token }}'},
+
                 url:'{% url 'user:login' %}',
                 datatype:JSON,      //希望返回Json格式的数据
                 success:function (data) {
@@ -370,6 +388,7 @@
             window.location.reload();
             window.open("/user/regist");
         }
+
     </script>
 
     <div id="login_btn" >
