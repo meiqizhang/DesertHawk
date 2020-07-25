@@ -56,17 +56,6 @@
 {% block content %}
 
     <div id="content">
-    {% if yes == 0 %}
-            <p>{{ msg }}</p>
-    {% elif yes == 1 %}
-        <script type="text/javascript">
-            function jumurl(){
-                alert("注册成功，点击跳转登陆");
-                window.location.href = '{% url "user:login" %}';
-            }
-            setTimeout(jumurl, 1000);
-        </script>
-    {% endif %}
         <div id="contentForm">
             <form action="{% url 'user:regist' %}" method="post">
                 {% csrf_token %}
@@ -93,13 +82,25 @@
             });
             $("#send_code").click(function(){
                 var phone = $("#input-phone").val()
+                for (var i = 0; i < phone.length; ++i) {
+                    if (phone[i] < '0' || phone[1] > '9') {
+                        alert("手机号只能由11位数字组成~");
+                        return;
+                    }
+                }
+
+                if (phone.length !== 11) {
+                    alert("手机号只能由11位数字组成~");
+                    return;
+                }
+
                 $.ajax({
                     type:'POST',
                     data:{'phone': phone, csrfmiddlewaretoken:'{{ csrf_token }}'},
                     url:'{% url 'user:send_code' %}',
-                    datatype:JSON,      //希望返回Json格式的数据
+                    datatype: JSON,      //希望返回Json格式的数据
                     success:function (data) {
-                        //alert(data.data);
+                        //alert(data.msg);
                     },
                     error:function () {
                         console.log('ajax刷新分页数据失败！');

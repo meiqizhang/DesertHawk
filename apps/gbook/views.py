@@ -13,7 +13,6 @@ from apps.user.views import get_user_info_from_cookie
 
 
 def list(request):
-    print('request', request)
     if request.method == 'GET':
         user_id = request.session.get('user_id', '')
         header = "/static/images/anonymous.jpg"
@@ -46,11 +45,8 @@ def add(request):
     parent_id = request.POST.get("parent", "-1")
     content = request.POST.get("content")
 
-    ip_str = request.POST.get("ip")
-    address = request.POST.get("address")
-    ip_str=''
-    address=''
-
+    ip_str = request.session.get("ip")
+    address = request.session.get("address")
     username = request.session.get("username", None)
 
     logging.info("user %s add gbook from %s, ip=%s" % (username, address, ip_str))

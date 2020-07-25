@@ -267,9 +267,9 @@
 
 <div>
     <script>
-        baseTime = 9;
+        baseTime = 90;
         tryTimes = 1;
-        login_type = "sms";
+        login_type = "username";
 
         function login_with_qq() {
             alert("QQ登录暂未开通");
@@ -293,6 +293,8 @@
             $(".input-code").css("visibility", "visible");
             $(".send-code").css("visibility", "visible");
 
+            login_type = "sms";
+
             return false;
         }
 
@@ -305,13 +307,31 @@
 
             login_type = 'sms';
             var phone = $(".input-phone").val();
+
+            if (phone.length === 0) {
+                alert("手机号不能为空");
+                return ;
+            }
+
+            if (phone.length !== 11) {
+                alert("手机号长度错误");
+                return ;
+            }
+
+            for (var i = 0; i < phone.length; ++i) {
+                if (phone[i] < '0' || phone[i] > '9') {
+                    alert("手机号错误");
+                    return ;
+                }
+            }
+
             $.ajax({
                 type:'POST',
                 data:{'phone': phone, csrfmiddlewaretoken: '{{ csrf_token }}'},
                 url:'{% url 'user:send_code' %}',
                 datatype:JSON,      //希望返回Json格式的数据
                 success:function (data) {
-                    alert(data.msg);
+                    //alert(data.msg);
                 },
                 error:function () {
                     console.log('ajax刷新分页数据失败！');
@@ -336,25 +356,19 @@
             var code = ($(".input-code").val());
             var password = ($(".input-password").val());
 
-            var address_info = {}
-            var ip = returnCitySN.cip; //客户端ip
-            $.getJSON("https://api.map.baidu.com/location/ip?callback=?", {
-                'ak': 'x2CC5dtMtwjAAe6epLt2s1Kxs0BmSxPu',
-                'coor': 'bd09ll',
-                'ip': ip
-            }, function(data) {
-                var x = data.content.point.x;//经度
-                var y = data.content.point.y;//纬度
-                var address = data.content.address;//所在市
-                address_info["ip"] = ip;
-                address_info["x"] = x;
-                address_info["y"] = y;
-                address_info["address"] = address;
-            });
+            if (login_type === "username") {
+                if (name_phone.length === 0 || password.length === 0) {
+                    alert("手机号或用户名和密码不能为空");
+                    return
+                }
+            }
+            else if (login_type === "sms") {
+
+            }
 
             $.ajax({
                 type:'POST',
-                data:{'ip': address_info['ip'], 'address': address_info['address'], 'login_type': login_type,
+                data:{'ip': getCookie('ip'), 'address': getCookie('address'), 'login_type': login_type,
                     'name_phone': name_phone, 'password': password, 'code': code, csrfmiddlewaretoken:'{{ csrf_token }}'},
 
                 url:'{% url 'user:login' %}',
@@ -364,8 +378,7 @@
                         alert(data.msg);
                     }
                     else {
-                        alert(data.msg);
-                        //$(".visit-header").attr('src', data.user.header);
+                        alert("登录成功，刷新当前页面就可以留言评论啦~")
                         image_download_and_set("visit-header", data.user.header);
                     }
                 },
@@ -376,6 +389,8 @@
         }
 
         function click_header_btn(){
+            //alert("已经登录了，确定要退出登录吗？");
+
             var status = $("#login-dialog").css("visibility");
             if (status === 'hidden') {
                 $("#login-dialog").css("visibility", 'visible');
@@ -411,9 +426,9 @@
             <input type="checkbox" id="dialogswitch"  onclick="click_header_btn()"/>
             <div class="dialog" style="font-weight: lighter">
                 <label class="close" for="dialogswitch"></label>
-                    <label class="login-tips" for="dialogswitch">用户名登录</label>
+                    <label class="login-tips" for="dialogs">用户名登录</label>
                     <label for="dialogs">
-                        <input class="input-phone" style="padding-left: 10px; size: 340px;font-weight: lighter" type="text" placeholder="请输入用户名">
+                        <input class="input-phone" style="padding-left: 10px; size: 340px;font-weight: lighter" type="text" placeholder="请输入用户或手机号">
                     </label>
                     <label class="code-login" for="dialogs" style="visibility: hidden;font-weight: lighter">
                         <input class="input-code" type="text" placeholder="输入手机验证码">

@@ -1,40 +1,23 @@
-#from captcha.models import CaptchaStore
 #encoding=utf-8
 
-import hashlib
 import json
-import socket
-import requests
 import urllib
 import time
 import random
 from urllib.parse import urlencode
 
-from django.contrib.auth import logout,login,authenticate
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
-from django.db import connection
-from django.db.models import Q, QuerySet
+from django.db.models import Q
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.urls import reverse
-
 from apps.user.models import UserProfile, SMSStatus
-
-
 from qcloudsms_py import SmsSingleSender
-
-
-def set_cookie(request):
-    obj = HttpResponse('ok')    #obj=render(request,...)
-    obj.set_cookie('name', 'ABC')
-    # obj.set_signed_cookie(key,value,salt='加密盐')
-    obj.set_signed_cookie('name', 'lqz', salt='123')#加盐,123是个密码,解cookie的时候需要它,
-    return obj
 
 
 def get_user_info_from_cookie(request):
@@ -45,113 +28,59 @@ def get_user_info_from_cookie(request):
 
     return user
 
+
 def login(request):
     response = dict()
     response["status"] = "success"
     response["msg"] = "成功"
     response["user"] = dict()
 
-    """
-    phone = request.POST.get("phone", None)
-    password = request.POST.get("password", None)
-
-    phone = '15692097691'
-    password = '123456'
-
-    if not phone or not password:
-        response["status"] = "error"
-        response["msg"] = "密码或用户名为空"
-        return HttpResponse(json.dumps(response), content_type="application/json")
-
-    s1 = hashlib.sha1()
-    s1.update(password.encode("utf8"))  # 指定编码格式，否则会报错
-    md5password = s1.hexdigest()
-
-    try:
-        row = UserProfile.objects.get(phone=phone, password=md5password)
-        response["user"]["id"] = row.id
-        response["user"]["header_url"] = row.header_url
-
-        request.session['user_id'] = row.id
-        #request.session['age'] = '18'
-        request.session.set_expiry(60) #30秒后过期
-        # 默认是14天后过期，0表示关闭浏览器过期
-
-    except Exception as e:
-        print(phone, password, md5password, e)
-        response["status"] = "error"
-        response["msg"] = "用户名或密码错误"
-        return HttpResponse(json.dumps(response), content_type="application/json")
-
-    #return HttpResponse(json.dumps(response), content_type="application/json")
-    """
-
     if request.method == 'GET':
         return render(request, 'login.html')
-    elif request.method == 'POST':
-        name_phone = request.POST.get("name_phone", None)
-        password = request.POST.get("password", None)
 
-        login_type = request.POST.get("login_type", None)
-        print("login type=%s" % login_type)
+    login_type = request.POST.get("login_type", None)
+    print("login type=%s" % login_type)
 
-        if not login_type:
-            login_type = 'username'
+    response = dict()
+    if login_type == "username":
+        response = login_with_user_name(request)
+    elif login_type == "sms":
+        response = login_with_sms_code(request)
 
-        if login_type == 'sms':
-            return login_with_sms_code(request)
+    if response and response["status"] == "success":
+        request.session["ip"] = request.POST.get("ip")
+        request.session["address"] = request.POST.get("address")
+        print("login success, save ip and address into session..., ip=%s, address=%s" % (request.session["ip"], request.session["address"]))
 
-        users = None
-
-        print("login with user_key=%s,  password=%s" % (name_phone, password))
-        if not password or len(password) < 1:
-            return "12"
-
-        user_id = None
-        users = User.objects.filter(username=name_phone).values().first()
-        if users:
-            user_id = users["id"]
-        else:
-            user_id = UserProfile.objects.filter(phone=name_phone).first()
-
-        if not user_id:
-            print("username an phone both None")
-            return "1"
-
-        if user_id:
-            users = User.objects.filter(id=user_id)
-            if users.first().check_password(password):
-                response["user"] = dict()
-                response["user"]["header"] = UserProfile.objects.get(user_id=user_id).header
-
-                # 将用户信息添加到session
-                request.session['user_id'] = user_id
-                request.session['username'] = User.objects.get(id=user_id).username
-
-                return HttpResponse(json.dumps(response), content_type="application/json")
-            else:
-                print(User.objects.get(id=user_id).password, make_password(password) )
-                response["status"] = "error"
-                response["msg"] = "密码错误，请重新输入"
-                return HttpResponse(json.dumps(response), content_type="application/json")
-        else:
-            response["status"] = "error"
-            response["msg"] = "用户不存在，请重新输入账号登录"
-            return HttpResponse(json.dumps(response), content_type="application/json")
-
+    return HttpResponse(json.dumps(response), content_type="application/json")
 
 #用户注册
 def regist(request):
     if request.method == 'GET':
         return render(request, 'templates/register.html')
     if request.method == "POST":
+        response = dict()
+
         username = request.POST.get('username')
         phone = request.POST.get('phone')
         password = request.POST.get('password')
+        sms_code = request.POST.get("verification_code")
+
+        sms_status = SMSStatus.objects.filter(phone=phone, code=sms_code).values("create_time").first()
+        if sms_status:
+            pass
+        else:
+            response["status"] = "error"
+            response["msg"] = "验证码错误~"
+            return HttpResponse(json.dumps(response).encode('utf-8').decode("unicode-escape"),
+                                content_type="application/json")
 
         users = UserProfile.objects.filter(Q(user__username=username) | Q(phone=phone)).exists()
         if users:
-            return render(request, 'register.html', context={'msg': '注册失败，请重新填写', 'yes':0})
+            response["status"] = "error"
+            response["msg"] = "该用户名或手机号已经被注册了，换个试试吧~"
+            return HttpResponse(json.dumps(response).encode('utf-8').decode("unicode-escape"),
+                                content_type="application/json")
         else:
             User.objects.create(username=username, password=make_password(password))
 
@@ -162,8 +91,9 @@ def regist(request):
             user.phone = phone
             user.header = "https://user-header-1251916339.cos.ap-beijing.myqcloud.com/default.jpg"
             user.save()
-            return render(request, 'register.html', context={'msg': '注册成功，即将跳转到登陆页面', 'yes':1})
-
+            response["status"] = "success"
+            response["msg"] = "注册成功啦，返回原页面登录就可以啦~"
+            return HttpResponse(json.dumps(response).encode('utf-8').decode('unicode_escape'), content_type="application/json")
 
 #注销账户
 def user_logout(request):
@@ -182,6 +112,9 @@ def get_code():
 
 
 def util_sendmsg(mobile, check_code):
+
+    return True
+
     APPID = '1400391229'
     APPKEY = '24a1787bee0af73c550716ab46e5b352'
 
@@ -206,7 +139,8 @@ def send_code(request):
     mobile = request.POST.get('phone')
     time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
     data = {'status': 200, 'msg': "ok"}
-    check_code = get_code()
+    check_code = 1111 #get_code()
+
     if util_sendmsg(mobile, check_code):
         SMSStatus(phone=mobile, code=check_code, create_time=time_now).save()
     else:
@@ -214,6 +148,55 @@ def send_code(request):
         data = {'status': 200, 'msg': "发送短信失败"}
 
     return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+def login_with_user_name(request):
+    response = dict()
+    response["msg"] = "登录成功"
+    response["user"] = dict()
+
+    name_or_phone = request.POST.get('name_phone', None)
+    password = request.POST.get('password', None)
+    print(name_or_phone, password)
+
+    user_id = None
+    try:
+        int(name_or_phone)
+        user = UserProfile.objects.filter(phone=name_or_phone).values("user__id").first()
+        print("%s is a modile num" % name_or_phone)
+        if user:
+            user_id = user["user__id"]
+        # 手机号
+    except Exception as e:
+        # 用户名
+        user = UserProfile.objects.filter(user__username=name_or_phone).values("user__id").first()
+        print("%s is a username" % name_or_phone)
+        if user:
+            user_id = user["user__id"]
+
+    if not user_id:
+        response["status"] = "error"
+        response["msg"] = "不存在该用户名或该手机号未注册~"
+        return response
+
+    print("%s user_id=%d" % (name_or_phone, user_id))
+
+    user = User.objects.filter(id=user_id)
+    if user.first().check_password(password):
+        response["status"] = "success"
+        response["user"] = dict()
+        response["user"]["header"] = UserProfile.objects.get(user__id=user_id).header
+
+        # 将用户信息添加到session
+        request.session['user_id'] = user_id
+        request.session['username'] = User.objects.get(id=user_id).username
+
+        return response
+    else:
+        response["status"] = "error"
+        response["msg"] = "密码错误，请重新输入"
+
+        return response
 
 
 def login_with_sms_code(request):
@@ -224,59 +207,24 @@ def login_with_sms_code(request):
 
     mobile = request.POST.get('name_phone', None)
     code = request.POST.get('code', None)
-    print(mobile, code)
 
     user = UserProfile.objects.filter(phone=mobile).values("user_id").first()
     if not user:
         response["status"] = "error"
         response["msg"] = "该手机还没有注册~"
-        return HttpResponse(json.dumps(response), content_type="application/json")
+        return response
 
     row = SMSStatus.objects.filter(phone=mobile, code=code).order_by("-id").values("create_time").first()
     if row:
         create_time = row["create_time"]
-        print("code %s create time=%s" % (code, create_time))
+        response["status"] = "success"
+        request.session['user_id'] = user["user_id"]
+        request.session['username'] = User.objects.get(id=user["user_id"]).username
     else:
         response["status"] = "error"
         response["msg"] = "验证码错误~"
-        return HttpResponse(json.dumps(response), content_type="application/json")
 
-    request.session['user_id'] = user["user_id"]
-    request.session['username'] = User.objects.get(id=user["user_id"]).username
-
-    return HttpResponse(json.dumps(response), content_type="application/json")
-
-
-    #根据mobile去session取值
-    check_code = request.session.get(mobile)
-    if code == check_code:
-        user = UserProfile.objects.filter(mobile=mobile).first()
-        if user:
-            login(request, user)
-            # request.session['username'] = user.username
-        return redirect(reverse('index'))
-    else:
-        return render(request, 'codelogin.html', context={'msg':'验证码输入有误'})
-
-
-def forget_password(request):
-    if request.method == 'GET':
-        form = CaptchaTestForm()
-        return render(request, 'forget_pwd.html', context={'form':form})
-    elif request.method =='POST':
-        #获取提交的邮箱， 发送邮箱，通过发送的邮箱设置新的密码
-        email = request.POST.get('email')
-        #给此邮箱地址发送邮件
-        result =send_email(email, request)
-        print(result)
-        print("=" *100)
-        if result == 2:
-            render(result, 'update_pwd.html', context={"check":'用户名不存在'})
-        if result:
-            render(result, 'update_pwd.html', context={"check":'验证信息已发送至您的邮箱'})
-        else:
-            render(result, 'update_pwd.html', context={"check":'验证信息发送失败，请稍后再试'})
-
+    return response
 
 
 #更新密码

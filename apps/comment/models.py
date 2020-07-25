@@ -20,8 +20,8 @@ CREATE TABLE `t_comment` (
 class Comment(models.Model):
     ip = models.CharField(max_length=32, verbose_name="ip地址")
     address = models.CharField(max_length=64, verbose_name="ip地址所在地区")
-    title = models.CharField(max_length=128, verbose_name="标题")
-    parent_id = models.IntegerField(verbose_name="父级id")
+    title = models.CharField(max_length=128, verbose_name="文章标题")
+    parent_id = models.IntegerField(verbose_name="父级id", default=-1)
     user_name = models.CharField(max_length=32, verbose_name="用户")
     ding = models.IntegerField(default=0)
     cai = models.IntegerField(default=0)

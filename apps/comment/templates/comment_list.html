@@ -190,7 +190,8 @@
             url:'{% url 'comment:list' %}',
             datatype:JSON,      //希望返回Json格式的数据
             success:function (data) {
-                //alert(data.data);
+                //console.info(data)
+                // alert(data.comment);
                 if (data.comment.length < 1){
                     $("#comment-list").append("还没有评论哟，快来评论盖楼呀~");
                     return true;

@@ -18,6 +18,9 @@ def commit(request):
 
     ip_str = request.session.get("ip")
     address = request.session.get("address")
+
+    #ip_str = request.session.get("ip")
+    #address = request.session.get("address")
     user_id = request.session.get("user_id", None)
 
     if not user_id:
@@ -28,14 +31,15 @@ def commit(request):
     try:
         time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
         username = User.objects.get(id=user_id).username
-        Comment.objects.create(title=title, user_name=username, content=content, ip=ip_str, address=address, create_time=time_now).save()
+        Comment.objects.create(title=title, parent_id=-1, user_name=username, content=content,
+                               ip=ip_str, address=address, create_time=time_now).save()
     except Exception as e:
         print(e)
 
     response["status"] = "success"
-    response["msg"] = "评论成功"
+    response["msg"] = "评论成功啦~"
 
-    return HttpResponse(json.dumps(response), content_type="application/json")
+    return HttpResponse(json.dumps(response).encode('utf-8').decode("unicode-escape"), content_type="application/json")
 
 
 def lists(request):
@@ -112,6 +116,7 @@ def ding(request):
     response["data"] = dict()
     response["data"]["ding"] = gbook["ding"] + 1
     return HttpResponse(json.dumps(response), content_type="application/json")
+
 
 def cai(request):
     response = dict()

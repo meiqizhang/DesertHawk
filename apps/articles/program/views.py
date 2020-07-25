@@ -19,6 +19,9 @@ from apps.user.views import get_user_info_from_cookie
 def home(request):
     categories = [{"name": "全部", "cat": "全部"}]
 
+    #request.session['user_id'] = user_id
+    #request.session['username'] = User.objects.get(id=user_id).username
+
     if request.method == 'GET':
         second_category = request.GET.get("category", "全部")
         sql = "SELECT DISTINCT(second_category) FROM t_article where first_category='程序设计'"
@@ -73,14 +76,6 @@ def home(request):
 
     return HttpResponse(json.dumps(context, cls=JsonCustomEncoder), content_type="application/json")
 
-    return render(request, 'templates/program.html', context={"context": context, "categories": categories})
-
-    # print("request No.%d page, return %d articles" % (page_id, len(articles)))
-    """if not second_category or len(second_category) < 1:
-        return render(request, 'learn.html', context={'articles': articles})
-    else:
-        return HttpResponse(json.dumps(context, cls=JsonCustomEncoder), content_type="application/json")
-    """
 
 class HighlightRenderer(mistune.Renderer):
     """    def block_code(self, code, lang):
