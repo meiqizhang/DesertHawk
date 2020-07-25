@@ -136,7 +136,7 @@ def send_code(request):
     mobile = request.POST.get('phone')
     time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
     data = {'status': 200, 'msg': "ok"}
-    check_code = 1111 #get_code()
+    check_code = get_code()
 
     if util_sendmsg(mobile, check_code):
         SMSStatus(phone=mobile, code=check_code, create_time=time_now).save()
