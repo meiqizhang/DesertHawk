@@ -112,9 +112,6 @@ def get_code():
 
 
 def util_sendmsg(mobile, check_code):
-
-    return True
-
     APPID = '1400391229'
     APPKEY = '24a1787bee0af73c550716ab46e5b352'
 
