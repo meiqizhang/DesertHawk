@@ -121,6 +121,18 @@ class Article(models.Model):
             Key=self.title + '-%s.md' % time_now,
             EnableMD5=False
         )
+
+        try:
+            tags = eval(self.tags)
+        except Exception as e:
+            try:
+                tags = self.tags.split(";")
+            except Exception as e:
+                tags = list()
+
+        for tag in tags:
+            Tag(tag=tag, title=self.title).save()
+
         super().save(*args, **kwargs)
 
 """

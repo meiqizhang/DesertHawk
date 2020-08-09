@@ -105,7 +105,10 @@ def detail(request):
         try:
             article['tags'] = eval(article['tags'])
         except Exception as e:
-            article['tags'] = []
+            try:
+                article['tags'] = article['tags'].split(";")
+            except Exception as e:
+                article['tags'] = []
 
     Article.objects.filter(title=title).update(click_num=article["click_num"] + 1)
 
