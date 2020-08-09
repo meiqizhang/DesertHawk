@@ -15,7 +15,6 @@ from apps.articles.models import Article, Tag
 from apps.user.models import UserProfile
 from apps.user.views import get_user_info_from_cookie
 
-
 def home(request):
     categories = [{"name": "全部", "cat": "全部"}]
 
@@ -74,6 +73,31 @@ def home(request):
     context['category'] = second_category
     context["page_size"] = page_size
 
+    return HttpResponse(json.dumps(context, cls=JsonCustomEncoder), content_type="application/json")
+
+
+def tag(request):
+    tag = request.GET.get("tag", None)
+
+    if request.method == 'GET':
+        return render(request, 'templates/tag.html', context={"tag": tag})
+
+    tag = request.POST.get("tag", None)
+    if tag:
+        titles = Tag.objects.filter(tag=tag).values_list("title", flat=True)
+    else:
+        titles = []
+
+    logging.info("query article with tag=%s, title=%s" % (tag, titles))
+
+    articles = list(Article.objects.filter(title__in=titles).order_by('-date').values("title", "description", "date"))
+
+    context = dict()
+    context["status"] = 'success'
+    context['msg'] = 'ok'
+    context["articles"] = articles
+
+    print(context)
     return HttpResponse(json.dumps(context, cls=JsonCustomEncoder), content_type="application/json")
 
 

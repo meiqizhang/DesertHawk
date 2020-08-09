@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    西湖歌舞几时休
+{% endblock %}
+
+{% block mycss %}
+    {{ block.super }}
+    <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/learn.css' }}"  rel="stylesheet">
+
+{% endblock %}
+<style>
+    #readmore1{
+        width: 100px;
+        height: 40px;
+        background: red;
+    }
+</style>
+
+{% block content %}
+    <script>
+        $.ajaxSetup({cache: false});
+        $.ajax({
+            type: 'POST',
+            data: {'tag': "{{tag}}", csrfmiddlewaretoken: '{{ csrf_token }}'},
+            url: '{% url 'articles:program:tag' %}',
+            datatype:JSON,
+            success:function (data) {
+                f1(data);
+                                console.log('ajax刷新分页数据失败！');
+
+            },
+            error:function () {
+                console.log('ajax刷新分页数据失败！');
+            }
+        });
+
+
+        function f1(data) {
+            $('.cbp_tmtimeline li').remove();
+
+            for (var i = 0; i < data.articles.length; i++) {
+                var year = data.articles[i].date.substring(0, 4);
+                var day = data.articles[i].date.substring(5, 10);
+                var url = encodeURI("/articles/program/detail?title=" + data.articles[i].title);
+                url = url.replace(/\+/g, "%2B");//"+"转义
+                url = url.replace(/\&/g, "%26");//"&"
+                url = url.replace(/\#/g, "%23");//"#"
+
+                var description = data.articles[i].description
+                if (description.length > 120) {
+                    description = description.substring(0, 120) + "......";
+                }
+                $('.cbp_tmtimeline').append('' +
+                    '<li>' +
+                        '<time class="cbp_tmtime">'+
+                            '<span>' + year + '</span>' +
+                            '<span>' + day + '</span>'+
+                        '</time>'+
+                        '<div class="cbp_tmicon"></div>' +
+                        '<div class="cbp_tmlabel" data-scroll-reveal="enter right over 1s">' +
+                            '<h2>'+ data.articles[i].title +'</h2>' +
+                            '<p>'+
+                                '<span class="blogpic">'+
+                                    '<img id="image-' + i + '" src="/static/images/loading.gif">' +
+                                '</span>' +
+                                '<a href="/articles/program/detail?title=' + data.articles[i].title + '">'+
+                                    description +
+                                '</a>' +
+                            '</p>' +
+                            '<a href="' + url + '" class="readmore" target="_blank">阅读全文&gt;&gt;</a>' +
+                        '</div>' +
+                    '</li>'
+                );
+            }
+            scrollReveal.init();    //使用js动态写入的html,必须init初始化才能正常使用scrollReveal动画效果
+        }
+    </script>
+
+    <style>
+        #category-btn{
+            -moz-user-select: none; /*火狐*/
+            -webkit-user-select: none; /*webkit浏览器*/
+            -ms-user-select: none; /*IE10*/
+            -khtml-user-select: none; /*早期浏览器*/
+            -o-user-select: none; /* Opera*/
+            user-select: none;
+        }
+    </style>
+    <article>
+        <aside>
+        <div class="my-container">
+            <h2 class="ctitle"><b>{{ tag }}</b>
+                <!--span style="margin-right: 20px">不要轻易放弃。学习成长的路上，我们长路漫漫，只因学无止境。</span-->
+            </h2>
+            <div class="rnav">
+                <ul style="margin-left: 0px">
+                    {% for cat in categories %}
+                        <li>
+                            {% comment %}<a id="category-btn" onclick="goto_category('{{ cat }}', 1);">{{ cat }}</a>{% endcomment %}
+                            <a id="category-btn" href="/articles/program?category={{ cat.cat }}&page_id=1">{{ cat.name }}</a>
+                        </li>
+                    {% endfor %}
+
+                </ul>
+            </div>
+
+            <ul class="cbp_tmtimeline">
+{% comment %}                {% for article in context.articles %}
+                    <li>
+                        <time class="cbp_tmtime">
+                            <span>{{ article.date |slice:"4" }}</span>
+                            <span>{{ article.date |slice:"5:10" }}</span>
+                        </time>
+
+                        <div class="cbp_tmlabel" data-scroll-reveal="enter right over 1s">
+                            <h2>{{ article.title }}</h2>
+                            <div>
+                            <p>
+                                <span class="blogpic">
+                                    <img src="{{ MEDIA_URL }}{{ article.image }}">
+                                </span>
+                                <a href="{% url 'article:article_detail' %}?title={{ article.title }}">
+                                    {{ article.description }}
+                                </a>
+                            </p>
+                                </div>
+                            <div id="readmore1">
+                                <a href="{% url 'article:article_detail' %}?title={{ article.title }}" target="_blank" class="readmore">阅读全文>></a>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}{% endcomment %}
+
+            </ul>
+        </div>
+        </aside>
+    </article>
+{% endblock %}
+
+
+
+

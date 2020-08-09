@@ -11,6 +11,7 @@ urlpatterns = [
     #path('search/',         views.article_search,   name='search'),
 
     path('',   program.home, name='home'),
+    path('tag',   program.tag, name='tag'),
     path('detail',   program.detail, name='detail'),
     #path('article_image/',  views.article_image, name='article_image'),
 
