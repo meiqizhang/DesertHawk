@@ -118,6 +118,12 @@ class HighlightRenderer(mistune.Renderer):
         img = '<div style="text-align:center;"><img style="margin:auto" src="%s"></div>' % src
         return img
 
+    """
+    def paragraph(self, text):
+        p = '<p>xxxxxx' + text + '</p>'
+        return p
+    """
+
 def detail(request):
     title = request.GET.get('title')
     article = Article.objects.filter(title=title, first_category="程序设计").values("id", "title", "date", "second_category", "description", "tags", "content", "click_num").first()
@@ -142,7 +148,7 @@ def detail(request):
             abouts += list(Tag.objects.filter(tag=tag).values_list("title", flat=True))
 
     abouts = sorted(list(set(abouts)))
-    if title in abouts:
+    while title in abouts:
         abouts.remove(title)
 
     id = article['id']
