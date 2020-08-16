@@ -183,6 +183,9 @@ MDEDITOR_CONFIGS = {
         'emoji': True,  # 是否开启表情功能
         'tex': True,  # 是否开启 tex 图表功能
         'flow_chart': True,  # 是否开启流程图功能
+        'lineWrapping': True,
+        'lineNumbers': True,
+        'watch': True,
         'sequence': True  # 是否开启序列图功能
     }
 }
