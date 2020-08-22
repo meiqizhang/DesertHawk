@@ -16,8 +16,27 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.urls import reverse
-from apps.user.models import UserProfile, SMSStatus
+
+from DesertHawk.settings import sms_app_id, sms_app_key
+from apps.user.models import UserProfile, SMSStatus, VisitHistory
 from qcloudsms_py import SmsSingleSender
+
+
+def add_visit_history_log(func):
+    def wrapper(request, *args, **kwargs):
+        ip_str = request.COOKIES.get("ip")
+        params = '&'
+        for p in request.GET:
+            params += p + '=' + request.GET.get(p)
+
+        if len(params) > 1:
+            VisitHistory(ip_str=ip_str, url=request.path + "?" + params[1:]).save()
+        else:
+            VisitHistory(ip_str=ip_str, url=request.path).save()
+
+        return func(request, *args, **kwargs)
+
+    return wrapper
 
 
 def get_user_info_from_cookie(request):
@@ -29,6 +48,7 @@ def get_user_info_from_cookie(request):
     return user
 
 
+@add_visit_history_log
 def login(request):
     response = dict()
     response["status"] = "success"
@@ -54,7 +74,9 @@ def login(request):
 
     return HttpResponse(json.dumps(response), content_type="application/json")
 
-#用户注册
+
+# 用户注册
+@add_visit_history_log
 def regist(request):
     if request.method == 'GET':
         return render(request, 'templates/register.html')
@@ -112,10 +134,10 @@ def get_code():
 
 
 def util_sendmsg(mobile, check_code):
-    APPID = '1400391229'
-    APPKEY = '24a1787bee0af73c550716ab46e5b352'
+    #APPID = '1400391229'
+    #APPKEY = '24a1787bee0af73c550716ab46e5b352'
 
-    sender = SmsSingleSender(APPID, APPKEY)
+    sender = SmsSingleSender(sms_app_id, sms_app_key)
     TEMPLATE_ID = 667205
     SMS_SIGN = "ditanshow网"
 
@@ -175,8 +197,6 @@ def login_with_user_name(request):
         response["status"] = "error"
         response["msg"] = "不存在该用户名或该手机号未注册~"
         return response
-
-    print("%s user_id=%d" % (name_or_phone, user_id))
 
     user = User.objects.filter(id=user_id)
     if user.first().check_password(password):
@@ -244,24 +264,6 @@ def update_pwd(request):
         else:
             return render(request, 'update_pwd.html', context={'msg': '更新失败'})
 
-
-#定义一个路由验证码
-def valide_code(request):
-    if request.is_ajax():
-        key = request.GET.get('key')
-        code = request.GET.get('code')
-        captche = CaptchaStore.objects.filter(hashkey=key).first()
-        data = {}
-        if captche.response==code.lower():
-            #正确
-            data['status'] = 1
-            print(data)
-            return JsonResponse(data=data)
-        else:
-            #错误
-            data['status'] = 0
-            print(data)
-            return JsonResponse(data=data)
 
 # @login_required  #login(request, user) user-->继承Abstract
 # def user_center(request):
@@ -401,4 +403,7 @@ class QQ(object):
             return user_info
         except Exception as e:
             print(e.reason)
+
+
+
 

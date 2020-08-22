@@ -27,3 +27,15 @@ class SMSStatus(models.Model):
         db_table = 't_sms_status'
         verbose_name = "短信验证码"
         verbose_name_plural = verbose_name
+
+
+class VisitHistory(models.Model):
+    id = models.IntegerField(primary_key=True)
+    ip_str = models.CharField(max_length=32)
+    url = models.CharField(max_length=512, verbose_name="访问的url")
+    visit_time = models.DateTimeField(auto_now_add=True, verbose_name="访问时间")
+
+    class Meta:
+        db_table = "t_visit_history"
+        verbose_name = "用户访问历史"
+        verbose_name_plural = verbose_name

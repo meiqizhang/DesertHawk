@@ -7,15 +7,14 @@ import pymysql
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from DesertHawk.settings import BLOG_ROOT, DATABASES, JsonCustomEncoder
-from django.views.decorators.csrf import csrf_exempt
-
+from DesertHawk.settings import JsonCustomEncoder
 from apps.articles.models import ContentImage, Article
-from apps.statistic.models import SiteStatistic
+from apps.user.views import add_visit_history_log
 
 
 def index(request):
     return render(request, 'index.html')  # 只返回页面，数据全部通过ajax获取
+
 
 def content_image(request):
     md5 = request.GET.get('md5')
@@ -33,6 +32,7 @@ def content_image(request):
     return HttpResponse(response["image"])
 
 
+@add_visit_history_log
 def home(request):
     if 'page_id' not in request.GET:
         return render(request, 'index.html')

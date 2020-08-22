@@ -138,7 +138,6 @@ class StorageObject(Storage):
             Key=new_name,
             EnableMD5=False
         )
-        print("upload image %s as %s to cos return %s" (name, new_name, response['ETag']))
         return "https://content-image-1251916339.cos.ap-beijing.myqcloud.com/" + name
 
     def exists(self, name):

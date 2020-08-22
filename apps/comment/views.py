@@ -7,9 +7,10 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from apps.comment.models import Comment
-from apps.user.views import get_user_info_from_cookie
+from apps.user.views import get_user_info_from_cookie, add_visit_history_log
 
 
+@add_visit_history_log
 def commit(request):
     response = dict()
 
@@ -42,6 +43,7 @@ def commit(request):
     return HttpResponse(json.dumps(response).encode('utf-8').decode("unicode-escape"), content_type="application/json")
 
 
+# @add_visit_history_log
 def lists(request):
     title = request.POST.get("title", None)
     parent = request.POST.get("parent", None)
@@ -67,6 +69,7 @@ def lists(request):
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 
+@add_visit_history_log
 def reply(request):
 
     response = dict()
@@ -94,6 +97,7 @@ def reply(request):
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 
+@add_visit_history_log
 def ding(request):
     response = dict()
     response["status"] = "success"
@@ -118,6 +122,7 @@ def ding(request):
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 
+@add_visit_history_log
 def cai(request):
     response = dict()
     response["status"] = "success"

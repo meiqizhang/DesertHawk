@@ -12,7 +12,6 @@ from apps.statistic.models import SiteStatistic, CityCoordinate
 
 
 def set_statistic(request):
-
     ip_str = request.GET.get("ip", None)
     x = request.GET.get("x", '0')
     y = request.GET.get("y", '0')

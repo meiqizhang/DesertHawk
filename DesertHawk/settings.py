@@ -233,6 +233,11 @@ MKEDITOR_STORAGE_BACKEND = 'DesertHawk.view.StorageObject'  # 自定义ckedit上
 
 secret_id = os.environ["COS_SECRET_ID"]
 secret_key = os.environ["COS_SECRET_KEY"]
+
+sms_app_id = os.environ["SMS_APP_ID"]
+sms_app_key = os.environ["SMS_APP_KEY"]
+
+
 region = 'ap-beijing'  # 替换为用户的 Region
 token = None  # 使用临时密钥需要传入 Token，默认为空，可不填
 scheme = 'http'  # 指定使用 http/https 协议来访问 COS，默认为 https，可不填

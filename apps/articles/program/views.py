@@ -13,13 +13,12 @@ from pygments.formatters import html
 from DesertHawk.settings import JsonCustomEncoder
 from apps.articles.models import Article, Tag
 from apps.user.models import UserProfile
-from apps.user.views import get_user_info_from_cookie
+from apps.user.views import get_user_info_from_cookie, add_visit_history_log
 
+
+@add_visit_history_log
 def home(request):
     categories = [{"name": "全部", "cat": "全部"}]
-
-    #request.session['user_id'] = user_id
-    #request.session['username'] = User.objects.get(id=user_id).username
 
     if request.method == 'GET':
         second_category = request.GET.get("category", "全部")
@@ -76,6 +75,7 @@ def home(request):
     return HttpResponse(json.dumps(context, cls=JsonCustomEncoder), content_type="application/json")
 
 
+@add_visit_history_log
 def tag(request):
     tag = request.GET.get("tag", None)
 
@@ -124,6 +124,7 @@ class HighlightRenderer(mistune.Renderer):
         return p
     """
 
+@add_visit_history_log
 def detail(request):
     title = request.GET.get('title')
     article = Article.objects.filter(title=title, first_category="程序设计").values("id", "title", "date", "second_category", "description", "tags", "content", "click_num").first()

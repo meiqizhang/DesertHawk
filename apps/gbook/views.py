@@ -9,9 +9,10 @@ from django.shortcuts import render
 # Create your views here.
 from apps.gbook.models import GBook
 from apps.user.models import UserProfile
-from apps.user.views import get_user_info_from_cookie
+from apps.user.views import get_user_info_from_cookie, add_visit_history_log
 
 
+@add_visit_history_log
 def list(request):
     if request.method == 'GET':
         user_id = request.session.get('user_id', '')
@@ -37,6 +38,7 @@ def list(request):
         return HttpResponse(json.dumps(response), content_type="application/json")
 
 
+@add_visit_history_log
 def add(request):
     response = dict()
     response["status"] = "success"
@@ -65,6 +67,7 @@ def add(request):
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 
+@add_visit_history_log
 def ding(request):
     response = dict()
     response["status"] = "success"
@@ -88,6 +91,8 @@ def ding(request):
     response["data"]["ding"] = gbook["ding"] + 1
     return HttpResponse(json.dumps(response), content_type="application/json")
 
+
+@add_visit_history_log
 def cai(request):
     response = dict()
     response["status"] = "success"
