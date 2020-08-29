@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'apps.home',
     'apps.comment',
     'apps.gbook',
+    'apps.search',
     'apps.administrator',
     'libs.mdeditor',
     'DesertHawk',
@@ -87,6 +88,7 @@ TEMPLATES = [
                  os.path.join(BASE_DIR, 'apps/user'),
                  os.path.join(BASE_DIR, 'apps/gbook'),
                  os.path.join(BASE_DIR, 'apps/aboutme'),
+                 os.path.join(BASE_DIR, 'apps/search'),
                  ],
         'APP_DIRS': True,
         'OPTIONS': {

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    站内搜索
+{% endblock %}
+
+{% block mycss %}
+    {{ block.super }}
+    <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/learn.css' }}"  rel="stylesheet">
+
+{% endblock %}
+<style>
+    #readmore1{
+        width: 100px;
+        height: 40px;
+        background: red;
+    }
+</style>
+
+{% block content %}
+    <script>
+        $(document).ready(function(){
+            var img=$("img");
+            for(var i = 0; i < img.length; i++){
+                var id = img.get(i).id;
+                if (id.startsWith("image-")) {
+                    var title = id.substring(6, id.length);
+                    set_image(title, id);
+                    console.log(title);
+                }
+            }
+        });
+    </script>
+
+    <article>
+        <aside>
+        <div class="my-container">
+            <h2 class="ctitle"><b>"{{ keyword }}"</b>
+            </h2>
+
+            <ul class="cbp_tmtimeline">
+               {% for article in articles %}
+                   <li>
+                        <time class="cbp_tmtime">
+                            <span>{{ article.date |slice:"4" }}</span>
+                            <span>{{ article.date |slice:"5:10" }}</span>
+                        </time>
+
+                        <div class="cbp_tmlabel" data-scroll-reveal="enter right over 1s">
+                            <h2>{{ article.title }}</h2>
+                            <div>
+                           <p>
+                               <span class="blogpic">
+                                   <img id="image-{{ article.title }}">
+                               </span>
+                               <a href="/articles/program/detail?title={{ article.title }}">
+                                   {{ article.description }}
+                               </a>
+                           </p>
+                            </div>
+                            <div id="readmore1">
+                                <a href="/articles/program/detail?title={{ article.title }}" target="_blank" class="readmore">阅读全文>></a>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        </aside>
+    </article>
+{% endblock %}
+
+
+
+

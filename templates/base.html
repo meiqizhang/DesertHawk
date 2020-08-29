@@ -89,8 +89,8 @@
         {% endblock %}
     </title>
 
-    <meta name="keywords" content="小qiqi的博客" charset="utf-8"/>
-    <meta name="description" content=" 小qiqi的博客" charset="utf-8"/>
+    <!--meta name="keywords" content="小qiqi的博客" charset="utf-8"/>
+    <meta name="description" content=" 小qiqi的博客" charset="utf-8"/-->
 
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/base.css' }}"  rel="stylesheet">
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/index.css' }}" rel="stylesheet">
@@ -180,7 +180,7 @@
         </a>
 
         <div id="search_div">
-            <form method="get" action="" id="search">
+            <form method="get" action="/search/">
                 {% if key_word %}
                     <input id="key_word" type="text" name="keyword" value={{ key_word }} />
                 {% else %}
