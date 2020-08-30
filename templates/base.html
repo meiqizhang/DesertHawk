@@ -119,7 +119,7 @@
             border: 1px solid #aaaaaa;
         }
         #search_div input{
-            width: 200px;
+            width: 180px;
             height: 35px;
             padding-left: 10px;
             border-radius: 5px;
@@ -172,6 +172,11 @@
         <a href="{% url 'articles:mindsay:home' %}">
             <span>碎言碎语</span>
             <span class="en" style="color: #BC7A00">Saying</span>
+        </a>
+
+        <a href="{% url 'document:list' %}">
+            <span>文档资源</span>
+            <span class="en" style="color: #BC7A00">Download</span>
         </a>
 
         <a href="{% url 'gbook:list' %}">

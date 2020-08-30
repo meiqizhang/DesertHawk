@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    站内文档
+{% endblock %}
+
+{% block mycss %}
+    {{ block.super }}
+    <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/learn.css' }}"  rel="stylesheet">
+<style>
+    .document {
+    }
+    .document > h5 > a {
+        color: black;
+    }
+    .document > h5 > a:hover {
+        color: grey;
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <article>
+        <aside>
+        <div class="my-container">
+            <h2 class="ctitle"><b>站内文档</b>
+            </h2>
+
+            <br>
+            <ul>
+               {% for doc in documents %}
+                   <li>
+                        <div class="document">
+                            <h5>{{ doc.date |slice:"10" }} &nbsp; <a href="{{ doc.url }}" target="_blank">{{ doc.name }}</a></h5>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        </aside>
+    </article>
+{% endblock %}
+
+
+
+
