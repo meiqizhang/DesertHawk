@@ -14,29 +14,47 @@
         color: black;
     }
     .document > h5 > a:hover {
-        color: grey;
+        color: black;
         text-decoration: underline;
     }
 </style>
 {% endblock %}
 
 {% block content %}
+    <script>
+        function click_download(name) {
+            $.ajax({
+                type: 'POST',
+                data: {'name': name, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                url: '{% url 'document:download' %}',
+                datatype: JSON,
+                success:function (data) {
+                    console.log("ajax刷新下载成功！");
+                },
+                error:function () {
+                    console.log('ajax刷新分页数据失败！');
+                }
+            });
+        }
+
+    </script>
+
     <article>
         <aside>
         <div class="my-container">
-            <h2 class="ctitle"><b>站内文档</b>
-            </h2>
-
+            <h2 class="ctitle"><b>站内文档</b></h2>
             <br>
             <ul>
                {% for doc in documents %}
                    <li>
                         <div class="document">
-                            <h5>{{ doc.date |slice:"10" }} &nbsp; <a href="{{ doc.url }}" target="_blank">{{ doc.name }}</a></h5>
+                            <h5><a href="{{ doc.url }}" target="_blank" onclick="click_download('{{ doc.name }}')">{{ doc.name }}
+                                &nbsp;({{ doc.download_count }})</a></h5>
                         </div>
                     </li>
                 {% endfor %}
             </ul>
+            <br>
         </div>
         </aside>
     </article>
