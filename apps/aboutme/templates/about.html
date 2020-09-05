@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block title %}
+    关于我
+{% endblock %}
+
 {% block head %}
 {% endblock head %}
 
@@ -8,7 +12,7 @@
         <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/about.css' }}"  rel="stylesheet">
         <div class="container center_content">
             <div class="about-banner">
-                <p>&nbsp;</p>
+                <br><br>
                 <p data-scroll-reveal="enter top over 2s">我们不停的翻弄着回忆，却再也找不回那时的自己</p>
                 <p data-scroll-reveal="enter left over 2s after 1s">人生，是一场盛大的遇见。若你懂得，就请珍惜。</p>
                 <p data-scroll-reveal="enter bottom over 2s after 2s">无论下多久的雨，最后都会有彩虹；无论你多么悲伤，要相信幸福在前方等候.</p>
@@ -37,13 +41,10 @@
             <div class="about">
                 <h2>关于我</h2>
                 <ul>
-                    <p>张祺，2014年毕业于杭州电子科技大学-计算机科学与技术专业，先后就职于vivo和腾讯<p>
+                    <p>小西，2014年毕业于杭州电子科技大学-计算机科学与技术专业，先后就职于vivo和腾讯<p>
                     <p>主栈C/C++和python，其余语言也有涉及</p>
                     <p>熟悉redis底层实现，阅读过源代码</p>
-                    <p>熟悉分布式技术</p>
-                    <p>熟悉直播架构以及音视频的处理</p>
-                    <p>熟悉推荐系统架构</p>
-                    <p>对图像识别感兴趣，平常会训练一些模型做DIY</p>
+                    <p>熟悉微服务架构于分布式系统</p>
                 </ul>
                 <h2>我的博客</h2>
                 <p>域  名：www.ditanshow.com</p>

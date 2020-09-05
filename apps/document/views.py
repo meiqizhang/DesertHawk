@@ -26,7 +26,7 @@ def list(request):
 @add_visit_history_log
 def download(request):
     logging.info("download request=%s" % request.body)
-    name = request.POST.get("name", None)
+    name = request.GET.get("name", None)
 
     if not name:
         return HttpResponse("error, name is None")
