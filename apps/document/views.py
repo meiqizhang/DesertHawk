@@ -17,7 +17,7 @@ def list(request):
     return response"""
 
     documents = []
-    for doc in Document.objects.all():
+    for doc in Document.objects.all().order_by("name"):
         documents.append({"name": doc.name, "url": doc.url, "download_count": doc.download_count, "date": doc.create_time.strftime('%Y-%m-%d %H:%I:%S')})
 
     return render(request, 'document/templates/document.html', context={"documents": documents})
