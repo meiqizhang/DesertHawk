@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block content %}
+{% block meta %}
+    <meta name="keywords" content="python+django自己搭建博客,搭建博客" charset="utf-8"/>
+    <meta name="description" content=" python+django自己搭建博客,搭建博客" charset="utf-8"/>
+{% endblock %}
 
+{% block content %}
     <div class="blog" data-scroll-reveal="enter top">
         {% comment %}
         {% for figure_article in figure_articles %}

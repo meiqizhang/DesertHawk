@@ -5,6 +5,12 @@
 {{ article.title }}
 {% endblock %}
 
+{% block meta %}
+    <meta name="description" content="{{ article.description }} {{ article.content }}">
+    <meta name="keywords" content="{{ article.title }}">
+    <meta name="cdn-baidu-search" content='{"autorun":true, "install":true, "keyword": "{{ article.title}}"}'>
+{% endblock %}
+
 {% block content %}
     {% block mycss %}
         {{ block.super }}

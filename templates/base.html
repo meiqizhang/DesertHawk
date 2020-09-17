@@ -79,22 +79,27 @@
     </script>
 
     {% block mycss %}
-
     {% endblock %}
 
-    <meta charset="urt-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="origin">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="MobileOptimized" content="width">
+
+    {% block meta %}
+    {% endblock %}
+
     <title>
         {% block title %}
             西湖歌舞几时休
         {% endblock %}
     </title>
 
-    <!--meta name="keywords" content="小qiqi的博客" charset="utf-8"/>
-    <meta name="description" content=" 小qiqi的博客" charset="utf-8"/-->
-
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/base.css' }}"  rel="stylesheet">
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/index.css' }}" rel="stylesheet">
-
 
     <script src="{% static 'js/modernizr.js' %}"></script>
     <script src="{% static 'js/scrollReveal.js' %}"></script>
