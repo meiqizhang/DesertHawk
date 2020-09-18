@@ -12,8 +12,10 @@ from django.shortcuts import render
 from DesertHawk.settings import START_TIME, cos_client
 
 from apps.statistic.models import SiteStatistic
+from apps.user.views import add_visit_history_log
 
 
+@add_visit_history_log
 def robots(request):
     txt = """
     User-agent: * 
