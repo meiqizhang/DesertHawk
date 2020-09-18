@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 
 from apps.articles.program import views as program
 
@@ -12,7 +12,8 @@ urlpatterns = [
 
     path('',   program.home, name='home'),
     path('tag',   program.tag, name='tag'),
-    path('detail',   program.detail, name='detail'),
+    #path('detail/*',   program.detail, name='detail'),
+    re_path('^detail/', program.detail, name='detail'),
     #path('article_image/',  views.article_image, name='article_image'),
 
     #path('upload_thumb/', views.upload_article_thumb),

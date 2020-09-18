@@ -37,6 +37,7 @@ def main():
         charset='utf8',
         cursorclass=pymysql.cursors.DictCursor
     )
+
     # 建立游标
     #cursor = connect.cursor()
     #insert_content_image(connect)

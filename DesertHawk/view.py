@@ -9,10 +9,17 @@ from django.db import connection
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from apps.articles.models import ContentImage
-from DesertHawk.settings import START_TIME, BLOG_ROOT, DATABASES, cos_client
+from DesertHawk.settings import START_TIME, cos_client
 
 from apps.statistic.models import SiteStatistic
+
+
+def robots(request):
+    txt = """
+    User-agent: * 
+    Disallow: /admin
+    """
+    return HttpResponse(txt, content_type='text/plain')
 
 
 def calendar(request):

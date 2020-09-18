@@ -46,10 +46,7 @@
                 for (var i = 0; i < data.articles.length; i++) {
                     var year = data.articles[i].date.substring(0, 4);
                     var day = data.articles[i].date.substring(5, 10);
-                    var url = encodeURI("/articles/program/detail?title=" + data.articles[i].title);
-                    url = url.replace(/\+/g, "%2B");//"+"转义
-                    url = url.replace(/\&/g, "%26");//"&"
-                    url = url.replace(/\#/g, "%23");//"#"
+                    var url = "/articles/program/detail/" + data.articles[i].article_id + '.html';
 
                     var description = data.articles[i].description
 					if (description.length > 120) {
@@ -68,7 +65,7 @@
                                     '<span class="blogpic">'+
                                         '<img id="image-' + i + '" src="/static/images/loading.gif">' +
                                     '</span>' +
-                                    '<a href="/articles/program/detail?title=' + data.articles[i].title + '">'+
+                                    '<a href="/articles/program/detail/' + data.articles[i].article_id + '.html">'+
                                         description +
                                     '</a>' +
                                 '</p>' +
@@ -174,7 +171,6 @@
         <aside>
         <div class="my-container">
             <h2 class="ctitle"><b>程序设计</b>
-                <!--span style="margin-right: 20px">不要轻易放弃。学习成长的路上，我们长路漫漫，只因学无止境。</span-->
             </h2>
             <div class="rnav">
                 <ul style="margin-left: 0px">
@@ -184,7 +180,6 @@
                             <a id="category-btn" href="/articles/program?category={{ cat.cat }}&page_id=1">{{ cat.name }}</a>
                         </li>
                     {% endfor %}
-
                 </ul>
             </div>
 

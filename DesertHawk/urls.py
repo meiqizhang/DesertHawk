@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+
+from DesertHawk import view
 from DesertHawk.view import get_start_time
 
 urlpatterns = [
@@ -28,20 +30,9 @@ urlpatterns = [
     path('aboutme/', include(('apps.aboutme.urls'), namespace='aboutme')),
     path('search/', include(('apps.search.urls'), namespace='search')),
     path('document/', include(('apps.document.urls'), namespace='document')),
-
-    # #path('xadmin/', xadmin.site.urls),
-    # path('calendar/', common.calendar),
-    # path('about/', common.about_me),
-    # path('upload_image/', common.content_image_manager),
-    # path('download_image/', common.content_image_manager),
-    # path('starttime/', common.get_start_time),
-    # #path('', include('social_django.urls', namespace='social'), name='user_login'),
     path('', include(('apps.home.urls'), namespace="index")),
     path('home/', include(('apps.home.urls'), namespace="home")),
-    # #path('user/', include(('User.urls', 'user'), namespace='user')),
     path('articles/', include(('apps.articles.urls', 'articles'), namespace='articles')),
-    # #re_path(r'^captcha/', include('captcha.urls')),
-    # re_path(r'^media/(?P<path>.*)$', serve, {'document_root':MEDIA_ROOT}),
-    # #re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('robots.txt', view.robots)
 ]

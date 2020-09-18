@@ -91,10 +91,10 @@
 
         <div class="nextinfo">
             <p>上一篇：
-                <a href="{% url 'articles:program:detail' %}?title={{ article_pre.title | add:'' }}">{{ article_pre.title }}</a>
+                <a href="{% url 'articles:program:detail' %}{{ article_pre.article_id }}.html">{{ article_pre.title }}</a>
             </p>
             <p>下一篇：
-                <a href="{% url 'articles:program:detail' %}?title={{ article_next.title | add:'' }}">{{ article_next.title }}</a>
+                <a href="{% url 'articles:program:detail' %}{{ article_next.article_id }}.html">{{ article_next.title }}</a>
             </p>
         </div>
         <div class="otherlink" style="margin-top: 20px;">
@@ -103,7 +103,7 @@
                 <ul>
                     {% for article_tag in list_about %}
                         <li>
-                            <a href="{% url 'articles:program:detail' %}?title={{ article_tag.title }}" target="_blank">{{ article_tag.title }}</a>
+                            <a href="{% url 'articles:program:detail' %}{{ article_tag.article_id }}.html" target="_blank">{{ article_tag.title }}</a>
                         </li>
                     {% endfor %}
                 </ul>

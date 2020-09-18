@@ -49,6 +49,7 @@ class ContentImage(models.Model):
 """
 CREATE TABLE `t_article` (
   `id` 		INT NOT NULL AUTO_INCREMENT,
+  `article_id` int not null ,
   `title` 	VARCHAR(128) NOT NULL,
   `category` 	VARCHAR(32) DEFAULT '文章分类',
   `tags` 	VARCHAR(64) DEFAULT '[]' COMMENT '文章标签',
@@ -94,6 +95,7 @@ class Category(models.Model):
 
 
 class Article(models.Model):
+    article_id = models.IntegerField(default=0, verbose_name="文章id")
     title = models.CharField(max_length=128, verbose_name='标题')
     first_category = models.CharField(max_length=32, default="程序设计", verbose_name="一级分类")
     second_category = models.CharField(max_length=32, default="", verbose_name="二级分类")
@@ -132,6 +134,11 @@ class Article(models.Model):
 
         for tag in tags:
             Tag(tag=tag, title=self.title).save()
+
+        if Article.objects.filter(title=self.title).values("article_id").first():
+            self.article_id = Article.objects.filter(title=self.title).values("article_id").first()["article_id"]
+        else:
+            self.article_id = Article.objects.values("article_id").order_by("-article_id").first()["article_id"] + 1
 
         super().save(*args, **kwargs)
 

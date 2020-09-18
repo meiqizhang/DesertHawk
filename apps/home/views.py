@@ -1,9 +1,5 @@
-import datetime
-import decimal
-import hashlib
 import json
-import os
-import pymysql
+
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -40,7 +36,7 @@ def home(request):
     page_id = request.GET.get("page_id", "1")
     page_id = int(page_id)
 
-    articles = Article.objects.filter(status=1).order_by("-date").values("title", "description", "date")
+    articles = Article.objects.filter(status=1).order_by("-date").values("article_id", "title", "description", "date")
 
     page_size = 7
     total_pages = int(len(articles) / page_size) + 1
@@ -58,9 +54,10 @@ def home(request):
 
     return HttpResponse(json.dumps(context, cls=JsonCustomEncoder), content_type="application/json")
 
+
 def page_not_found(request, exception):
     return render(request, '404.html')
 
-# 500
+
 def page_error(request):
     return render(request, '500.html')

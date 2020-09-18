@@ -1,19 +1,15 @@
 import json
 import logging
+import mistune
 
-import markdown2
 from django.db import connection
 from django.http import HttpResponse
 from django.shortcuts import render
-import mistune
-from pygments import highlight
-from pygments.lexers import get_lexer_by_name
-from pygments.formatters import html
 
 from DesertHawk.settings import JsonCustomEncoder
 from apps.articles.models import Article, Tag
 from apps.user.models import UserProfile
-from apps.user.views import get_user_info_from_cookie, add_visit_history_log
+from apps.user.views import add_visit_history_log
 
 
 @add_visit_history_log
@@ -33,7 +29,8 @@ def home(request):
             cat = cat.replace('#', "%23")
             categories.append({"name": row[0], "cat": cat})
 
-        return render(request, 'templates/program.html', context={"categories": categories, "second_category": second_category})
+        return render(request, 'templates/program.html',
+                      context={"categories": categories, "second_category": second_category})
 
     page_id = request.POST.get('page_id', '1')
     second_category = request.POST.get("category", "全部")
@@ -49,9 +46,11 @@ def home(request):
         return HttpResponse(json.dumps(context))
 
     if second_category == '全部':
-        articles = Article.objects.filter(status=1).order_by('-date').values("title", "description", "date")
+        articles = Article.objects.filter(status=1).order_by('-date'). \
+            values("article_id", "title", "description", "date")
     else:
-        articles = Article.objects.filter(first_category="程序设计",second_category=second_category, status=1).order_by('-date').values("title", "description", "date")
+        articles = Article.objects.filter(first_category="程序设计", second_category=second_category, status=1). \
+            order_by("-date").values("article_id", "title", "description", "date")
 
     page_size = 7
     total_pages = int(len(articles) / page_size)
@@ -124,13 +123,29 @@ class HighlightRenderer(mistune.Renderer):
         return p
     """
 
+
 @add_visit_history_log
 def detail(request):
-    title = request.GET.get('title')
-    article = Article.objects.filter(title=title, first_category="程序设计").values("id", "title", "date", "second_category", "description", "tags", "content", "click_num").first()
+    try:
+        if request.path.endswith(".html"):
+            article_id = request.path.split('/')[-1].split('.')[0]
+            article = Article.objects.filter(article_id=article_id, first_category="程序设计"). \
+                values("article_id", "title", "date", "second_category", "description", "tags", "content", "click_num").\
+                first()
+        else:
+            title = request.GET.get('title')
+            article = Article.objects.filter(title=title, first_category="程序设计"). \
+                values("article_id", "title", "date", "second_category", "description", "tags", "content", "click_num").\
+                first()
+            article_id = article["article_id"]
+    except Exception as e:
+        logging.error("catch an exception, e=%s" % e)
+        article = None
 
     if not article:
         return render(request, "404.html")
+
+    logging.debug("request #%s article" % article_id)
 
     if 'tags' in article:
         try:
@@ -141,7 +156,8 @@ def detail(request):
             except Exception as e:
                 article['tags'] = []
 
-    Article.objects.filter(title=title).update(click_num=article["click_num"] + 1)
+    title = article["title"]
+    Article.objects.filter(article_id=article_id).update(click_num=article["click_num"] + 1)
 
     abouts = list()
     if 'tags' in article:
@@ -152,41 +168,35 @@ def detail(request):
     while title in abouts:
         abouts.remove(title)
 
-    id = article['id']
-    article_pre = Article.objects.filter(id__lt=id).values("title").order_by("-id").first()
-    article_next = Article.objects.filter(id__gt=id).values("title").order_by("id").first()
+    abouts = list(Article.objects.filter(title__in=abouts).values("article_id", "title"))
+
+    article_pre = Article.objects.filter(article_id__lt=article_id).values("article_id", "title"). \
+        order_by("-article_id").first()
+    article_next = Article.objects.filter(article_id__gt=article_id).values("article_id", "title"). \
+        order_by("article_id").first()
 
     if article_pre:
-        article_pre = article_pre['title']
+        article_pre = {"article_id": article_pre["article_id"], "title": article_pre['title']}
     if article_next:
-        article_next = article_next['title']
+        article_next = {"article_id": article_next["article_id"], "title": article_next['title']}
 
     user_id = request.session.get('user_id', '')
     header = "/static/images/anonymous.jpg"
 
-    logging.info("get user id from sessoion=%s" % user_id)
+    logging.info("get user id from session=%s" % user_id)
     if user_id:
         if UserProfile.objects.filter(user_id=user_id).first():
             header = UserProfile.objects.get(user_id=user_id).header
         else:
             user_id = None
 
-    user = get_user_info_from_cookie(request)
-
-    #article['content'] = markdown2.markdown(article['content'].replace("\r\n", '  \n'),
-    #                                        extras=["code-friendly"])
-
     renderer = HighlightRenderer()
     markdown = mistune.Markdown(renderer=renderer)
     article['content'] = markdown(article['content'])
 
-    #article['content'] = mistune.markdown(article['content'])
-
     return render(request, 'templates/detail.html', context={'article': article,
-                                                    'list_about': abouts,
-                                                    'article_pre': article_pre,
-                                                    'article_next': article_next,
-                                                    'user': {'id': user_id, 'header': header}
-                                                    })
-
-
+                                                             'list_about': abouts,
+                                                             'article_pre': article_pre,
+                                                             'article_next': article_next,
+                                                             'user': {'id': user_id, 'header': header}
+                                                             })
