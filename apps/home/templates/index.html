@@ -121,7 +121,7 @@
                     $('.blog').append(figure +
                             '<ul style="padding: 0; margin: 0;">' +
                                '<a href="' + url + '" target="_blank">'+
-                                   '<img id="image-' + i +  '" style="width: 100%; height: auto; margin: auto;" src="/static/images/loading.gif">' +
+                                   '<img id="image-' + i +  '" style="width: 100%; height: 100%; margin: auto;" src="/static/images/loading.gif">' +
                                    '<!--img src="/static/images/hot.png" style="width:16px;height:24px; position:absolute; top:0px; right: 0px"-->' +
                                    '<span>点击查看详情</span>' +
                                '</a>' +
@@ -157,7 +157,7 @@
                                 '<h2>'+ data.result[i].title +'</h2>' +
                                 '<p>'+
                                     '<span class="blogpic">'+
-                                        '<img id="image-' + i + '" src="/static/images/loading.gif">' +
+                                        '<img id="image-' + i + '" style="width: 100%; height: 100%" src="/static/images/loading.gif">' +
                                     '</span>' +
                                     '<a href="' + url + '">'+
                                         description +
