@@ -117,6 +117,9 @@ class HighlightRenderer(mistune.Renderer):
         img = '<div style="text-align:center;"><img style="margin:auto" src="%s"></div>' % src
         return img
 
+    def table(self, header, body):
+        return '<table class="table table-bordered">\n%s\n%s</table>' % (header, body)
+
     """
     def paragraph(self, text):
         p = '<p>xxxxxx' + text + '</p>'
