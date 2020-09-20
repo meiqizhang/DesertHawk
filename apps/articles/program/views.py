@@ -46,11 +46,11 @@ def home(request):
         return HttpResponse(json.dumps(context))
 
     if second_category == '全部':
-        articles = Article.objects.filter(status=1, first_category="程序设计").order_by('-date'). \
+        articles = Article.objects.filter(status=1, first_category="程序设计").order_by('-article_id'). \
             values("article_id", "title", "description", "date")
     else:
         articles = Article.objects.filter(first_category="程序设计", second_category=second_category, status=1). \
-            order_by("-date").values("article_id", "title", "description", "date")
+            order_by("-article_id").values("article_id", "title", "description", "date")
 
     page_size = 7
     total_pages = int(len(articles) / page_size)
@@ -135,6 +135,7 @@ def detail(request):
             article = Article.objects.filter(article_id=article_id, first_category="程序设计"). \
                 values("article_id", "title", "date", "second_category", "description", "tags", "content", "click_num").\
                 first()
+            article_id = int(article_id)
         else:
             title = request.GET.get('title')
             article = Article.objects.filter(title=title, first_category="程序设计"). \
@@ -148,7 +149,7 @@ def detail(request):
     if not article:
         return render(request, "404.html")
 
-    logging.debug("request #%s article" % article_id)
+    logging.debug("request #%d article" % article_id)
 
     if 'tags' in article:
         try:
@@ -173,10 +174,10 @@ def detail(request):
 
     abouts = list(Article.objects.filter(title__in=abouts).values("article_id", "title"))
 
-    article_pre = Article.objects.filter(article_id__lt=article_id).values("article_id", "title"). \
-        order_by("-article_id").first()
-    article_next = Article.objects.filter(article_id__gt=article_id).values("article_id", "title"). \
-        order_by("article_id").first()
+    article_pre = Article.objects.filter(article_id__gt=article_id, first_category="程序设计") .\
+        values("article_id", "title").order_by("article_id").first()
+    article_next = Article.objects.filter(article_id__lt=article_id, first_category="程序设计"). \
+        values("article_id", "title").order_by("-article_id").first()
 
     if article_pre:
         article_pre = {"article_id": article_pre["article_id"], "title": article_pre['title']}

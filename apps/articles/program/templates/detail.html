@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-{{ article.title }}
+{{ article.title }}-地摊文化
 {% endblock %}
 
 {% block meta %}
@@ -90,12 +90,17 @@
             </div>
 
             <div class="nextinfo">
-                <p>上一篇：
-                    <a href="{% url 'articles:program:detail' %}{{ article_pre.article_id }}.html">{{ article_pre.title }}</a>
-                </p>
-                <p>下一篇：
-                    <a href="{% url 'articles:program:detail' %}{{ article_next.article_id }}.html">{{ article_next.title }}</a>
-                </p>
+                {% if  article_pre.article_id %}
+                    <p>上一篇：
+                        <a href="{% url 'articles:program:detail' %}{{ article_pre.article_id }}.html">{{ article_pre.title }}</a>
+                    </p>
+                {% endif %}
+
+                {% if article_next.article_id %}
+                    <p>下一篇：
+                        <a href="{% url 'articles:program:detail' %}{{ article_next.article_id }}.html">{{ article_next.title }}</a>
+                    </p>
+                {% endif %}
             </div>
             <div class="otherlink" style="margin-top: 20px;">
                 <h2>相关文章</h2>

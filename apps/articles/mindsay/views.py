@@ -1,12 +1,13 @@
 import logging
 
-from django.http import HttpResponse
 from django.shortcuts import render
 
 # Create your views here.
 from apps.articles.models import Article
+from apps.user.views import add_visit_history_log
 
 
+@add_visit_history_log
 def home(request):
     articles = list(Article.objects.filter(first_category="mindsay").values("article_id", "title", "date", "description", "content"))
 
@@ -21,6 +22,7 @@ def home(request):
     return render(request, 'articles/mindsay/templates/index.html', context=context)
 
 
+@add_visit_history_log
 def detail(request):
     try:
         article_id = request.path.split('/')[-1].split('.')[0]
