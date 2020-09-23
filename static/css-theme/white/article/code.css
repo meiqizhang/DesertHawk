@@ -9,8 +9,9 @@ pre {
     background: none;
 }
 .hljs {
-    font-size: 16px!important;
-    font-family: consolas,monospace !important;
+    font-size: 14px!important;
+    font-weight: lighter;
+    font-family: "consolas",monospace !important;
     display: block;
     overflow-x: auto;
     padding: 0.5em;
@@ -18,7 +19,6 @@ pre {
     color: #FFF;
     white-space: pre;
     word-break: normal;
-    padding: 10px 15px !important;
     border: none;
 
     /*
@@ -48,7 +48,7 @@ code {
 
 .hljs-title {
     color: #10f000;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .hljs-section,
@@ -97,6 +97,7 @@ code {
 .hljs-deletion,
 .hljs-meta {
     color: #707070; /* 注释 */
+    font-style: italic;
 }
 
 .hljs-number {
