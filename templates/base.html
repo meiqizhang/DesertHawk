@@ -108,6 +108,12 @@
     {% block mycss %}
     {% endblock %}
 
+    <title>
+        {% block title %}
+            西湖歌舞几时休
+        {% endblock %}
+    </title>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="origin">
@@ -118,12 +124,6 @@
 
     {% block meta %}
     {% endblock %}
-
-    <title>
-        {% block title %}
-            西湖歌舞几时休
-        {% endblock %}
-    </title>
 
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/base.css' }}"  rel="stylesheet">
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/index.css' }}" rel="stylesheet">

@@ -2,11 +2,11 @@
 {% load static %}
 
 {% block title %}
-{{ article.title }}-地摊文化
+{{ article.title }}-西湖歌舞几时休
 {% endblock %}
 
 {% block meta %}
-    <meta name="description" content="{{ article.description }} {{ article.content }}">
+    <meta name="description" content="{{ article.description }}">
     <meta name="keywords" content="{{ article.title }}">
     <meta name="cdn-baidu-search" content='{"autorun":true, "install":true, "keyword": "{{ article.title}}"}'>
 {% endblock %}
@@ -20,8 +20,8 @@
         <link type="text/css" href="https://cdn.bootcss.com/highlight.js/9.15.8/styles/github.min.css" rel="stylesheet">
         <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/article/m.css' }}"  rel="stylesheet">
         <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/article/detail.css' }}"  rel="stylesheet">
-        <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/article/code.css' }}"  rel="stylesheet">
-
+        {% comment %}<link href="{% static 'css-theme/' %}{{ THEME }}{{ '/article/code.css' }}"  rel="stylesheet">{% endcomment %}
+        <link href="https://cdn.bootcss.com/highlight.js/9.6.0/styles/atelier-lakeside-dark.min.css" rel="stylesheet"/>
 
         <style>
             /* for block of numbers */
