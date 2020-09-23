@@ -42,7 +42,7 @@ def list(request):
 def add(request):
     response = dict()
     response["status"] = "success"
-    response["msg"] = "ok"
+    response["msg"] = "您的评论/留言成功啦，返回页面刷新就能看的啦~"
 
     parent_id = request.POST.get("parent", "-1")
     content = request.POST.get("content")
@@ -56,7 +56,8 @@ def add(request):
     if not username:
         response["status"] = "error"
         response["msg"] = "登录后才能留言哟~"
-        return HttpResponse(json.dumps(response).encode("utf-8"), content_type="application/json")
+
+        return HttpResponse(json.dumps(response).encode("utf-8").decode("unicode-escape"), content_type="application/json")
 
     try:
         time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
@@ -64,7 +65,7 @@ def add(request):
     except Exception as e:
         print("catch an exception when add msg into gbook, user_id=%s, e=%s" % (username, e))
 
-    return HttpResponse(json.dumps(response), content_type="application/json")
+    return HttpResponse(json.dumps(response).encode("utf-8").decode("unicode-escape"), content_type="application/json")
 
 
 @add_visit_history_log
@@ -85,7 +86,7 @@ def ding(request):
         logging.error("the %s gbook not exist" % id)
         response["status"] = "error"
         response["msg"] = "是不是点错了~"
-        return HttpResponse(json.dumps(response), content_type="application/json")
+        return HttpResponse(json.dumps(response).encode("utf-8").decode("unicode-escape"), content_type="application/json")
 
     response["data"] = dict()
     response["data"]["ding"] = gbook["ding"] + 1
@@ -110,9 +111,9 @@ def cai(request):
         logging.error("the %s gbook not exist" % id)
         response["status"] = "error"
         response["msg"] = "是不是点错了~"
-        return HttpResponse(json.dumps(response), content_type="application/json")
+        return HttpResponse(json.dumps(response).encode("utf-8").decode("unicode-escape"), content_type="application/json")
 
     response["data"] = dict()
     response["data"]["cai"] = gbook["cai"] + 1
-    return HttpResponse(json.dumps(response), content_type="application/json")
+    return HttpResponse(json.dumps(response).encode("utf-8").decode("unicode-escape"), content_type="application/json")
 
