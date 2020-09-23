@@ -3,21 +3,69 @@
 <html>
 <head>
     <meta name="baidu-site-verification" content="WmM9Nymwhq" />
-	<link href="https://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
-
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://pv.sohu.com/cityjson?ie=utf-8"></script>
     <script src="https://how2j.cn/study/js/jquery/2.0.0/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    {% block mycss %}
+    {% endblock %}
 
-	<script type="text/javascript">
+    <title>
+        {% block title %}
+            西湖歌舞几时休
+        {% endblock %}
+    </title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="origin">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="MobileOptimized" content="width">
+
+    {% block meta %}
+    {% endblock %}
+
+    <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/base.css' }}"  rel="stylesheet">
+    <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/index.css' }}" rel="stylesheet">
+    <script src="{% static 'js/modernizr.js' %}"></script>
+    <script src="{% static 'js/scrollReveal.js' %}"></script>
+    <script src="{% static 'js/article/request-image.js' %}"></script>
+    <script src="{% static 'js/map/echarts.min.js' %}"></script>
+    <script src="{% static 'js/map/china.js' %}"></script>
+</head>
+<body>
+<header>
+    <style type="text/css">
+        #search_div{
+            float: right;
+        }
+        #search_div button{
+            width: 60px;
+            height: 35px;
+            border-radius: 5px;
+            color: #333;
+            background-color: #ffffef;
+            border: 1px solid #aaaaaa;
+        }
+        #search_div input{
+            width: 180px;
+            height: 35px;
+            padding-left: 10px;
+            border-radius: 5px;
+            border: 1px solid #aaaaaa;
+            background-color: #ffffef;
+        }
+    </style>
+    <script type="text/javascript">
         function setCookie(cname, cvalue, exdays) {
             var d = new Date();
             d.setTime(d.getTime() + (exdays*24*60*60*1000));
             var expires = "expires=" + d.toGMTString();
             if (exdays > 0) {
                 document.cookie = cname + "=" + cvalue + "; " + expires;
-            }
-            else {
+            } else {
                 document.cookie = cname + "=" + cvalue;
             }
         }
@@ -25,8 +73,7 @@
         function getCookie(cname) {
             var name = cname + "=";
             var ca = document.cookie.split(';');
-            for(var i=0; i<ca.length; i++)
-            {
+            for(var i=0; i<ca.length; i++) {
                 var c = ca[i].trim();
                 if (c.indexOf(name) === 0) {
                     return c.substring(name.length,c.length);
@@ -72,7 +119,6 @@
 
         ip = getCookie("ip")
         if (ip === ""){
-            //alert("请求");
             getAddress();
         }
 
@@ -105,74 +151,10 @@
         });
     </script>
 
-    {% block mycss %}
-    {% endblock %}
-
-    <title>
-        {% block title %}
-            西湖歌舞几时休
-        {% endblock %}
-    </title>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="referrer" content="origin">
-    <meta http-equiv="Cache-Control" content="no-transform">
-    <meta http-equiv="Cache-Control" content="no-siteapp">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="MobileOptimized" content="width">
-
-    {% block meta %}
-    {% endblock %}
-
-    <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/base.css' }}"  rel="stylesheet">
-    <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/index.css' }}" rel="stylesheet">
-
-    <script src="{% static 'js/modernizr.js' %}"></script>
-    <script src="{% static 'js/scrollReveal.js' %}"></script>
-
-    <script src="{% static 'js/article/request-image.js' %}"></script>
-
-    <script src="{% static 'js/map/echarts.min.js' %}"></script>
-    <script src="{% static 'js/map/china.js' %}"></script>
-</head>
-<body>
-<header>
-    <style type="text/css">
-        #search_div{
-            float: right;
-        }
-        #search_div button{
-            width: 60px;
-            height: 35px;
-            border-radius: 5px;
-            color: #333;
-            background-color: #ffffef;
-            border: 1px solid #aaaaaa;
-        }
-        #search_div input{
-            width: 180px;
-            height: 35px;
-            padding-left: 10px;
-            border-radius: 5px;
-            border: 1px solid #aaaaaa;
-            background-color: #ffffef;
-        }
-    </style>
     <div class="logo" data-scroll-reveal="enter right over 1s">
         <a href="/" >
             愿你历尽千帆，归来仍是少年
         </a>
-
-{% comment %}        <div style="text-align: right">
-            {% if request.user.is_authenticated %}
-                欢迎！<a href="{% url 'user:center' %}">{{ request.session.username }}</a>&nbsp;&nbsp;&nbsp;
-                <a href="{% url 'user:user_logout' %}">注销</a>
-            {% else %}
-                <a href="{% url 'user:user_login' %}">登录</a> &nbsp;&nbsp;&nbsp;
-                <a href="{% url 'user:register' %}">注册</a>
-            {% endif %}
-        </div>{% endcomment %}
     </div>
 
     <nav class="topnav" data-scroll-reveal="enter bottom over 0.8s after 0.8s">
@@ -229,9 +211,6 @@
     </nav>
 
 </header>
-<style>
-
-</style>
 
 <script>
     $(function(){
@@ -293,12 +272,6 @@
                     symbolSize: function (data) {
                         //return  data[2] * 1;
                         var size = new Array()
-                        /*size[1] = 4 ;
-                        size[2] = 6 ;
-                        size[3] = 8;
-                        size[4] = 10;
-                        size[5] = 12;*/
-
                         for (var i = 0; i <= 12; i++) {
                             size[i] = i;
                         }
@@ -313,21 +286,6 @@
                     itemStyle: { //基调颜色
                         normal: {
                             color: function (data) {
-                                /*var color = new Array()
-
-                                color[1] = "#ff7676";
-                                color[2] = "#ff5555";
-                                color[3] = "#ff2828";
-                                color[4] = "#ca0000";
-
-                                var idx = parseInt(data.data[2] / 10 + 1)
-                                if (idx > 4) {
-                                    return color[4];
-                                }
-                                else {
-                                    return color[idx];
-                                }
-                                */
                                 var idx = parseInt(data.data[2]);
                                 idx = 130 - idx;
                                 if (idx < 0) {
@@ -370,8 +328,6 @@
                 </div>
             </article>
         </div>
-        {% comment %}<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="border: 1px solid red; height: 1000px">
-        </div>{% endcomment %}
     </div>
 </div>
 
@@ -448,32 +404,28 @@
             var years = parseInt(seconds / (24 * 3600 * 356));
             if (years > 0){
                 seconds = parseInt(seconds % (years * 24 * 3600 * 356));
-            }
-            else {
+            } else {
 				years = 0;
 			}
 
             var days = parseInt(seconds / (24 * 3600));
             if (days > 0) {
                 seconds = parseInt(seconds % (days * 24 * 3600));
-            }
-			else{
+            } else{
 				days = 0;
 			}
 
             var hours = parseInt(seconds / 3600);
             if (hours > 0){
                 seconds = parseInt(seconds % (hours * 3600));
-            }
-			else{
+            } else {
 				hours = 0;
 			}
 
             var minutes = parseInt(seconds / 60);
 			if (minutes > 0){
 				seconds = parseInt(seconds % 60);
-			}
-			else{
+			} else {
 				minutes = 0;
 			}
 
