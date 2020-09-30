@@ -34,5 +34,6 @@ urlpatterns = [
     path('home/', include(('apps.home.urls'), namespace="home")),
     path('articles/', include(('apps.articles.urls', 'articles'), namespace='articles')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
-    path('robots.txt', view.robots)
+    path('robots.txt', view.robots),
+    path('calendar.html', view.calendar)
 ]

@@ -101,17 +101,12 @@ def tag(request):
 
 
 class HighlightRenderer(mistune.Renderer):
-    """    def block_code(self, code, lang):
-        if not lang:
-            return '\n<pre><code>%s</code></pre>\n' % \
-                mistune.escape(code)
-        lexer = get_lexer_by_name(lang, stripall=True)
-        formatter = html.HtmlFormatter()
-        return highlight(code, lexer, formatter)"""
+    def block_code(self, code, lang):
+        return '<div><pre style="padding:0px"><code>%s</code></pre></div>' % mistune.escape(code)
 
-    def block_quote(self, text):  # 引用块
+    """def block_quote(self, text):  # 引用块
         html = '<blockquote style="color:gray; font-size:14px;font-style:italic">%s</blockquote>' % text
-        return html
+        return html """
 
     def image(self, src, title, alt_text):
         img = '<div style="text-align:center;"><img style="margin:auto" src="%s"></div>' % src

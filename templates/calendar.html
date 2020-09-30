@@ -109,31 +109,24 @@
         var year = curDate.getFullYear();
         var month =  curDate.getMonth();
         
-         console.log(year +"--"+month);
-        // oday.innerHTML = '';
-        if(year && month){
-            console.log(year +"--"+month);
-            // 获取月份的第一天
-            var firstDate = new Date(year,month,1);
-            // 第一天对应是周几
-            var dayOfWeek = firstDate.getDay();
-            // 该月份有多少天
-            var conutDay =  getMonthDays(year,month);
-            console.log("countDay="+conutDay);
-            oLi.forEach(function(el,index){
-                el.innerHTML = '';
-            })
-            eachFor(1,conutDay,function(val){
-                if (val == curDate.getDate()) {
-                    oLi[dayOfWeek + val - 1].innerHTML = "<b><font color='red'>" + val + "</font></b>";
-                }
-                else {
-                    oLi[dayOfWeek + val - 1].innerHTML = val;
-                }
-            });
-        }else{
-            alert('请先选择年份和月份');
-        }
+        // 获取月份的第一天
+        var firstDate = new Date(year,month,1);
+        // 第一天对应是周几
+        var dayOfWeek = firstDate.getDay();
+        // 该月份有多少天
+        var conutDay =  getMonthDays(year,month);
+        console.log("countDay="+conutDay);
+        oLi.forEach(function(el,index){
+            el.innerHTML = '';
+        })
+        eachFor(1,conutDay,function(val){
+            if (val == curDate.getDate()) {
+                oLi[dayOfWeek + val - 1].innerHTML = "<b><font color='red'>" + val + "</font></b>";
+            }
+            else {
+                oLi[dayOfWeek + val - 1].innerHTML = val;
+            }
+        });
     }
     // 是否为闰年 整百年份必须被400整除 非整百年份被4整除就都是闰年
     function getMonthDays(year,month){

@@ -37,27 +37,6 @@
 </head>
 <body>
 <header>
-    <style type="text/css">
-        #search_div{
-            float: right;
-        }
-        #search_div button{
-            width: 60px;
-            height: 35px;
-            border-radius: 5px;
-            color: #333;
-            background-color: #ffffef;
-            border: 1px solid #aaaaaa;
-        }
-        #search_div input{
-            width: 180px;
-            height: 35px;
-            padding-left: 10px;
-            border-radius: 5px;
-            border: 1px solid #aaaaaa;
-            background-color: #ffffef;
-        }
-    </style>
     <script type="text/javascript">
         function setCookie(cname, cvalue, exdays) {
             var d = new Date();
@@ -157,11 +136,7 @@
         </a>
     </div>
 
-    <nav class="topnav" data-scroll-reveal="enter bottom over 0.8s after 0.8s">
-        <span>&nbsp;</span>
-        <span>&nbsp;</span>
-        <span>&nbsp;</span>
-
+    <nav class="topnav" data-scroll-reveal="enter bottom over 0.8s after 0.8s" style="margin-left: 25%;">
         <a href="{% url 'home:home' %}">
             <span>首页</span>
             <span class="en" style="color: #BC7A00">Home</span>
@@ -171,7 +146,6 @@
             <span>关于我</span>
             <span class="en" style="color: #BC7A00">About</span>
         </a>
-
 
         <a href="{% url 'articles:program:home' %}">
             <span>程序设计</span>
@@ -198,7 +172,7 @@
             <span class="en" style="color: #BC7A00">Saying</span>
         </a>
 
-        <div id="search_div">
+        <div class="search_div">
             <form method="get" action="/search/">
                 {% if key_word %}
                     <input id="key_word" type="text" name="keyword" value={{ key_word }} />
@@ -310,12 +284,12 @@
  });
 </script>
 
-<div class="container" style="width: 100%; border: 0px solid grey">
+<div class="container" style="width: 100%;">
     <div class="row">
-        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="border: 0px solid red">
-            <div class="container" style="width: 100%; border: 0px solid grey">
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+            <div class="container" style="width: 100%;">
                 <div class="row" style="text-align: center">
-                    <div id="site-statistic" class="col-sm-12 col-md-12" style="height: 280px;"></div>
+                    <div id="site-statistic" class="col-sm-12 col-md-12"></div>
                     <p>您是小站的第<span style="color: red"> {{ VISIT_COUNT }} </span>位访客，欢迎~</p>
                 </div>
             </div>
@@ -327,6 +301,9 @@
                     {% endblock %}
                 </div>
             </article>
+        </div>
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+            <iframe name="" frameborder="0" scrolling="no" marginwidth="0" marginheight="0" style="height:250px;margin: 10px" src="/calendar.html"></iframe>
         </div>
     </div>
 </div>
@@ -405,32 +382,31 @@
             if (years > 0){
                 seconds = parseInt(seconds % (years * 24 * 3600 * 356));
             } else {
-				years = 0;
-			}
+                years = 0;
+            }
 
             var days = parseInt(seconds / (24 * 3600));
             if (days > 0) {
                 seconds = parseInt(seconds % (days * 24 * 3600));
             } else{
-				days = 0;
-			}
+                days = 0;
+            }
 
             var hours = parseInt(seconds / 3600);
             if (hours > 0){
                 seconds = parseInt(seconds % (hours * 3600));
             } else {
-				hours = 0;
-			}
+                hours = 0;
+            }
 
             var minutes = parseInt(seconds / 60);
-			if (minutes > 0){
+            if (minutes > 0){
 				seconds = parseInt(seconds % 60);
-			} else {
-				minutes = 0;
-			}
+            } else {
+                minutes = 0;
+            }
 
             var run = years + " 年 " + days + " 天 " + hours + " 小时 " + minutes + " 分钟 " + seconds + " 秒";
-
             $(".run_time").html(run);
         }
 
@@ -439,8 +415,7 @@
                 update_run_time();
             }
         }
-
-        var t = setInterval(showAuto, 1000);
+        setInterval(showAuto, 1000);
     })
 
 </script>

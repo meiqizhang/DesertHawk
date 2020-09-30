@@ -30,19 +30,22 @@ a:hover { text-decoration: none; color: #f3910e; }
 .f_r { float: right }
 
 header, article, footer {
-    width: 1000px;
-    margin: auto;
+    /*width: 1000px;
+    margin: auto;*/
     overflow: hidden;
 }
 .logo {
-    margin: 40px 0;
+    /*border: 1px solid red;*/
+    margin-left: 24%;
+    margin-top: 40px;
+    margin-bottom: 40px;
 }
 .logo > a{
     color: #BB6622;
     font-size: 38px;
 }
 nav {
-    margin-bottom: 40px ;
+    margin-bottom: 30px ;
 }
 nav a {
     position: relative;
@@ -50,10 +53,11 @@ nav a {
     font-size: 18px;
     margin-right: 30px;
 }
-.topnav a{
+.topnav a {
     font-size: 18px;
     font-weight: bolder;
     color: #8a6d3b;
+    /*margin-left: 25%;*/
 }
 .topnav a span:first-child {
     z-index: 2;
@@ -91,6 +95,28 @@ article {
     background: url(../../images/articlebg.png) repeat;
 }
 
+.search_div{
+    display: inline-block;
+    margin-right: 0px;
+    position: relative;
+    top: -24px;
+}
+.search_div button{
+    width: 60px;
+    height: 35px;
+    border-radius: 5px;
+    color: #333;
+    background-color: #ffffef;
+    border: 1px solid #aaaaaa;
+}
+.search_div input{
+    width: 150px;
+    height: 35px;
+    padding-left: 10px;
+    border-radius: 5px;
+    border: 1px solid #aaaaaa;
+    background-color: #ffffef;
+}
 .my-container {
     background: url(../../images/articlebg.png) repeat;
     box-shadow: 0px 0px 10px #1AAB8A inset;
@@ -99,6 +125,11 @@ article {
 footer {
     text-align: center;
     padding: 20px 0
+}
+
+#site-statistic {
+    height: 300px;
+    width: 100%;
 }
 
 .page{ margin:20px 0 ; text-align:center; width:100%;overflow: hidden;}
