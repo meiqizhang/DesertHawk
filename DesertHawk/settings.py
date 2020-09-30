@@ -37,7 +37,7 @@ SECRET_KEY = '05duh!gv&6^1(8r-76#ne%(taue_!+4dye2dqb*7e24(-ywq%&'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # Application definition
 
@@ -83,7 +83,6 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR, 'templates'),
-                 #os.path.join(BASE_DIR, 'templates/user'),
                  os.path.join(BASE_DIR, 'apps'),
                  os.path.join(BASE_DIR, 'apps/articles/program'),
                  os.path.join(BASE_DIR, 'apps/comment'),
@@ -109,7 +108,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'DesertHawk.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
@@ -123,7 +121,6 @@ DATABASES = {
         'PORT': '3306'
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -198,21 +195,10 @@ MDEDITOR_CONFIGS = {
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
 LANGUAGE_CODE = 'zh-hans'
-
 TIME_ZONE = 'Asia/Shanghai'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
-
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
@@ -227,20 +213,15 @@ THUMB_URL = '/articles/thumb/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 CKEDITOR_UPLOAD_PATH = ""
 
-
 IMAGES_URL = '/images/'
 CKEDITOR_STORAGE_BACKEND = 'DesertHawk.view.StorageObject'  # 自定义ckedit上传路径
 MKEDITOR_STORAGE_BACKEND = 'DesertHawk.view.StorageObject'  # 自定义ckedit上传路径
-
-#STATICFILES_STORAGE = ''
-#DEFAULT_FILE_STORAGE = ''
 
 secret_id = os.environ["COS_SECRET_ID"]
 secret_key = os.environ["COS_SECRET_KEY"]
 
 sms_app_id = os.environ["SMS_APP_ID"]
 sms_app_key = os.environ["SMS_APP_KEY"]
-
 
 region = 'ap-beijing'  # 替换为用户的 Region
 token = None  # 使用临时密钥需要传入 Token，默认为空，可不填
