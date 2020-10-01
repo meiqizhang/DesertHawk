@@ -6,6 +6,7 @@ from django.shortcuts import render
 # Create your views here.
 from apps.articles.models import Article
 from apps.articles.program.views import HighlightRenderer
+from apps.user.models import UserProfile
 from apps.user.views import add_visit_history_log
 
 
@@ -41,10 +42,19 @@ def detail(request):
     markdown = mistune.Markdown(renderer=renderer)
     article['content'] = markdown(article['content'])
 
+    user_id = request.session.get('user_id', '')
+    header = "/static/images/anonymous.jpg"
+
+    if user_id:
+        if UserProfile.objects.filter(user_id=user_id).first():
+            header = UserProfile.objects.get(user_id=user_id).header
+        else:
+            user_id = None
+
     article = {"article_id": article["article_id"],
                "title": article["title"],
                "description": article["description"],
                "date": "%s年%s月%s日" % (year, month, day),
                "content": article["content"]}
 
-    return render(request, 'articles/mindsay/templates/detail.html', context={"article": article})
+    return render(request, 'articles/mindsay/templates/detail.html', context={"article": article, 'user': {'id': user_id, 'header': header}})

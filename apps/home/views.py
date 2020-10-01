@@ -36,7 +36,7 @@ def home(request):
     page_id = request.GET.get("page_id", "1")
     page_id = int(page_id)
 
-    articles = Article.objects.filter(status=1).order_by("-article_id").values("article_id", "title", "description", "date")
+    articles = Article.objects.filter(status=1).order_by("-article_id").values("article_id", "title", "first_category", "description", "date")
 
     page_size = 7
     total_pages = int(len(articles) / page_size) + 1

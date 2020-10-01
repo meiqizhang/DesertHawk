@@ -101,6 +101,10 @@
                     if (data.result[i] == null) continue;
 
                     var url = encodeURI("/articles/program/detail/" + data.result[i].article_id + ".html");
+                    if (data.result[i].first_category === "mindsay") {
+                        url = encodeURI("/articles/mindsay/detail/" + data.result[i].article_id + ".html");
+                    }
+
                     var figure = '<figure style="margin-left: 25px">';
 
                     $('.blog').append(figure +
@@ -123,7 +127,10 @@
                 for (; i < data.result.length; i++) {
                     var year = data.result[i].date.substring(0, 4);
                     var day = data.result[i].date.substring(5, 10);
-                    url = encodeURI("/articles/program/detail/" + data.result[i].article_id + ".html");
+                    var url = encodeURI("/articles/program/detail/" + data.result[i].article_id + ".html");
+                    if (data.result[i].first_category === "mindsay") {
+                        url = encodeURI("/articles/mindsay/detail/" + data.result[i].article_id + ".html");
+                    }
 
                     $('.cbp_tmtimeline').append('' +
                         '<li>' +
