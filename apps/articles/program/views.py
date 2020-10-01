@@ -1,6 +1,7 @@
 import json
 import logging
 import mistune
+import jieba
 
 from django.db import connection
 from django.http import HttpResponse
@@ -8,6 +9,7 @@ from django.shortcuts import render
 
 from DesertHawk.settings import JsonCustomEncoder
 from apps.articles.models import Article, Tag
+from apps.articles.program.stop_words import stop_words
 from apps.user.models import UserProfile
 from apps.user.views import add_visit_history_log
 
@@ -188,6 +190,9 @@ def detail(request):
             header = UserProfile.objects.get(user_id=user_id).header
         else:
             user_id = None
+
+    keywords = [w for w in jieba.cut(article['content'])]
+    article["keywords"] = list(set(keywords).difference(stop_words))  # b中有而a中没有的非常高效！
 
     renderer = HighlightRenderer()
     markdown = mistune.Markdown(renderer=renderer)

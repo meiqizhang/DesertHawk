@@ -7,7 +7,7 @@
 
 {% block meta %}
     <meta name="description" content="{{ article.description }}">
-    <meta name="keywords" content="{{ article.title }}">
+    <meta name="keywords" content="{{ article.keywords }}">
     <meta name="cdn-baidu-search" content='{"autorun":true, "install":true, "keyword": "{{ article.title}}"}'>
 {% endblock %}
 
@@ -131,7 +131,7 @@
         hljs.initHighlightingOnLoad();
         hljs.initLineNumbersOnLoad();
 
-        $("document").ready(function(){
+        /*$("document").ready(function(){
             var img=$("article img");
             for(var i = 0;i < img.length; i++){
                 var id = img.get(i).id;
@@ -139,7 +139,7 @@
                     set_image(id, id, false);
                 }
             }
-        })
+        })*/
     </script>
 {% endblock %}
 
