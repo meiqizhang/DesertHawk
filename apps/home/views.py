@@ -46,6 +46,9 @@ def home(request):
 
     articles = articles[from_idx: end_idx]
 
+    for article in articles:
+        article["description"] = article["description"][:70]
+
     context = dict()
     context["code"] = 200
     context["result"] = articles

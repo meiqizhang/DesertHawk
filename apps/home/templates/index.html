@@ -97,40 +97,24 @@
                 $('.cbp_tmtimeline li').remove();
 
                 var i = 0;
-                for (; i < 3; i++){
-                    if(data.result[i] == null) {
-                        continue;
-                    }
+                for (; i < 3; i++) {
+                    if (data.result[i] == null) continue;
 
                     var url = encodeURI("/articles/program/detail/" + data.result[i].article_id + ".html");
-                    var figure = '';
-                    if (i === 0) {
-                        figure = '<figure style="margin-left: 25px">';
-                    }
-                    else if (i === 1){
-                        figure = '<figure style="margin-left: 25px">';
-                    }
-                    else if (i === 2) {
-                        figure = '<figure style="margin-left: 25px">';
-                    }
+                    var figure = '<figure style="margin-left: 25px">';
 
-					var description = data.result[i].description;
-					if (description.length > 90) {
-						description = description.substring(0, 90) + "......";
-					}
                     $('.blog').append(figure +
                             '<ul style="padding: 0; margin: 0;">' +
                                '<a href="' + url + '" target="_blank">'+
                                    '<img id="image-' + i +  '" style="width: 100%; height: 100%; margin: auto;" src="/static/images/loading.gif">' +
-                                   '<!--img src="/static/images/hot.png" style="width:16px;height:24px; position:absolute; top:0px; right: 0px"-->' +
                                    '<span>点击查看详情</span>' +
                                '</a>' +
                             '</ul>' +
                            '<p>' +
-                               '<br><a href="' + url + '" target="_blank">'+data.result[i].title + '</a>' +
+                               '<br><a href="' + url + '" target="_blank">' + data.result[i].title + '</a>' +
                            '</p>' +
                            '<figcaption>' +
-                               description +
+                               data.result[i].description +
                            '</figcaption>' +
                         '</figure>'
                     )
@@ -139,12 +123,7 @@
                 for (; i < data.result.length; i++) {
                     var year = data.result[i].date.substring(0, 4);
                     var day = data.result[i].date.substring(5, 10);
-                    var url = encodeURI("/articles/program/detail/" + data.result[i].article_id + ".html");
-
-                    var description = data.result[i].description;
-					if (description.length > 120) {
-						description = description.substring(0, 120) + "......";
-					}
+                    url = encodeURI("/articles/program/detail/" + data.result[i].article_id + ".html");
 
                     $('.cbp_tmtimeline').append('' +
                         '<li>' +
@@ -160,7 +139,7 @@
                                         '<img id="image-' + i + '" style="width: 100%; height: 100%" src="/static/images/loading.gif">' +
                                     '</span>' +
                                     '<a href="' + url + '">'+
-                                        description +
+                                        data.result[i].description +
                                     '</a>' +
                                 '</p>' +
                                 '<a href="' + url + '"  class="readmore" target="_blank">阅读全文&gt;&gt;</a>' +
@@ -185,14 +164,11 @@
                         for (var i = 1; i <= 5; i++) {
                             $('.pages a:last').before('<a title="第' + i + '页" id="page-index"><b>' + i + '</b></a>');
                         }
-                    }
-                    else if(idx > parseInt(data.total_pages) - 2) {
-                        //alert(0);
+                    } else if(idx > parseInt(data.total_pages) - 2) {
                         for (var i = parseInt(data.total_pages) - 5 + 1; i <= parseInt(data.total_pages); i++) {
                             $('.pages a:last').before('<a title="第' + i + '页" id="page-index"><b>' + i + '</b></a>');
                         }
-                    }
-                    else {
+                    } else {
                          for (var i = idx - 2; i <= idx + 2; i++) {
                             $('.pages a:last').before('<a title="第' + i + '页" id="page-index"><b>' + i + '</b></a>');
                         }
@@ -226,8 +202,7 @@
                         if ($(this).attr("class") === "active") {
                             if (idx >= parseInt(data.total_pages)){
                                 alert("已经是最后一页了");
-                            }
-                            else {
+                            } else {
                                 go_to_page(idx + 1);
                             }
                         }
