@@ -1,9 +1,11 @@
 import logging
 
+import mistune
 from django.shortcuts import render
 
 # Create your views here.
 from apps.articles.models import Article
+from apps.articles.program.views import HighlightRenderer
 from apps.user.views import add_visit_history_log
 
 
@@ -34,6 +36,10 @@ def detail(request):
 
     date = article["date"].strftime('%Y-%m-%d').split('-')
     year, month, day = date[:3]
+
+    renderer = HighlightRenderer()
+    markdown = mistune.Markdown(renderer=renderer)
+    article['content'] = markdown(article['content'])
 
     article = {"article_id": article["article_id"],
                "title": article["title"],
