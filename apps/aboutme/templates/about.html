@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-    关于我
+    关于我-西湖歌舞几时休
 {% endblock %}
 
 {% block head %}
@@ -10,7 +10,7 @@
 {% block content %}
 
         <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/about.css' }}"  rel="stylesheet">
-        <div class="container center_content">
+        <div>
             <div class="about-banner">
                 <br><br>
                 <p data-scroll-reveal="enter top over 2s">我们不停的翻弄着回忆，却再也找不回那时的自己</p>
@@ -18,7 +18,8 @@
                 <p data-scroll-reveal="enter bottom over 2s after 2s">无论下多久的雨，最后都会有彩虹；无论你多么悲伤，要相信幸福在前方等候.</p>
             </div>
             <div class="memorial_day">
-                <div class="time_axis"></div>
+                <div class="time_axis" >
+                </div>
                 <ul>
                     <li class="n1"><a href="#">本科毕业</a>
                         <div class="dateview">2014</div>
@@ -28,12 +29,8 @@
                         <div class="dateview">2016</div>
                     </li>
 
-                    <li class="n3"><a href="#">推荐系统</a>
+                    <li class="n3"><a href="#">推荐系统&ABTest</a>
                         <div class="dateview">2018</div>
-                    </li>
-
-                    <li class="n4"><a href="#">ABTest</a>
-                        <div class="dateview">2020</div>
                     </li>
                 </ul>
             </div>

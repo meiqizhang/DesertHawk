@@ -26,28 +26,20 @@
         }
         #input{
             width: 100%;
-            /*height: 150px;*/
             border: 0px green solid;
             clear: both;
             margin-top: 10px;
         }
         #input-area{
             width: calc(100% - 2px);
-            /*height: 140px;*/
             font-size: 16px;
             border: 1px solid grey;
         }
         #input #input-left{
-            /*width: 10px;
-            height: 300px;
-            border: 1px solid greenyellow;*/
             float: left;
             margin-left: 20px;
         }
         #input #input-right{
-            /*width: 10px;
-            height: 300px;
-            border: 1px solid greenyellow;*/
             float: right;
             margin-right: 60px;
         }
@@ -147,7 +139,6 @@
             border-radius: 10px;
         }
         .dialog .send-code:hover {
-            /*background: #5a7b8c;*/
         }
         .dialog .input-password {
             position: absolute;
@@ -329,9 +320,8 @@
                 type:'POST',
                 data:{'phone': phone, csrfmiddlewaretoken: '{{ csrf_token }}'},
                 url:'{% url 'user:send_code' %}',
-                datatype:JSON,      //希望返回Json格式的数据
+                datatype: JSON,
                 success:function (data) {
-                    //alert(data.msg);
                 },
                 error:function () {
                     console.log('ajax刷新分页数据失败！');
@@ -341,7 +331,6 @@
             var waitTime = baseTime * tryTimes;
             var intervalId = window.setInterval(function () {
                  if (waitTime === 0){
-                     //alert("超时");
                      clearInterval(intervalId);
                      $(".code-timer").text(' 发送验证码');
                      tryTimes += 1
@@ -361,9 +350,7 @@
                     alert("手机号或用户名和密码不能为空");
                     return
                 }
-            }
-            else if (login_type === "sms") {
-
+            } else if (login_type === "sms") {
             }
 
             $.ajax({
@@ -376,8 +363,7 @@
                 success:function (data) {
                     if (data.status === "error") {
                         alert(data.msg);
-                    }
-                    else {
+                    } else {
                         alert("登录成功，刷新当前页面就可以留言评论啦~")
                         image_download_and_set("visit-header", data.user.header);
                     }
@@ -389,13 +375,10 @@
         }
 
         function click_header_btn(){
-            //alert("已经登录了，确定要退出登录吗？");
-
             var status = $("#login-dialog").css("visibility");
             if (status === 'hidden') {
                 $("#login-dialog").css("visibility", 'visible');
-            }
-            else {
+            } else {
                 $("#login-dialog").css("visibility", 'hidden');
             }
         }
@@ -403,7 +386,6 @@
             window.location.reload();
             window.open("/user/regist");
         }
-
     </script>
 
     <div id="login_btn" >

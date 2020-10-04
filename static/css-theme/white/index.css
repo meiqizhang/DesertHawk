@@ -17,13 +17,11 @@
     float: left;
     margin: 0 8px 0;
     overflow: hidden;
-    /*border: 1px solid red;*/
 }
 
 .blog figure img {
     display: block;
     margin: auto;
-    /*height: 280px;*/
     overflow: hidden;
 }
 .blog figure p {
@@ -59,7 +57,6 @@
     display: block;
 }
 .blog figure > figcaption{
-    /*color: #ffffff;*/
 }
 
 .blog > figure > p > a{
@@ -82,7 +79,6 @@
     text-decoration: underline
 }
 
-/* cbp_tmtimeline */
 .cbp_tmtimeline {
     margin: 30px 0 0 0;
     padding: 0;
@@ -126,9 +122,7 @@
 }
 
 .cbp_tmtimeline > li .cbp_tmlabel {
-   /* margin: 0 30px 15px 180px;*/
     margin-top: 0px;
-    /*margin-right: 30px;*/
     margin-bottom: 30px;
     margin-left: 250px;
 
@@ -138,9 +132,7 @@
     position: relative;
     border-radius: 5px;
     height: 200px;
-    /*width: calc(100% - 240px);*/
     margin-right: 110px;
-    border: 0px dashed crimson;
 }
 .cbp_tmtimeline > li:nth-child(odd) .cbp_tmlabel {
     /*background: salmon;*/
@@ -174,7 +166,6 @@
 .cbp_tmtimeline > li:nth-child(even) .cbp_tmlabel:after {
     border-right-color: #c0d592;
 }
-
 
 .readmore{
     color: #fff;
@@ -236,8 +227,8 @@
 }
 
 .blogpic {
-    width: 200px;
     height: 120px;
+    width: 40%;
     overflow: hidden;
     display: block; float: left;
     margin-right: 20px;
@@ -248,15 +239,6 @@
     height: auto;
     margin: auto;
 }
-
-/*a.readmore {
-    background: #FAFAE9;
-    color: #fff;
-    padding: 5px 10px;
-    float: right;
-    margin: 20px 0 0 0;
-    border-radius: 5px;
-}*/
 
 .cbp_tmtimeline li .cbp_tmtime {
     -webkit-transition: all 1s;

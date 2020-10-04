@@ -30,6 +30,16 @@
             </figure>
         {% endfor %}
         {% endcomment %}
+        <div class="container" style="width: 100%">
+            <div class="row">
+                <div id="top-1" class="col-xs-4 col-4 col-sm-4 col-md-4 col-lg-4">
+                </div>
+                <div id="top-2" class="col-xs-4 col-4 col-sm-4 col-md-4 col-lg-4">
+                </div>
+                <div id="top-3" class="col-xs-4 col-4 col-sm-4 col-md-4 col-lg-4">
+                </div>
+            </div>
+        </div>
     </div>
 
     <ul class="cbp_tmtimeline">
@@ -77,13 +87,9 @@
                     type:'GET',
                     data:{'page_id':page_id},
                     url:'{% url 'index:home' %}',
-                    datatype:JSON,      //希望返回Json格式的数据
+                    datatype: JSON,
                     success:function (data) {
-                        f1(data);     //处理返回后的数据
-                        /*$(".blog").children().each(function(i, n){
-                            var obj = $(n)
-                            alert(obj.html());//弹出子元素标签
-                        });*/
+                        f1(data);
                     },
                     error:function () {
                         console.log('ajax刷新分页数据失败！');
@@ -91,8 +97,7 @@
                 });
             }
 
-            function f1(data) {   //处理返回后的数据    data为字符串型);
-                //刷新文章
+            function f1(data) {
                 $('.blog figure').remove();
                 $('.cbp_tmtimeline li').remove();
 
@@ -105,9 +110,9 @@
                         url = encodeURI("/articles/mindsay/detail/" + data.result[i].article_id + ".html");
                     }
 
-                    var figure = '<figure style="margin-left: 25px">';
+                    var figure = '<figure style="width: 100%">';
 
-                    $('.blog').append(figure +
+                    $('#top-' + (i + 1)).append(figure +
                             '<ul style="padding: 0; margin: 0;">' +
                                '<a href="' + url + '" target="_blank">'+
                                    '<img id="image-' + i +  '" style="width: 100%; height: 100%; margin: auto;" src="/static/images/loading.gif">' +
@@ -138,7 +143,7 @@
                                 '<span>' + year + '</span>' +
                                 '<span>' + day + '</span>'+
                             '</time>'+
-                            '<div class="cbp_tmicon"></div>' +
+                            '<div class="cbp_tmicon" style=""></div>' +
                             '<div class="cbp_tmlabel" data-scroll-reveal="enter right over 1s">' +
                                 '<h2>'+ data.result[i].title +'</h2>' +
                                 '<p>'+
@@ -195,8 +200,7 @@
                             let idx = parseInt($(this).text());
                             if (idx < 2) {
                                 alert("已经是第一页了");
-                            }
-                            else {
+                            } else {
                                 go_to_page(idx-1);
                             }
                         }

@@ -6,16 +6,13 @@
         height: auto;
         margin-top: 30px;
         border: 0px solid green;
-
     }
 
     .comment-item > .header {
         width: 48px;
         height: 48px;
-        /*border: 1px solid red;*/
         margin-top:0px;
         float: left;
-
     }
 
     .username {
@@ -53,13 +50,7 @@
         color: red;
         cursor: pointer;
     }
-
 </style>
-
-{% comment %}
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
-<link href="{% static 'css-theme/' %}{{ THEME }}{{ '/bootstrap.min.css' }}"  rel="stylesheet">
-{% endcomment %}
 
 <script src="/static/ckeditor/ckeditor/ckeditor.js"></script>
 <script src="/static/ckeditor/ckeditor/adapters/jquery.js"></script>
@@ -188,10 +179,8 @@
             type:'POST',
             data:{'title': title, "parent": -1, csrfmiddlewaretoken:'{{ csrf_token }}'},
             url:'{% url 'comment:list' %}',
-            datatype:JSON,      //希望返回Json格式的数据
-            success:function (data) {
-                //console.info(data)
-                // alert(data.comment);
+            datatype: JSON,
+            success: function (data) {
                 if (data.comment.length < 1){
                     $("#comment-list").append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;还没有评论哟，快来评论盖楼呀~");
                     return true;
@@ -217,7 +206,6 @@
             datatype: JSON,
             success:function (data) {
                 if (data.comment.length > 0){
-                    //alert(content_id + " has "+ data.comment.length + " children");
                     for (var i = 0; i < data.comment.length; i++) {
                         $("#" + content_id).append(create_comment_item(data.comment[i], true, user_id));
                         list_reply_tree(data.comment[i]);
