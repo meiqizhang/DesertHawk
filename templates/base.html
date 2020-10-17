@@ -26,13 +26,37 @@
     {% block meta %}
     {% endblock %}
 
+    <link id="baseCss" rel="stylesheet" />
+{% comment %}
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/base.css' }}"  rel="stylesheet">
+{% endcomment %}
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/index.css' }}" rel="stylesheet">
+
     <script src="{% static 'js/modernizr.js' %}"></script>
     <script src="{% static 'js/scrollReveal.js' %}"></script>
     <script src="{% static 'js/article/request-image.js' %}"></script>
     <script src="{% static 'js/map/echarts.min.js' %}"></script>
     <script src="{% static 'js/map/china.js' %}"></script>
+
+    <SCRIPT>
+        function getWidth() {
+            var winWidth;
+            if(window.innerWidth) {
+                winWidth = window.innerWidth;
+            } else if((document.body) && (document.body.clientWidth)) {
+                winWidth = document.body.clientWidth;
+            }
+            return winWidth;
+        }
+
+        var h_screenWidth = getWidth();
+            if (h_screenWidth > 1500) {
+                baseCSS = "base-default.css";
+            } else {
+                baseCSS = "base-min.css";
+            }
+            document.getElementById("baseCss").href = "static/css-theme/white/" + baseCSS;
+    </SCRIPT>
 </head>
 <body>
 <header>
@@ -282,9 +306,9 @@
  });
 </script>
 
-<div class="container" style="width: 100%;">
+<div id="main-container" class="container" style="width: 100%;">
     <div class="row">
-        <div class="col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3">
+        <div id="statistic-bar" class="col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3">
             <div class="container" style="width: 100%;">
                 <div class="row" style="text-align: center">
                     <div id="site-statistic" class="col-sm-12 col-md-12"></div>
@@ -292,7 +316,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-12 col-12 col-sm-12 col-md-12 col-lg-6">
+        <div id="article-bar" class="col-xs-12 col-12 col-sm-12 col-md-12 col-lg-6">
             <article>
                 <div class="my-container" >
                     {% block content %}
@@ -300,11 +324,29 @@
                 </div>
             </article>
         </div>
-        <div class="col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3">
+        <div id="calendar-bar" class="col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3">
             <iframe name="" frameborder="0" scrolling="no" marginwidth="0" marginheight="0" style="height:250px;margin: 10px" src="/calendar.html"></iframe>
         </div>
     </div>
 </div>
+
+<script>
+    var screenWidth = getWidth();
+    console.log("width=" + screenWidth);
+    if (screenWidth > 1500) {
+        document.getElementById("statistic-bar").setAttribute("class", "col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3");
+        document.getElementById("article-bar").setAttribute("class", "col-xs-12 col-12 col-sm-12 col-md-12 col-lg-6");
+        document.getElementById("calendar-bar").setAttribute("class", "col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3");
+    } else if (screenWidth > 1280) {
+        document.getElementById("statistic-bar").setAttribute("class", "col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3");
+        document.getElementById("article-bar").setAttribute("class", "col-xs-12 col-12 col-sm-12 col-md-12 col-lg-9");
+        document.getElementById("calendar-bar").setAttribute("style", "display:none");
+    } else {
+        document.getElementById("statistic-bar").setAttribute("style", "display:none");
+        document.getElementById("article-bar").setAttribute("class", "col-xs-12 col-12 col-sm-12 col-md-12 col-lg-12");
+        document.getElementById("calendar-bar").setAttribute("style", "display:none");
+    }
+</script>
 
 <div class="container footer_href" style="margin-top: 30px; color: #000000; font-size: 14px">
     <div class="row">

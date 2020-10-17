@@ -121,6 +121,18 @@
     color: #fde19a;
 }
 
+@media (min-width: 2200px) {
+    .statstic-bar {
+        display: block;
+    }
+}
+
+@media (min-width: 2200px) {
+    .statstic-bar {
+        display: block;
+    }
+}
+
 .cbp_tmtimeline > li .cbp_tmlabel {
     margin-top: 0px;
     margin-bottom: 30px;
@@ -132,8 +144,9 @@
     position: relative;
     border-radius: 5px;
     height: 200px;
-    margin-right: 110px;
+    margin-right: 50px;
 }
+
 .cbp_tmtimeline > li:nth-child(odd) .cbp_tmlabel {
     /*background: salmon;*/
     background: #ff9f8f;
