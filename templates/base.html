@@ -27,9 +27,7 @@
     {% endblock %}
 
     <link id="baseCss" rel="stylesheet" />
-{% comment %}
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/base.css' }}"  rel="stylesheet">
-{% endcomment %}
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/index.css' }}" rel="stylesheet">
 
     <script src="{% static 'js/modernizr.js' %}"></script>
@@ -49,13 +47,13 @@
             return winWidth;
         }
 
-        var h_screenWidth = getWidth();
-            if (h_screenWidth > 1500) {
-                baseCSS = "base-default.css";
-            } else {
-                baseCSS = "base-min.css";
-            }
-            document.getElementById("baseCss").href = "static/css-theme/white/" + baseCSS;
+        /*var h_screenWidth = getWidth();
+        if (h_screenWidth > 1500) {
+            baseCSS = "base-default.css";
+        } else {
+            baseCSS = "base-min.css";
+        }
+        document.getElementById("baseCss").href = "static/css-theme/white/" + baseCSS;*/
     </SCRIPT>
 </head>
 <body>
