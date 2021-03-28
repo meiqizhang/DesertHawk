@@ -306,7 +306,7 @@
 
 <div id="main-container" class="container" style="width: 100%;">
     <div class="row">
-        <div id="statistic-bar" class="col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3">
+        <div id="statistic-bar" class="col-xs-0 col-0 col-sm-0 col-md-0 col-lg-0">
             <div class="container" style="width: 100%;">
                 <div class="row" style="text-align: center">
                     <div id="site-statistic" class="col-sm-12 col-md-12"></div>
@@ -322,7 +322,7 @@
                 </div>
             </article>
         </div>
-        <div id="calendar-bar" class="col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3">
+        <div id="calendar-bar" class="col-xs-0 col-0 col-sm-0 col-md-0 col-lg-6">
             <iframe name="" frameborder="0" scrolling="no" marginwidth="0" marginheight="0" style="height:250px;margin: 10px" src="/calendar.html"></iframe>
         </div>
     </div>
@@ -336,12 +336,12 @@
         document.getElementById("article-bar").setAttribute("class", "col-xs-12 col-12 col-sm-12 col-md-12 col-lg-6");
         document.getElementById("calendar-bar").setAttribute("class", "col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3");
     } else if (screenWidth > 1280) {
-        document.getElementById("statistic-bar").setAttribute("class", "col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3");
-        document.getElementById("article-bar").setAttribute("class", "col-xs-12 col-12 col-sm-12 col-md-12 col-lg-9");
+        document.getElementById("article-bar").setAttribute("class", "col-xs-offset-2 col-sm-offset-2 col-md-offset-2 col-lg-offset-2 col-xs-8 col-8 col-sm-8 col-md-8 col-lg-8");
         document.getElementById("calendar-bar").setAttribute("style", "display:none");
-    } else {
         document.getElementById("statistic-bar").setAttribute("style", "display:none");
+    } else {
         document.getElementById("article-bar").setAttribute("class", "col-xs-12 col-12 col-sm-12 col-md-12 col-lg-12");
+        document.getElementById("statistic-bar").setAttribute("style", "display:none");
         document.getElementById("calendar-bar").setAttribute("style", "display:none");
     }
 </script>

@@ -25,7 +25,7 @@ def search(request):
 
             print(results)
     else:
-        pass
+        results = list()
 
     return render(request, 'search.html', context={"articles": results, "keyword": keyword})
 
