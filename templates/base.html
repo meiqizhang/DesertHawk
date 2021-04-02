@@ -304,9 +304,9 @@
  });
 </script>
 
-<div id="main-container" class="container" style="width: 100%;">
+<div id="main-container" class="container show" style="width: 100%;">
     <div class="row">
-        <div id="statistic-bar" class="col-xs-0 col-0 col-sm-0 col-md-0 col-lg-0">
+        <div id="statistic-bar" class="col-xs-0 col-0 col-sm-0 col-md-0 col-lg-0 hidden">
             <div class="container" style="width: 100%;">
                 <div class="row" style="text-align: center">
                     <div id="site-statistic" class="col-sm-12 col-md-12"></div>
@@ -314,7 +314,7 @@
                 </div>
             </div>
         </div>
-        <div id="article-bar" class="col-xs-12 col-12 col-sm-12 col-md-12 col-lg-6">
+        <div id="article-bar" class="col-xs-12 col-12 col-sm-12 col-md-12 col-lg-6 hidden">
             <article>
                 <div class="my-container" >
                     {% block content %}
@@ -322,7 +322,7 @@
                 </div>
             </article>
         </div>
-        <div id="calendar-bar" class="col-xs-0 col-0 col-sm-0 col-md-0 col-lg-6">
+        <div id="calendar-bar" class="col-xs-0 col-0 col-sm-0 col-md-0 col-lg-6 hidden">
             <iframe name="" frameborder="0" scrolling="no" marginwidth="0" marginheight="0" style="height:250px;margin: 10px" src="/calendar.html"></iframe>
         </div>
     </div>
@@ -332,18 +332,21 @@
     var screenWidth = getWidth();
     console.log("width=" + screenWidth);
     if (screenWidth > 1500) {
-        document.getElementById("statistic-bar").setAttribute("class", "col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3");
-        document.getElementById("article-bar").setAttribute("class", "col-xs-12 col-12 col-sm-12 col-md-12 col-lg-6");
-        document.getElementById("calendar-bar").setAttribute("class", "col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3");
+        $("#statistic-bar").attr("class", "col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3 show");
+        $("#article-bar").attr("class", "col-xs-12 col-12 col-sm-12 col-md-12 col-lg-6 show");
+        $("#calendar-bar").attr("class", "col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3 show");
     } else if (screenWidth > 1280) {
-        document.getElementById("article-bar").setAttribute("class", "col-xs-offset-2 col-sm-offset-2 col-md-offset-2 col-lg-offset-2 col-xs-8 col-8 col-sm-8 col-md-8 col-lg-8");
-        document.getElementById("calendar-bar").setAttribute("style", "display:none");
-        document.getElementById("statistic-bar").setAttribute("style", "display:none");
+        $("#article-bar").attr("class", "col-xs-offset-2 col-sm-offset-2 col-md-offset-2 col-lg-offset-2 col-xs-8 col-8 col-sm-8 col-md-8 col-lg-8 show");
+        //document.getElementById("article-bar").setAttribute("class", "col-xs-offset-2 col-sm-offset-2 col-md-offset-2 col-lg-offset-2 col-xs-8 col-8 col-sm-8 col-md-8 col-lg-8");
+        //document.getElementById("calendar-bar").setAttribute("style", "display:none");
+        //document.getElementById("statistic-bar").setAttribute("style", "display:none");
     } else {
-        document.getElementById("article-bar").setAttribute("class", "col-xs-12 col-12 col-sm-12 col-md-12 col-lg-12");
-        document.getElementById("statistic-bar").setAttribute("style", "display:none");
-        document.getElementById("calendar-bar").setAttribute("style", "display:none");
+        $("#article-bar").attr("class", "col-xs-12 col-12 col-sm-12 col-md-12 col-lg-12 show");
+        //document.getElementById("article-bar").setAttribute("class", "col-xs-12 col-12 col-sm-12 col-md-12 col-lg-12");
+        //document.getElementById("statistic-bar").setAttribute("style", "display:none");
+        //document.getElementById("calendar-bar").setAttribute("style", "display:none");
     }
+    //$("#main-container").attr("class", "show");
 </script>
 
 <div class="container footer_href" style="margin-top: 30px; color: #000000; font-size: 14px">
