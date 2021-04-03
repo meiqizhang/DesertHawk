@@ -95,7 +95,7 @@ def get_statistic(request):
                 record = CityCoordinate.objects.get(x=x, y=y)
                 pos["city"] = record.city
             except Exception as e:
-                logging.error("catch an exception, e=%s" % e)
+                #logging.error("catch an exception, e=%s" % e)
                 pos["city"] = "未知"
 
         result.append(pos)

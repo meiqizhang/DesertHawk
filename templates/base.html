@@ -7,6 +7,7 @@
     <script src="https://pv.sohu.com/cityjson?ie=utf-8"></script>
     <script src="https://how2j.cn/study/js/jquery/2.0.0/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="http://lib.h-ui.net/jquery.form/3.51.0/jquery.form.min.js"></script>
     {% block mycss %}
     {% endblock %}
 
@@ -198,9 +199,8 @@
                 {% if key_word %}
                     <input id="key_word" type="text" name="keyword" value={{ key_word }} />
                 {% else %}
-                    <input type="text" name="keyword" placeholder="搜索文章" />
+                    <input type="text" name="keyword" placeholder="回车键搜索文章..." />
                 {% endif %}
-                <button type="submit">Search</button>
             </form>
         </div>
     </nav>

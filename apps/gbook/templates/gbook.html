@@ -61,7 +61,7 @@
                     <!--span style="margin-right: 20px">不要轻易放弃。学习成长的路上，我们长路漫漫，只因学无止境。</span-->
                 </h2>
                 <div style="padding-left: 30px; padding-right: 30px;padding-top: 30px">
-                     <form action="{% url 'gbook:add' %}" method="POST" enctype="multipart/form-data">
+                     <form action="{% url 'gbook:add' %}" method="POST" enctype="multipart/form-data" id="gbook-commit-form">
                          {% csrf_token %}
                          {% include "comment.html" %}
                          <span style="padding-left: 0px">
@@ -94,7 +94,6 @@
 
 <script>
      $("document").ready(function(){
-         //alert("req");
          $.ajax({
             type:'POST',
             data:{'parent': -1, csrfmiddlewaretoken:'{{ csrf_token }}'},
@@ -115,6 +114,27 @@
             }
         });
      })
+
+    $("#gbook-commit-form").ajaxForm(function(data){
+        var oEditor = CKEDITOR.instances["comment-input-text"];
+        var content = oEditor.getData();
+        $.ajax({
+            type:'POST',
+            data:{
+                "content": content,
+                "parent": -1,
+                csrfmiddlewaretoken:'{{ csrf_token }}'
+            },
+            url:'{% url 'gbook:add' %}',
+            datatype:JSON,
+            success:function(rsp) {
+                alert(rsp.msg);
+            },
+            error:function () {
+                console.log('ajax刷新分页数据失败！');
+            }
+        });
+    });
 
      function gbook_ding(id) {
          $.ajax({

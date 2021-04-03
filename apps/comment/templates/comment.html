@@ -1,258 +1,34 @@
 {% load static %}
-<head>
+<head xmlns="http://www.w3.org/1999/html">
     <style>
         .login-logo {
-            padding-left: 10px;
-            padding-top: 13px;
-            color: #f3910e;
+            padding-top: 12px;
+            color: #03910e;
         }
 
         .login-logo:hover {
-            padding-left: 10px;
             padding-top: 12px;
             color: red;
             text-decoration: underline;
             cursor: pointer;
         }
-
-        #login_btn{
-            height: 50px;
-            width: calc(100% - 2px);
-        }
-        #login_btn a img{
-            width: 64px;
-            height: 64px;
-            border-radius:50%;
-        }
-        #input{
-            width: 100%;
-            border: 0px green solid;
-            clear: both;
-            margin-top: 10px;
-        }
-        #input-area{
-            width: calc(100% - 2px);
-            font-size: 16px;
-            border: 1px solid grey;
-        }
-        #input #input-left{
-            float: left;
-            margin-left: 20px;
-        }
-        #input #input-right{
-            float: right;
-            margin-right: 60px;
-        }
-        #input-option{
-            margin-top: 10px;
-        }
-        #face {
-            width: 32px;
-            height: 32px;
-            border: 1px #3c3c3c solid;
-            float: left;
-        }
-        #pic {
-            width: 32px;
-            height: 32px;
-            border: 1px #9c3c3c solid;
-            float: left;
-            margin-left: 30px;
-        }
-
-        .dialog {
-            position: fixed;
-            top: 40%;
-            left: 50%;
-            margin-left: 0px;
-            margin-top: 0px;
-            overflow: hidden;
-            border: 1px solid #999;
-            text-align: center;
-            border-radius: 10px;
-            box-shadow: 5px 5px 5px #999;
-            z-index: 1110;
-            background-image: url("/static/images/login-bg-high-new.png");
-        }
-
-        .dialog > .regist-btn{
-            text-decoration: underline;
-        }
-        .dialog span:hover{
-            color: red;
-            cursor: pointer;
-        }
-        .dialog .close {
-            position: absolute;
-            top: 15px;
-            margin-left: 160px;
-            width: 12px;
-            height: 12px;
-            background-image: url("/static/images/close-btn.png");
-        }
-        .dialog .close:hover {
-            top: 14px;
-            margin-left: 160px;
-        }
-
-        .dialog .login-tips {
-            position: absolute;
-            top: 100px;
-            left: 12px;
-            width: 350px;
-            height: 40px;
-            color:#7d7d7d;
-        }
-
-        .dialog .input-phone {
-            position: absolute;
-            top: 140px;
-            left: 16px;
-            width: 345px;
-            height: 40px;
-            border: 1px solid grey;
-            border-radius: 10px;
-        }
-
-        .dialog .input-code {
-            position: absolute;
-            top: 200px;
-            left: 16px;
-            width: 230px;
-            height: 40px;
-            padding-left: 10px;
-            size: 280px;
-            border: solid 1px grey;
-            border-radius: 10px;
-        }
-
-        .dialog .send-code {
-            position: absolute;
-            top: 200px;
-            left: 260px;
-            width: 100px;
-            height: 40px;
-            padding-right: 10px;
-            size: 80px;
-            border: solid 1px grey;
-            text-align: center;
-            border-radius: 10px;
-        }
-        .dialog .send-code:hover {
-        }
-        .dialog .input-password {
-            position: absolute;
-            top: 200px;
-            left: 16px;
-            width: 345px;
-            height: 40px;
-            border: 1px solid grey;
-            border-radius: 10px;
-        }
-
-        .code-login > span{
-            color: grey;
-        }
-        .code-login > span:hover{
-        }
-        .dialog .login-btn {
-            position: absolute;
-            top: 280px;
-            left: 16px;
-            width: 350px;
-            height: 40px;
-            font-size: 18px;
-            text-align: center;
-            line-height: 40px;
-            background-image: url("/static/images/login-btn.png");
-        }
-
-        .dialog .regist-btn {
-            position: absolute;
-            top: 245px;
-            left: 16px;
-            width: 350px;
-            height: 30px;
-            color:#7d7d7d;
-        }
-
-        .dialog .login-with-wechat {
-            position: absolute;
-            top: 360px;
-            left: 60px;
-            width: 48px;
-            height: 48px;
-            background-image: url("/static/images/wechat.png");
-        }
-
-        .dialog .login-with-wechat:hover {
-            top: 358px;
-            cursor: pointer;
-        }
-
-        .dialog .login-with-qq {
-            position: absolute;
-            top: 360px;
-            left: 135px;
-            width: 48px;
-            height: 48px;
-            background-image: url("/static/images/qq.png");
-        }
-        .dialog .login-with-qq:hover {
-            top: 358px;
-            cursor: pointer;
-        }
-
-        .dialog .login-with-github {
-            position: absolute;
-            top: 360px;
-            left: 215px;
-            width: 48px;
-            height: 48px;
-            background-image: url("/static/images/github.png");
-        }
-        .dialog .login-with-github:hover {
-            top: 358px;
-            cursor: pointer;
-        }
-
-        .dialog .login-with-phone {
-            position: absolute;
-            top: 360px;
-            left: 280px;
-            width: 48px;
-            height: 48px;
-            background-image: url("/static/images/phone.png");
-        }
-        .dialog .login-with-phone:hover {
-            top: 358px;
-            cursor: pointer;
-        }
-
-        #dialogswitch {
-            display: none;
-        }
-        #dialogswitch:checked+.dialog {
-            margin-left: -150px;
-            margin-top: -100px;
-            width: 384px;
-            height: 474px;
-        }
-
-        #dialoglogin:checked+.dialog {
-            margin-left: -150px;
-            margin-top: -100px;
-            width: 384px;
-            height: 474px;
-        }
-
         .current-user img{
             width: 48px;
             height: 48px;
             border-radius: 50%;
             border: 1px solid white;
         }
-
+        .btn-circle {
+            width: 48px;
+            height: 48px;
+            text-align: center;
+            border-radius: 50%;
+            border: 1px solid white;
+        }
+         .btn-circle:hover {
+             cursor: pointer;
+             top: -2px;
+         }
     </style>
 </head>
 
@@ -275,42 +51,34 @@
             return false;
         }
         function login_with_phone() {
-            $(".login-tips").text('使用手机登录');
-            $(".input-phone").attr("placeholder", "输入手机号")
-            $(".input-password").css("visibility", "hidden");
-            $(".regist-btn").css("visibility", "hidden");
-
-            $(".code-login").css("visibility", "visible");
-            $(".input-code").css("visibility", "visible");
-            $(".send-code").css("visibility", "visible");
-
+            $("#login-with-username").attr("class", "hide");
+            $("#login-with-sms").attr("class", "show");
             login_type = "sms";
-
             return false;
         }
 
-        function send_code() {
-            text = $(".code-timer").text()
+        function send_sms_code() {
+            var send_btn = $("#login-with-sms-code-btn");
+            var text = send_btn.text();
             if (text.indexOf("s") > 0){
                 alert("不要重复发送~");
                 return false;
             }
 
             login_type = 'sms';
-            var phone = $(".input-phone").val();
-
-            if (phone.length === 0) {
+            var phone_number = $("#login-with-sms-phone-number").val();
+            if (phone_number.length === 0) {
                 alert("手机号不能为空");
                 return ;
             }
 
-            if (phone.length !== 11) {
+            if (phone_number.length !== 11) {
                 alert("手机号长度错误");
                 return ;
             }
 
-            for (var i = 0; i < phone.length; ++i) {
-                if (phone[i] < '0' || phone[i] > '9') {
+            for (var i = 0; i < phone_number.length; ++i) {
+                if (phone_number[i] < '0' || phone_number[i] > '9') {
                     alert("手机号错误");
                     return ;
                 }
@@ -318,45 +86,61 @@
 
             $.ajax({
                 type:'POST',
-                data:{'phone': phone, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                data:{'phone_number': phone_number, csrfmiddlewaretoken: '{{ csrf_token }}'},
                 url:'{% url 'user:send_code' %}',
                 datatype: JSON,
-                success:function (data) {
+                async: false,
+                success:function (rsp) {
+                    if(rsp.code !== 0) {
+                        alert(rsp.msg);
+                        return;
+                    }
+                    var waitTime = baseTime * tryTimes;
+                    var intervalId = window.setInterval(function () {
+                        // 15692097691
+                         if (waitTime <= 0){
+                             clearInterval(intervalId);
+                             send_btn.val(' 发送验证码');
+                             tryTimes += 1
+                             return ;
+                         }
+                         send_btn.val(' '+ waitTime + 's');
+                         waitTime -= 1;
+                    }, 1000);
                 },
                 error:function () {
                     console.log('ajax刷新分页数据失败！');
                 }
             });
-
-            var waitTime = baseTime * tryTimes;
-            var intervalId = window.setInterval(function () {
-                 if (waitTime === 0){
-                     clearInterval(intervalId);
-                     $(".code-timer").text(' 发送验证码');
-                     tryTimes += 1
-                     return ;
-                 }
-                 $(".code-timer").text(' '+ waitTime + 's');
-                 waitTime -= 1;
-            }, 1000);
+            return false;
         }
         function click_login_btn() {
-            var name_phone = ($(".input-phone").val());
-            var code = ($(".input-code").val());
-            var password = ($(".input-password").val());
+            var username_phone = $("#login-with-username-username-phone").val();
+            var password = $("#login-with-username-password").val();
+            var sms_code = $("#login-with-sms-sms-code").val();
+            var phone_number = $("#login-with-sms-phone-number").val();
 
             if (login_type === "username") {
-                if (name_phone.length === 0 || password.length === 0) {
+                if (username_phone.length === 0 || password.length === 0) {
                     alert("手机号或用户名和密码不能为空");
                     return
                 }
-            } else if (login_type === "sms") {
+            }
+            else if (login_type === "sms") {
             }
 
             $.ajax({
                 type:'POST',
-                data:{'ip': getCookie('ip'), 'address': getCookie('address'), 'login_type': login_type,
-                    'name_phone': name_phone, 'password': password, 'code': code, csrfmiddlewaretoken:'{{ csrf_token }}'},
+                data:{
+                        'ip': getCookie('ip'),
+                        'address': getCookie('address'),
+                        'login_type': login_type,
+                        'username_phone': username_phone,
+                        'phone_number': phone_number,
+                        'password': password,
+                        'sms_code': sms_code,
+                    csrfmiddlewaretoken:'{{ csrf_token }}'
+                },
 
                 url:'{% url 'user:login' %}',
                 datatype:JSON,      //希望返回Json格式的数据
@@ -366,6 +150,7 @@
                     } else {
                         alert("登录成功，刷新当前页面就可以留言评论啦~")
                         image_download_and_set("visit-header", data.user.header);
+                        $('#login-btn').modal('hide');
                     }
                 },
                 error:function () {
@@ -374,73 +159,104 @@
             });
         }
 
-        function click_header_btn(){
-            var status = $("#login-dialog").css("visibility");
-            if (status === 'hidden') {
-                $("#login-dialog").css("visibility", 'visible');
-            } else {
-                $("#login-dialog").css("visibility", 'hidden');
-            }
-        }
         function regist_btn() {
-            window.location.reload();
+            //window.location.reload();
             window.open("/user/regist");
         }
     </script>
 
-    <div id="login_btn" >
-        <label for="dialogswitch">
-            <div class="current-user">
-                {% if user.id %}
-                    <img src="{{ user.header }}">
-                {% else %}
-                    <div style="width: 48px;height:48px; border-radius:50%; border: 1px solid red;">
-                        <div class="login-logo">登录</div>
-                    </div>
-                {% endif %}
-            </div>
-        </label>
-    </div>
-
-    {#% if not user.id %#}
-    <div id="login-dialog" style="visibility: hidden;">
-        {% if True %}
-            <input type="checkbox" id="dialogswitch"  onclick="click_header_btn()"/>
-            <div class="dialog" style="font-weight: lighter">
-                <label class="close" for="dialogswitch"></label>
-                    <label class="login-tips" for="dialogs">用户名登录</label>
-                    <label for="dialogs">
-                        <input class="input-phone" style="padding-left: 10px; size: 340px;font-weight: lighter" type="text" placeholder="请输入用户或手机号">
-                    </label>
-                    <label class="code-login" for="dialogs" style="visibility: hidden;font-weight: lighter">
-                        <input class="input-code" type="text" placeholder="输入手机验证码">
-                        <span class="send-code" onclick="send_code()"><div class="code-timer" style="margin-top: 8px; margin-left: 4px">&nbsp;发送验证码</div></span>
-                    </label>
-
-                    <label for="dialogs">
-                        <input class="input-password" style="padding-left: 10px; size: 340px;font-weight: lighter" type="password" placeholder="请输入密码">
-                    </label>
-                    <label class="login-btn" for="dialogswitch" onclick="click_login_btn()">登录评论</label>
-                    <label class="regist-btn" for="dialogswitch" style="font-weight: lighter">
-                        <span onclick="regist_btn()">前往注册</span>&nbsp;
-                        <span onclick="alert('忘记密码暂未开通');return false;">忘记密码</span>
-                    </label>
-                    <label class="third-login" for="dialogs">
-                        <label class="login-with-wechat" for="dialogswitch" onclick="return login_with_wechat()"></label>
-                        <label class="login-with-qq" for="dialogswitch" onclick="return login_with_qq()"></label>
-                        <label class="login-with-github" for="dialogswitch" onclick="return login_with_github()"></label>
-                        <label class="login-with-phone" for="dialogswitch" onclick="return login_with_phone()"></label>
-                    </label>
+    <div class="btn" data-toggle="modal" data-target="#login-btn">
+	    <div class="current-user">
+            {% if user.id %}
+                <img src="{{ user.header }}">
+            {% else %}
+                <div style="width: 48px;height:48px; border-radius:50%; border: 1px solid gray;">
+                    <div class="login-logo">登录</div>
                 </div>
-        {% endif %}
+            {% endif %}
+        </div>
     </div>
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="login-btn" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width:400px; padding-top: 5%;">
+            <div class="modal-content">
+                <div class="modal-body" style="text-align: center">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" >
+                        &times;
+                    </button>
+                        <div class="" id="login-with-username">
+                            <br><br><br>
+                                <b>用户名登录</b>
+                            <br><br>
+                            <div class="form-group">
+                                <input id="login-with-username-username-phone" type="text" class="form-control" placeholder="请输入用户名或手机号">
+                            </div>
+                            <div class="form-group">
+                                <input id="login-with-username-password" type="password" class="form-control" placeholder="请输入密码">
+                            </div>
+                        </div>
+                        <div class="hidden" id="login-with-sms">
+                            <br><br><br>
+                                <b>使用手机登录</b>
+                            <br><br>
+                            <div class="form-group">
+                                <input id="login-with-sms-phone-number" type="text" class="form-control" placeholder="请输入手机号">
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-8 col-sm-8">
+                                        <input id="login-with-sms-sms-code"type="text" class="form-control" placeholder="输入验证码"></input>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4">
+                                        <input id="login-with-sms-code-btn" type="button" class="btn btn-primary active" onclick="send_sms_code()"
+                                               style="width: 100%" value="发送验证码" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="padding-top:0px">
+                            <p type="" class="btn btn-link" onclick="regist_btn()">前往注册</p>
+                            <p type="" class="btn btn-link" onclick="alert('忘记密码暂未开通');return false;">忘记密码</p>
+                        <br><br><br>
+                        <label id="login-btn-commit" class="btn btn-success" style="width:100%; font-size: larger" onclick="return click_login_btn()">登录评论</label>
+                        </div>
+                </div>
+
+                <br>
+                <div class="row">
+                    <div class="col-md-offset-2 col-sm-offset-2 col-md-8 col-sm-8" style="border: 0px solid #ff0000">
+                        <label type="button" class="btn btn-defaul btn-circle col-md-1 col-sm-1 "
+                                style="background-image: url('/static/images/wechat.png')"
+                                onclick="return login_with_wechat()"></label>
+                        <label type="button" class="btn btn-defaul btn-circle col-md-1 col-sm-1 col-md-push-1 col-sm-push-1"
+                                style="background-image: url('/static/images/qq.png')"
+                                onclick="return login_with_qq()"></label>
+                        <label type="button" class="btn btn-defaul btn-circle col-md-1 col-sm-1 col-md-push-2 col-sm-push-2"
+                                style="background-image: url('/static/images/github.png')"
+                                onclick="return login_with_github()"></label>
+                        <label type="button" class="btn btn-defaul btn-circle col-md-1 col-sm-1 col-md-push-3 col-sm-push-3"
+                                style="background-image: url('/static/images/phone.png')"
+                                onclick="return login_with_phone()"></label>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <div class="modal-footer">
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+
     <script src="/static/ckeditor/ckeditor/ckeditor.js"></script>
     <script src="/static/ckeditor/ckeditor/adapters/jquery.js"></script>
     <div id="input">
-        <textarea id="input-area" name="content" cols="20" rows="2" >
+        <textarea id="comment-input-text" name="content" cols="20" rows="2" >
         </textarea>
         <script>
-            CKEDITOR.replace('input-area',
+            CKEDITOR.replace('comment-input-text',
             {
                 'width': 'auto',
                 'height': 200,
