@@ -5,6 +5,7 @@ from django.shortcuts import render
 
 from DesertHawk.settings import JsonCustomEncoder
 from apps.articles.models import ContentImage, Article
+from apps.home.fetch_news import fetch_toutiao_news
 from apps.user.views import add_visit_history_log
 
 
@@ -64,3 +65,15 @@ def page_not_found(request, exception):
 
 def page_error(request):
     return render(request, '500.html')
+
+def fetch_news(request):
+    max_behot_time = '0'  # 链接参数
+    title = []  # 存储新闻标题
+    source_url = []  # 存储新闻的链接
+    s_url = []  # 存储新闻的完整链接
+    source = []  # 存储发布新闻的公众号
+    media_url = {}  # 存储公众号的完整链接
+
+    result = fetch_toutiao_news(max_behot_time, title, source_url, s_url, source, media_url)
+    print("fetch news", result)
+    return HttpResponse(json.dumps({"code": 0, "news": result}, ensure_ascii=False),  content_type="application/json")
