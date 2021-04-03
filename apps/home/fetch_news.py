@@ -24,14 +24,14 @@ media_url = {}   # 存储公众号的完整链接
 def get_as_cp():  # 该函数主要是为了获取as和cp参数，程序参考今日头条中的加密js文件：home_4abea46.js
     zz = {}
     now = round(time.time())
-    print(now) # 获取当前计算机时间
+    #print(now) # 获取当前计算机时间
     e = hex(int(now)).upper()[2:] #hex()转换一个整数对象为16进制的字符串表示
-    print('e:', e)
+    #print('e:', e)
     a = hashlib.md5()  #hashlib.md5().hexdigest()创建hash对象并返回16进制结果
-    print('a:', a)
+    #print('a:', a)
     a.update(str(int(now)).encode('utf-8'))
     i = a.hexdigest().upper()
-    print('i:', i)
+    #print('i:', i)
     if len(e)!=8:
         zz = {'as':'479BB4B7254C150',
         'cp':'7E0AC8874BB0985'}
@@ -48,13 +48,13 @@ def get_as_cp():  # 该函数主要是为了获取as和cp参数，程序参考�
     'as':'A1'+s+e[-3:],
     'cp':e[0:3]+r+'E1'
     }
-    print('zz:', zz)
+    #print('zz:', zz)
     return zz
 
 def getdata(url, headers, cookies):  # 解析网页函数
     r = requests.get(url, headers=headers, cookies=cookies)
-    print(url)
-    print(r.text)
+    #print(url)
+    #print(r.text)
     try:
         data = json.loads(r.text)
         return data
@@ -92,7 +92,7 @@ def fetch_toutiao_news(max_behot_time, title, source_url, s_url, source, media_u
         if demo is None:
             continue
 
-        print(demo)
+        #print(demo)
         # time.sleep(1)
         for j in range(len(demo['data'])):
             # print(demo['data'][j]['title'])
@@ -102,23 +102,23 @@ def fetch_toutiao_news(max_behot_time, title, source_url, s_url, source, media_u
                 source.append(demo['data'][j]['source'])  # 获取发布新闻的公众号
             if demo['data'][j]['source'] not in media_url:
                 media_url[demo['data'][j]['source']] = url+demo['data'][j]['media_url']  # 获取公众号链接
-        print(max_behot_time)
+        #print(max_behot_time)
         max_behot_time = str(demo['next']['max_behot_time'])  # 获取下一个链接的max_behot_time参数的值
 
         for index in range(len(title)):
-            print('标题：', title[index])
+            #print('标题：', title[index])
             if 'https' not in source_url[index]:
                 s_url.append(url+source_url[index])
-                print('新闻链接：', url+source_url[index])
+                #print('新闻链接：', url+source_url[index])
                 result.append({"title": title[index], "url": url+source_url[index], "source": source[index]})
             else:
-                print('新闻链接：', source_url[index])
+                #print('新闻链接：', source_url[index])
                 s_url.append(source_url[index])
                 # print('源链接：', url+source_url[index])
                 result.append({"title": title[index], "url": source_url[index], "source": source[index]})
 
-            print('头条号：', source[index])
-            print(len(title))   # 获取的新闻数量
+            #print('头条号：', source[index])
+            #print(len(title))   # 获取的新闻数量
     return result[:20]
 
 if __name__ == '__main__':
