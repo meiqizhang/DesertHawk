@@ -73,7 +73,10 @@ def fetch_news(request):
     s_url = []  # 存储新闻的完整链接
     source = []  # 存储发布新闻的公众号
     media_url = {}  # 存储公众号的完整链接
+    ip_str = request.COOKIES.get("ip")
+    if ip_str is None or len(ip_str) < 7:
+        print("ignore fetch news request, ip_str=", ip_str)
+        return HttpResponse(json.dumps({"code": 0, "news": []}), content_type="application/json")
 
     result = fetch_toutiao_news(max_behot_time, title, source_url, s_url, source, media_url)
-    print("fetch news", result)
     return HttpResponse(json.dumps({"code": 0, "news": result}, ensure_ascii=False),  content_type="application/json")
