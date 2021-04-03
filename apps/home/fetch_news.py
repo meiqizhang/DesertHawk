@@ -54,8 +54,13 @@ def get_as_cp():  # 该函数主要是为了获取as和cp参数，程序参考�
 def getdata(url, headers, cookies):  # 解析网页函数
     r = requests.get(url, headers=headers, cookies=cookies)
     print(url)
-    data = json.loads(r.text)
-    return data
+    print(r.text)
+    try:
+        data = json.loads(r.text)
+        return data
+    except Exception as e:
+        print("load json catch an exception, e=%s" % e)
+        return None
 
 
 def savedata(title, s_url, source, media_url):  # 存储数据到文件
@@ -84,6 +89,9 @@ def fetch_toutiao_news(max_behot_time, title, source_url, s_url, source, media_u
     for i in range(3):   # 此处的数字类似于你刷新新闻的次数，正常情况下刷新一次会出现10条新闻，但夜存在少于10条的情况；所以最后的结果并不一定是10的倍数
         ascp = get_as_cp()    # 获取as和cp参数的函数
         demo = getdata(start_url+max_behot_time+'&max_behot_time_tmp='+max_behot_time+'&tadrequire=true&as='+ascp['as']+'&cp='+ascp['cp'], headers, cookies)
+        if demo is None:
+            continue
+
         print(demo)
         # time.sleep(1)
         for j in range(len(demo['data'])):
