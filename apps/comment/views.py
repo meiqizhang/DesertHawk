@@ -38,7 +38,7 @@ def commit(request):
         print(e)
 
     response["status"] = "success"
-    response["msg"] = "评论成功啦~"
+    response["msg"] = "评论成功啦，刷新就能看见了~"
 
     return HttpResponse(json.dumps(response).encode('utf-8').decode("unicode-escape"), content_type="application/json")
 

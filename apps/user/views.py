@@ -80,15 +80,16 @@ def login(request):
 def regist(request):
     if request.method == 'GET':
         return render(request, 'templates/register.html')
+
     if request.method == "POST":
         response = dict()
 
         username = request.POST.get('username')
-        phone = request.POST.get('phone')
+        phone_number = request.POST.get('phone_number')
         password = request.POST.get('password')
-        sms_code = request.POST.get("verification_code")
+        sms_code = request.POST.get("sms_code")
 
-        sms_status = SMSStatus.objects.filter(phone=phone, code=sms_code).values("create_time").first()
+        sms_status = SMSStatus.objects.filter(phone=phone_number, code=sms_code).values("create_time").first()
         if sms_status:
             pass
         else:
@@ -97,7 +98,7 @@ def regist(request):
             return HttpResponse(json.dumps(response).encode('utf-8').decode("unicode-escape"),
                                 content_type="application/json")
 
-        users = UserProfile.objects.filter(Q(user__username=username) | Q(phone=phone)).exists()
+        users = UserProfile.objects.filter(Q(user__username=username) | Q(phone=phone_number)).exists()
         if users:
             response["status"] = "error"
             response["msg"] = "该用户名或手机号已经被注册了，换个试试吧~"
@@ -110,7 +111,7 @@ def regist(request):
 
             user = UserProfile()
             user.user_id = User.objects.get(username=username).id
-            user.phone = phone
+            user.phone = phone_number
             user.header = "https://user-header-1251916339.cos.ap-beijing.myqcloud.com/default.jpg"
             user.save()
             response["status"] = "success"
@@ -145,26 +146,25 @@ def util_sendmsg(mobile, check_code):
         params = [check_code]
         response = sender.send_with_param(86, mobile, TEMPLATE_ID, params, sign=SMS_SIGN, extend="", ext="")
         print("response=%s" % response)
+        return response
 
     except Exception as e:
         print('sms error: %s' % e)
-        return False
-
-    if response and response['result'] == 0:
-        return True
+        return None
 
 
 def send_code(request):
-    mobile = request.POST.get('phone')
+    phone_number = request.POST.get('phone_number')
     time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
-    data = {'status': 200, 'msg': "ok"}
+    data = {'code': 0, 'msg': "ok"}
     check_code = get_code()
 
-    if util_sendmsg(mobile, check_code):
-        SMSStatus(phone=mobile, code=check_code, create_time=time_now).save()
+    response = util_sendmsg(phone_number, check_code)
+    if response["result"] == 0:
+        SMSStatus(phone=phone_number, code=check_code, create_time=time_now).save()
     else:
-        print("send message to %s failed, mobile=%s" % mobile)
-        data = {'status': 200, 'msg': "发送短信失败"}
+        print("send message to %s failed" % phone_number)
+        data = {'code': 1, 'msg': "发送短信失败, msg=%s" % response["errmsg"]}
 
     return HttpResponse(json.dumps(data), content_type="application/json")
 
@@ -174,22 +174,24 @@ def login_with_user_name(request):
     response["msg"] = "登录成功"
     response["user"] = dict()
 
-    name_or_phone = request.POST.get('name_phone', None)
+    username_phone = request.POST.get('username_phone', None)
     password = request.POST.get('password', None)
-    print(name_or_phone, password)
+    print(username_phone, password)
 
     user_id = None
     try:
-        int(name_or_phone)
-        user = UserProfile.objects.filter(phone=name_or_phone).values("user__id").first()
-        print("%s is a modile num" % name_or_phone)
+        if len(username_phone) != 11:
+            raise Exception("")
+        int(username_phone)
+        user = UserProfile.objects.filter(phone=username_phone).values("user__id").first()
+        print("%s is a modile num" % username_phone)
         if user:
             user_id = user["user__id"]
         # 手机号
     except Exception as e:
         # 用户名
-        user = UserProfile.objects.filter(user__username=name_or_phone).values("user__id").first()
-        print("%s is a username" % name_or_phone)
+        user = UserProfile.objects.filter(user__username=username_phone).values("user__id").first()
+        print("%s is a username" % username_phone)
         if user:
             user_id = user["user__id"]
 

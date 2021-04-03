@@ -111,7 +111,7 @@
                 {% endif %}
             </div>
             <div style="margin-top:30px; border-top: #000 2px solid;">
-                 <form action="/comment/commit" method="POST" enctype="multipart/form-data">
+                 <form action="/comment/commit" method="POST" enctype="multipart/form-data" id="articles-comment-commit-form">
                      {% csrf_token %}
                      <div style="padding-bottom: 30px"></div>
                      {% include "comment.html" %}
@@ -131,15 +131,28 @@
         hljs.initHighlightingOnLoad();
         hljs.initLineNumbersOnLoad();
 
-        /*$("document").ready(function(){
-            var img=$("article img");
-            for(var i = 0;i < img.length; i++){
-                var id = img.get(i).id;
-                if (id.length > 0){
-                    set_image(id, id, false);
-                }
+
+    $("#articles-comment-commit-form").ajaxForm(function(data){
+        var oEditor = CKEDITOR.instances["comment-input-text"];
+        var content = oEditor.getData();
+        $.ajax({
+            type:'POST',
+            data:{
+                "content": content,
+                "parent": -1,
+                csrfmiddlewaretoken:'{{ csrf_token }}'
+            },
+            url:'{% url 'comment:commit' %}',
+            datatype:JSON,
+            success:function(rsp) {
+                alert(rsp.msg);
+            },
+            error:function () {
+                console.log('ajax刷新分页数据失败！');
             }
-        })*/
+        });
+    });
+
     </script>
 {% endblock %}
 

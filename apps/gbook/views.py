@@ -42,7 +42,7 @@ def list(request):
 def add(request):
     response = dict()
     response["status"] = "success"
-    response["msg"] = "您的评论/留言成功啦，返回页面刷新就能看的啦~"
+    response["msg"] = "您的评论/留言成功啦，刷新页面就能看见了~感谢支持...^_^"
 
     parent_id = request.POST.get("parent", "-1")
     content = request.POST.get("content")

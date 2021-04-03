@@ -15,110 +15,129 @@
             margin-top: 20px;
             margin-bottom: 20px;
             border-radius: 10px;
-            box-shadow: 2px 2px 2px #000000;
+            {#box-shadow: 2px 2px 2px #000000;#}
         }
-
-        #content form {
-            margin: 20px;
-            text-align: left
-        }
-
-        #contentForm input {
-            margin-top: 10px;
-            margin-bottom: 20px;
-            width: 300px;
-            height: 30px;
-            border: none;
-            padding: 3px;
-            padding-left: 30px;
-            border-radius: 5px;
-        }
-
-        #btn {
-            background: grey;
-            color: #f2f2f2;
-
-            padding: 10px 30px 10px 30px;
-            font-size: 16px;
-            font-family: 微软雅黑, 宋体, Arial, Helvetica, Verdana, sans-serif;
-            font-weight: bold;
-            border-radius: 3px;
-            border: none;
-        }
-        #btn:hover{
-            background: #9e4177;
-
-        }
-
     </style>
 {% endblock %}
 
 {% block content %}
-
     <div id="content">
-        <div id="contentForm">
-            <form action="{% url 'user:regist' %}" method="post">
+        <div id="contentForm1" style="margin-left: 10px">
+            <br>
+{#            <form action="{% url 'user:regist' %}" method="post">#}
                 {% csrf_token %}
+                <div class="form-group">
+                    <div style="text-align: center"><b>注册中心</b></div>
+                    <br>
+                </div>
+                <div class="form-group">
+                    <input id="regist-input-username" type="text" class="form-control" placeholder="请输入用户名">
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-8 col-sm-8" >
+                            <input id="regist-input-phone-number" type="text" class="form-control" placeholder="输入手机号" value="15692097691"/>
+                        </div>
+                        <div class="col-md-4 col-sm-4">
+                            <input id="regist-send-sms-btn" type="button" class="btn btn-primary" style="width: 100%" value="发送验证码" />
+                        </div>
+                    </div>
+                </div>
 
-                <input type="text" placeholder="请输入用户名" name="username" required=""><br>
-                <p>
-                    <input type="text" id="input-phone" placeholder="请输入手机号码" name="phone" required="" style="width: 210px;">
-                    <input type="button" value="发送验证码" id="send_code" style="width: 80px;height: 36px">
-                </p>
-
-                <input type="text" placeholder="4位验证码" id="verification_code" name="verification_code" required=""><br>
-                <input type="password" placeholder="请输入密码" id="password" name="password" required=""><br>
-                <input type="password" placeholder="请确认密码" id="password1" name="password1" required=""><br>
-
-                <button id="btn">提交注册</button>
-            </form>
+                <div class="form-group">
+                    <input id="regist-input-sms-code" class="form-control" type="text" placeholder="4位验证码" name="regist-sms-code" required="">
+                </div>
+                <div class="form-group">
+                    <input id="regist-input-password" class="form-control" type="password" placeholder="请输入密码" name="regist-password" required="">
+                </div>
+                <div class="form-group">
+                    <input id="regist-input-password1" class="form-control" type="password" placeholder="请确认密码" name="regist-password1" required="">
+                </div>
+                <br>
+                <div class="form-group row">
+                    <div class="col-sm-8 col-md-8 col-sm-offset-2 col-md-offset-2">
+                        <input id="regist-commit-btn" type="button" class="btn btn-primary" style="width: 100%" value="提交注册"/>
+                    </div>
+                </div>
+{#            </form>#}
         </div>
         <script type="text/javascript">
-            var baseTime = 90;
-            var tryTimes = 1;
-
-            $(function () {
-                $("#send_code").css({"padding-left": "0px"});
-            });
-            $("#send_code").click(function(){
-                var phone = $("#input-phone").val()
-                for (var i = 0; i < phone.length; ++i) {
-                    if (phone[i] < '0' || phone[1] > '9') {
+            $("#regist-send-sms-btn").click(function(){
+                var phone_number = $("#regist-input-phone-number").val();
+                for (var i = 0; i < phone_number.length; ++i) {
+                    if (phone_number[i] < '0' || phone_number[i] > '9') {
                         alert("手机号只能由11位数字组成~");
                         return;
                     }
                 }
 
-                if (phone.length !== 11) {
+                if (phone_number.length !== 11) {
                     alert("手机号只能由11位数字组成~");
                     return;
                 }
 
                 $.ajax({
                     type:'POST',
-                    data:{'phone': phone, csrfmiddlewaretoken:'{{ csrf_token }}'},
+                    data:{'phone_number': phone_number, csrfmiddlewaretoken:'{{ csrf_token }}'},
                     url:'{% url 'user:send_code' %}',
                     datatype: JSON,      //希望返回Json格式的数据
-                    success:function (data) {
-                        //alert(data.msg);
+                    async: false,
+                    success:function (rsp) {
+                        console.log(rsp);
+                        if (rsp.code !== 0) {
+                            alert(rsp.msg);
+                            return false;
+                        }
+                        else {
+                            var baseTime = 90;
+                            var tryTimes = 1;
+                            var waitTime = baseTime * tryTimes;
+                            var send_sms_btn = $("#regist-send-sms-btn");
+                            var intervalId = window.setInterval(function () {
+                                 if (waitTime <= 0){
+                                     clearInterval(intervalId);
+                                     send_sms_btn.val('发送验证码');
+                                     tryTimes += 1
+                                     return ;
+                                 }
+                                 send_sms_btn.val(waitTime + 's');
+                                 waitTime -= 1;
+                            }, 1000);
+                        }
                     },
                     error:function () {
                         console.log('ajax刷新分页数据失败！');
                     }
                 });
-
-                var waitTime = baseTime * tryTimes;
-                var intervalId = window.setInterval(function () {
-                     if (waitTime === 0){
-                         //alert("超时");
-                         clearInterval(intervalId);
-                         $("#send_code").val('发送验证码');
-                         tryTimes += 1
-                         return ;
-                     }
-                     $("#send_code").val(waitTime + 's');
-                     waitTime -= 1;
-                }, 1000);
+            });
+            $("#regist-commit-btn").click(function(){
+                var phone_number = $("#regist-input-phone-number").val();
+                var sms_code = $("#regist-input-sms-code").val();
+                var password = $("#regist-input-password").val();
+                var username = $("#regist-input-username").val();
+                $.ajax({
+                    type:'POST',
+                    data: {
+                        "username": username,
+                        "phone_number": phone_number,
+                        "password": password,
+                        "sms_code": sms_code,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    url:'{% url 'user:regist' %}',
+                    datatype:JSON,      //希望返回Json格式的数据
+                    success:function (data) {
+                        if (data.status === "error") {
+                            alert(data.msg);
+                        } else {
+                            alert("登录成功，刷新当前页面就可以留言评论啦~")
+                            //image_download_and_set("visit-header", data.user.header);
+                        }
+                    },
+                    error:function () {
+                        console.log('ajax刷新分页数据失败！');
+                    }
+                });
             });
         </script>
     </div>
@@ -127,8 +146,8 @@
 {% block my_js %}
     <script>
         window.onload = function () {
-            document.getElementById('password').onchange = validatePassword;
-            document.getElementById('password1').onchange = validatePassword;
+            document.getElementById('regist-input-password').onchange = validatePassword;
+            document.getElementById('regist-input-password1').onchange = validatePassword;
             //document.getElementById('send_code').textContent = "60s";
         };
 
@@ -139,7 +158,6 @@
                 document.getElementById('password1').setCustomValidity("输入两次密码不一致");
             else
                 document.getElementById('password1').setCustomValidity("");
-
         }
     </script>
 {% endblock %}
