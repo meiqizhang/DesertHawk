@@ -1,4 +1,7 @@
 {% load static %}
+
+<link REL="SHORTCUT ICON" HREF="{% static "images/7.png" %}"/>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,7 +16,7 @@
 
     <title>
         {% block title %}
-            西湖歌舞几时休
+            愿你历尽千帆，归来仍是少年
         {% endblock %}
     </title>
 
@@ -47,14 +50,6 @@
             }
             return winWidth;
         }
-
-        /*var h_screenWidth = getWidth();
-        if (h_screenWidth > 1500) {
-            baseCSS = "base-default.css";
-        } else {
-            baseCSS = "base-min.css";
-        }
-        document.getElementById("baseCss").href = "static/css-theme/white/" + baseCSS;*/
     </SCRIPT>
 </head>
 <body>
@@ -154,56 +149,64 @@
 
     <div class="logo" data-scroll-reveal="enter right over 1s">
         <a href="/" >
-            愿你历尽千帆，归来仍是少年
+            <b>愿你历尽千帆，归来仍是少年</b>
         </a>
     </div>
 
-    <nav class="topnav" data-scroll-reveal="enter bottom over 0.8s after 0.8s" style="margin-left: 25%;">
-        <a href="{% url 'home:home' %}">
-            <span>首页</span>
-            <span class="en" style="color: #BC7A00">Home</span>
-        </a>
+ <div class="row">
+{#     <div class="col-xs-offset-3 col-sm-offset-3 col-md-offset-3 col-lg-offset-3 col-xs-6 col-sm-6 col-md-6 col-lg-6" style="border: 1px solid red">#}
+    <div id="top-nav-layout" style="border: 0px solid red">
+        <nav class="topnav" data-scroll-reveal="enter bottom over 0.8s after 0.8s" style="margin-left: 1%;">
+            <a href="{% url 'home:home' %}">
+                <span>首页</span>
+                <span class="en" style="color: #BC7A00">Home</span>
+            </a>
 
-        <a href="/aboutme/">
-            <span>关于我</span>
-            <span class="en" style="color: #BC7A00">About</span>
-        </a>
+            <a href="/aboutme/">
+                <span>关于我</span>
+                <span class="en" style="color: #BC7A00">About</span>
+            </a>
 
-        <a href="{% url 'articles:program:home' %}">
-            <span>程序设计</span>
-            <span class="en" style="color: #BC7A00">Program</span>
-        </a>
+            <a href="{% url 'articles:program:home' %}">
+                <span>程序设计</span>
+                <span class="en" style="color: #BC7A00">Program</span>
+            </a>
 
-        <a href="{% url 'articles:travel:home' %}">
-            <span>旅行摄影</span>
-            <span class="en" style="color: #BC7A00">Travel</span>
-        </a>
+            <a href="{% url 'articles:travel:home' %}">
+                <span>旅行摄影</span>
+                <span class="en" style="color: #BC7A00">Travel</span>
+            </a>
 
-        <a href="{% url 'articles:mindsay:home' %}">
-            <span>碎言碎语</span>
-            <span class="en" style="color: #BC7A00">Saying</span>
-        </a>
+            <a href="{% url 'articles:mindsay:home' %}">
+                <span>碎言碎语</span>
+                <span class="en" style="color: #BC7A00">Saying</span>
+            </a>
 
-        <a href="{% url 'document:list' %}">
-            <span>文档资源</span>
-            <span class="en" style="color: #BC7A00">Download</span>
-        </a>
+            <a href="{% url 'document:list' %}">
+                <span>文档资源</span>
+                <span class="en" style="color: #BC7A00">Download</span>
+            </a>
 
-        <a href="{% url 'gbook:list' %}">
-            <span>留言</span>
-            <span class="en" style="color: #BC7A00">Saying</span>
-        </a>
+            <a href="{% url 'gbook:list' %}" style="margin-left: -15px">
+                <span>留言</span>
+                <span class="en" style="color: #BC7A00">Saying</span>
+            </a>
 
-        <div class="search_div">
-            <form method="get" action="/search/">
-                {% if key_word %}
-                    <input id="key_word" type="text" name="keyword" value={{ key_word }} />
-                {% else %}
-                    <input type="text" name="keyword" placeholder="回车键搜索文章..." />
-                {% endif %}
-            </form>
-        </div>
-    </nav>
+            <div class="search_div">
+                <form method="get" action="/search/">
+                    {% if key_word %}
+                        <input id="key_word" type="text" name="keyword" value={{ key_word }} />
+                    {% else %}
+                        <input type="text" name="keyword" placeholder="站内搜索..." />
+                    {% endif %}
+{#                    <div class="form-group">#}
+{#                        <input id="key_word" type="text"  placeholder="站内搜索...">#}
+{#                    </div>#}
+                </form>
+            </div>
+        </nav>
+    </div>
+ </div>
 </header>
 
 <script>
@@ -274,7 +277,7 @@
                         if (idx > 12){
                             idx = 12;
                         }
-                        
+
                         return size[idx];
                     },
                     itemStyle: { //基调颜色
@@ -301,6 +304,24 @@
             var myChart = echarts.init(document.getElementById('site-statistic'));
             myChart.setOption(optionMap);
         }
+
+        $.ajax({
+            type:'GET',
+            url: "/fetch_news",
+            datatype:JSON,      //希望返回Json格式的数据
+            success:function (rsp) {
+                console.log(rsp);
+                for (var i = 0; i < rsp.news.length; i++) {
+                    //$("#hot-news").val(rsp.news[i].source + ":" + rsp.news[i].title);
+                    var html = "<button type='button' class='btn btn-link' onclick='window.open(\"" + rsp.news[i].url + "#www.ditanshow.com\")'> <b>" + rsp.news[i].source + "</b> : " + rsp.news[i].title + "</button>";
+                    console.log(html)
+                    $("#hot-news").append(html);
+                }
+            },
+            error:function () {
+                console.log('ajax刷新分页数据失败！');
+            }
+        });
  });
 </script>
 
@@ -324,6 +345,8 @@
         </div>
         <div id="calendar-bar" class="col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3">
             <iframe name="" frameborder="0" scrolling="no" marginwidth="0" marginheight="0" style="height:250px;margin: 10px" src="/calendar.html"></iframe>
+            <div id="hot-news" >
+            </div>
         </div>
     </div>
 </div>
@@ -335,18 +358,19 @@
         $("#statistic-bar").attr("class", "col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3 show");
         $("#article-bar").attr("class", "col-xs-12 col-12 col-sm-12 col-md-12 col-lg-6 show");
         $("#calendar-bar").attr("class", "col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3 show");
+        $("#top-nav-layout").attr("class", "col-xs-offset-3 col-sm-offset-3 col-md-offset-3 col-lg-offset-3 col-xs-6 col-sm-6 col-md-6 col-lg-6");
     } else if (screenWidth > 1280) {
         $("#article-bar").attr("class", "col-xs-offset-2 col-sm-offset-2 col-md-offset-2 col-lg-offset-2 col-xs-8 col-8 col-sm-8 col-md-8 col-lg-8 show");
-        //document.getElementById("article-bar").setAttribute("class", "col-xs-offset-2 col-sm-offset-2 col-md-offset-2 col-lg-offset-2 col-xs-8 col-8 col-sm-8 col-md-8 col-lg-8");
-        //document.getElementById("calendar-bar").setAttribute("style", "display:none");
-        //document.getElementById("statistic-bar").setAttribute("style", "display:none");
+        $("#statistic-bar").attr("class", "hidden");
+        $("#calendar-bar").attr("class", "hidden");
+        $("#top-nav-layout").attr("class", "col-xs-offset-2 col-sm-offset-2 col-md-offset-2 col-xs-8 col-sm-8 col-md-8 col-lg-8");
+
     } else {
-        $("#article-bar").attr("class", "col-xs-12 col-12 col-sm-12 col-md-12 col-lg-12 show");
-        //document.getElementById("article-bar").setAttribute("class", "col-xs-12 col-12 col-sm-12 col-md-12 col-lg-12");
-        //document.getElementById("statistic-bar").setAttribute("style", "display:none");
-        //document.getElementById("calendar-bar").setAttribute("style", "display:none");
+        $("#article-bar").attr("class", "col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1 col-xs-10 col-10 col-sm-10 col-md-10 col-lg-10 show");
+        $("#statistic-bar").attr("class", "hidden");
+        $("#calendar-bar").attr("class", "hidden");
+        $("#top-nav-layout").attr("class", "col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-xs-10 col-sm-10 col-md-10 col-lg-10");
     }
-    //$("#main-container").attr("class", "show");
 </script>
 
 <div class="container footer_href" style="margin-top: 30px; color: #000000; font-size: 14px">
