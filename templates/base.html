@@ -305,23 +305,30 @@
             myChart.setOption(optionMap);
         }
 
-        $.ajax({
-            type:'GET',
-            url: "/fetch_news",
-            datatype:JSON,      //希望返回Json格式的数据
-            success:function (rsp) {
-                console.log(rsp);
-                for (var i = 0; i < rsp.news.length; i++) {
-                    //$("#hot-news").val(rsp.news[i].source + ":" + rsp.news[i].title);
-                    var html = "<button type='button' class='btn btn-link' onclick='window.open(\"" + rsp.news[i].url + "#www.ditanshow.com\")'> <b>" + rsp.news[i].source + "</b> : " + rsp.news[i].title + "</button>";
-                    console.log(html)
-                    $("#hot-news").append(html);
+        var hot_news_str = getCookie("hot_news");
+        if (!hot_news_str || hot_news_str.length  === 0) {
+            $.ajax({
+                type: 'GET',
+                url: "/fetch_news",
+                datatype: JSON,      //希望返回Json格式的数据
+                success: function (rsp) {
+                    console.log(rsp);
+                    setCookie("hot_news", JSON.stringify(rsp.news), 0.02); // 30分钟过期
+                },
+                error: function () {
+                    console.log('ajax刷新分页数据失败！');
                 }
-            },
-            error:function () {
-                console.log('ajax刷新分页数据失败！');
-            }
-        });
+            });
+        }
+
+        hot_news_str = getCookie("hot_news");
+        var hot_news = eval('(' + hot_news_str + ')');
+        console.log(hot_news)
+         for (var i = 0; i < hot_news.length; i++) {
+            var title = hot_news[i].title;
+            var html = "<ul><a type='button' class='x' onclick='window.open(\"" + hot_news[i].url + "#www.ditanshow.com\")'> <b>" + hot_news[i].source + "</b> : " + title + "</a></ul>";
+            $("#hot-news").append(html);
+        }
  });
 </script>
 
@@ -345,7 +352,7 @@
         </div>
         <div id="calendar-bar" class="col-xs-0 col-0 col-sm-0 col-md-0 col-lg-6 hidden">
             <iframe name="" frameborder="0" scrolling="no" marginwidth="0" marginheight="0" style="height:250px;margin: 10px" src="/calendar.html"></iframe>
-            <div id="hot-news" style="width: 330px;" >
+            <div id="hot-news" style="width: 300px; border: 0px solid red" >
             </div>
         </div>
     </div>
@@ -354,11 +361,17 @@
 <script>
     var screenWidth = getWidth();
     console.log("width=" + screenWidth);
-    if (screenWidth > 1500) {
+     if (screenWidth > 1600) {
         $("#statistic-bar").attr("class", "col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3 show");
         $("#article-bar").attr("class", "col-xs-12 col-12 col-sm-12 col-md-12 col-lg-6 show");
         $("#calendar-bar").attr("class", "col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3 show");
         $("#top-nav-layout").attr("class", "col-xs-offset-3 col-sm-offset-3 col-md-offset-3 col-lg-offset-3 col-xs-6 col-sm-6 col-md-6 col-lg-6");
+    }
+    else if (screenWidth > 1480) {
+        $("#statistic-bar").attr("class", "col-xs-2 col-2 col-sm-2 col-md-2 col-lg-2 show");
+        $("#article-bar").attr("class", "col-xs-8 col-8 col-sm-8 col-md-8 col-lg-8 show");
+        $("#calendar-bar").attr("class", "col-xs-2 col-2 col-sm-2 col-md-2 col-lg-2 show");
+        $("#top-nav-layout").attr("class", "col-xs-offset-2 col-sm-offset-2 col-md-offset-2 col-lg-offset-2 col-xs-8 col-sm-8 col-md-8 col-lg-8");
     } else if (screenWidth > 1280) {
         $("#article-bar").attr("class", "col-xs-offset-2 col-sm-offset-2 col-md-offset-2 col-lg-offset-2 col-xs-8 col-8 col-sm-8 col-md-8 col-lg-8 show");
         $("#statistic-bar").attr("class", "hidden");

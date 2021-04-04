@@ -27,11 +27,15 @@ def home(request):
 
 @add_visit_history_log
 def detail(request):
-    try:
-        article_id = request.path.split('/')[-1].split('.')[0]
-    except Exception as e:
-        logging.error("catch an exception, e=%s" % e)
-        return render(request, "404.html")
+    title = request.GET.get("title", None)
+    if title:
+        article_id = Article.objects.filter(title=title).values("article_id").first()["article_id"]
+    else:
+        try:
+            article_id = request.path.split('/')[-1].split('.')[0]
+        except Exception as e:
+            logging.error("catch an exception, e=%s" % e)
+            return render(request, "404.html")
 
     article = Article.objects.filter(article_id=article_id).values("article_id", "title", "date", "description", "content").first()
 
