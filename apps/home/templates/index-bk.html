@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+    <meta name="keywords" content="python+django搭建自己的博客,搭建博客" charset="utf-8"/>
+    <meta name="description" content=" python+django搭建自己的博客,搭建博客" charset="utf-8"/>
+{% endblock %}
+
+{% block content %}
+    <div class="blog" data-scroll-reveal="enter top">
+        {% comment %}
+        {% for figure_article in figure_articles %}
+            <figure>
+                <ul>
+                    <a href="{% url 'article:article_detail' %}?title={{ figure_article.title }}">
+                        <img src="/static/images/loading.gif" >
+                        <!--img src="/static/images/hot.png" style="position: absolute; top:0px; left: 250px; z-index:2; width: 16px; height: 24px" -->
+                        <span>点击查看详情</span>
+                    </a>
+                </ul>
+
+                <p>
+                    <a href="{% url 'article:article_detail' %}?title={{ figure_article.title }}">{{ figure_article.title }}</a>
+                </p>
+                <figcaption>
+                    <span>
+                        {{ figure_article.description }}
+                    </span>
+                </figcaption>
+            </figure>
+        {% endfor %}
+        {% endcomment %}
+        <div class="container" style="width: 100%">
+            <div class="row">
+                <div id="top-1" class="col-xs-4 col-4 col-sm-4 col-md-4 col-lg-4">
+                </div>
+                <div id="top-2" class="col-xs-4 col-4 col-sm-4 col-md-4 col-lg-4">
+                </div>
+                <div id="top-3" class="col-xs-4 col-4 col-sm-4 col-md-4 col-lg-4">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ul class="cbp_tmtimeline">
+        {% comment %}
+        {% for darticle in darticles %}
+            <li>
+                <time class="cbp_tmtime">
+                    <span>{{ darticle.date |slice:"4" }}</span>
+                    <span>{{ darticle.date |slice:"5:10" }}</span>
+                </time>
+                <div class="cbp_tmicon"></div>
+                <div class="cbp_tmlabel" data-scroll-reveal="enter right over 1s">
+                    <h2>{{ darticle.title }}</h2>
+                    <p>
+                        <span class="blogpic">
+                            <img src="/static/images/loading.gif">
+                        </span>
+                        <a href="{% url 'article:article_detail' %}?title={{ darticle.title }}">
+                            {{ darticle.description }}
+                        </a>
+                    </p>
+                    <!--a href="{% url 'article:article_detail' %}?title={{ darticle.title }}" target="_blank" class="readmore">阅读全文&gt;&gt;</a-->
+                    <a href="{% url 'article:article_detail' %}?title={{ darticle.title }}" class="readmore">阅读全文&gt;&gt;</a>
+                </div>
+            </li>
+
+        {% endfor %}
+        {% endcomment %}
+    </ul>
+
+    <script>
+        $(document).ready(function(){
+            $.ajaxSetup({cache: false});
+            go_to_page(1);
+
+            $("#page-index*").click(function () {
+
+                let idx = $(this).text();
+                idx = parseInt(idx);
+                go_to_page(idx);
+            });
+
+            function go_to_page(page_id){
+                $.ajax({
+                    type:'GET',
+                    data:{'page_id':page_id},
+                    url:'{% url 'index:home' %}',
+                    datatype: JSON,
+                    success:function (data) {
+                        f1(data);
+                    },
+                    error:function () {
+                        console.log('ajax刷新分页数据失败！');
+                    }
+                });
+            }
+
+            function f1(data) {
+                $('.blog figure').remove();
+                $('.cbp_tmtimeline li').remove();
+
+                var i = 0;
+                for (; i < 3; i++) {
+                    if (data.result[i] == null) continue;
+
+                    var url = encodeURI("/articles/program/detail/" + data.result[i].article_id + ".html");
+                    if (data.result[i].first_category === "mindsay") {
+                        url = encodeURI("/articles/mindsay/detail/" + data.result[i].article_id + ".html");
+                    }
+
+                    var figure = '<figure style="width: 100%">';
+
+                    $('#top-' + (i + 1)).append(figure +
+                            '<ul style="padding: 0; margin: 0;">' +
+                               '<a href="' + url + '" target="_blank">'+
+                                   '<img id="image-' + i +  '" style="width: 100%; height: 100%; margin: auto;" src="/static/images/loading.gif">' +
+                                   '<span>点击查看详情</span>' +
+                               '</a>' +
+                            '</ul>' +
+                           '<p>' +
+                               '<br><a href="' + url + '" target="_blank">' + data.result[i].title + '</a>' +
+                           '</p>' +
+                           '<figcaption>' +
+                               data.result[i].description +
+                           '</figcaption>' +
+                        '</figure>'
+                    )
+                }
+
+                for (; i < data.result.length; i++) {
+                    var year = data.result[i].date.substring(0, 4);
+                    var day = data.result[i].date.substring(5, 10);
+                    var url = encodeURI("/articles/program/detail/" + data.result[i].article_id + ".html");
+                    if (data.result[i].first_category === "mindsay") {
+                        url = encodeURI("/articles/mindsay/detail/" + data.result[i].article_id + ".html");
+                    }
+
+                    $('.cbp_tmtimeline').append('' +
+                        '<li>' +
+                            '<time class="cbp_tmtime">'+
+                                '<span>' + year + '</span>' +
+                                '<span>' + day + '</span>'+
+                            '</time>'+
+                            '<div class="cbp_tmicon" style=""></div>' +
+                            '<div class="cbp_tmlabel" data-scroll-reveal="enter right over 1s">' +
+                                '<h2>'+ data.result[i].title +'</h2>' +
+                                '<p>'+
+                                    '<span class="blogpic">'+
+                                        '<img id="image-' + i + '" style="width: 100%; height: 100%" src="/static/images/loading.gif">' +
+                                    '</span>' +
+                                    '<a href="' + url + '">'+
+                                        data.result[i].description +
+                                    '</a>' +
+                                '</p>' +
+                                '<a href="' + url + '"  class="readmore" target="_blank">阅读全文&gt;&gt;</a>' +
+                            '</div>' +
+                        '</li>'
+                    );
+                }
+
+                //刷新页码
+                $('.pages a:not(":first,:last")').remove();
+                $("#total-pages").text("共" + data.total_pages + "页")
+
+                let idx = parseInt(data.page_id);
+
+                if(parseInt(data.num_pages) <= 5) {     //如果总页码数小于等于5，则全部显示
+                    for(var i = 1; i <= parseInt(data.total_pages); i++){
+                        $('.pages a:last').before('<a title="第' + i +'页" id="page-index"><b>' + i + '</b></a>');
+                    }
+                }
+                else { // 页面数大于5，看当前页面情况
+                    if (idx < 5 - 2) {
+                        for (var i = 1; i <= 5; i++) {
+                            $('.pages a:last').before('<a title="第' + i + '页" id="page-index"><b>' + i + '</b></a>');
+                        }
+                    } else if(idx > parseInt(data.total_pages) - 2) {
+                        for (var i = parseInt(data.total_pages) - 5 + 1; i <= parseInt(data.total_pages); i++) {
+                            $('.pages a:last').before('<a title="第' + i + '页" id="page-index"><b>' + i + '</b></a>');
+                        }
+                    } else {
+                         for (var i = idx - 2; i <= idx + 2; i++) {
+                            $('.pages a:last').before('<a title="第' + i + '页" id="page-index"><b>' + i + '</b></a>');
+                        }
+                    }
+                }
+
+                $('.pages a:not(":first,:last")').each(function () {    //为当前页加上active
+                    if (parseInt($(this).text()) === idx)
+                        $(this).addClass('active');
+                }).click(function () {
+                    go_to_page($(this).text());
+                });
+
+                $('.pages a:first').unbind("click").click(function () {
+                    $('.pages a:not(":first,:last")').each(function () {
+                        if ($(this).attr("class") === "active") {
+                            let idx = parseInt($(this).text());
+                            if (idx < 2) {
+                                alert("已经是第一页了");
+                            } else {
+                                go_to_page(idx-1);
+                            }
+                        }
+                    });
+                });
+
+                $('.pages a:last').unbind("click").click(function () {
+                    $('.pages a:not(":first,:last")').each(function () {
+                        let idx = parseInt($(this).text());
+                        if ($(this).attr("class") === "active") {
+                            if (idx >= parseInt(data.total_pages)){
+                                alert("已经是最后一页了");
+                            } else {
+                                go_to_page(idx + 1);
+                            }
+                        }
+                    });
+                });
+                scrollReveal.init();    //使用js动态写入的html,必须init初始化才能正常使用scrollReveal动画效果
+
+                for (i =0 ; i < data.result.length; i++) {
+                    image_download_and_set("image-" + i, "/articles/d_icon/?title=" + data.result[i].title);
+                }
+            }
+        });
+    </script>
+
+    <div class="pages">
+        <a title="前一页"><b> < </b> </a>
+        <a title="后一页"><b> > </b> </a>
+        <label id="total-pages"></label>
+    </div>
+
+{% endblock %}
+
+
+
