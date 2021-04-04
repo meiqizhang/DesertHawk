@@ -101,7 +101,8 @@ def fetch_toutiao_news(max_behot_time, title, source_url, s_url, source, media_u
                 source_url.append(demo['data'][j]['source_url'])  # 获取新闻链接
                 source.append(demo['data'][j]['source'])  # 获取发布新闻的公众号
             if demo['data'][j]['source'] not in media_url:
-                media_url[demo['data'][j]['source']] = url+demo['data'][j]['media_url']  # 获取公众号链接
+                #print(demo['data'][j])
+                media_url[demo['data'][j]['source']] = url+demo['data'][j]['source_url']  # 获取公众号链接
         #print(max_behot_time)
         max_behot_time = str(demo['next']['max_behot_time'])  # 获取下一个链接的max_behot_time参数的值
 
