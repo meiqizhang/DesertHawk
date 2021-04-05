@@ -306,7 +306,7 @@
         }
 
         var hot_news_str = getCookie("hot_news");
-        if (!hot_news_str || hot_news_str.length  === 0) {
+        if (!hot_news_str || hot_news_str.length === 0 && getWidth() > 1480) {
             $.ajax({
                 type: 'GET',
                 url: "/fetch_news",
@@ -322,12 +322,12 @@
         }
 
         hot_news_str = getCookie("hot_news");
-         if (!hot_news_str || hot_news_str.length  === 0) {
+         if (hot_news_str && hot_news_str.length > 0) {
              var hot_news = eval('(' + hot_news_str + ')');
              console.log(hot_news)
              for (var i = 0; i < hot_news.length; i++) {
                  var title = hot_news[i].title;
-                 var html = "<ul><a type='button' class='x' onclick='window.open(\"" + hot_news[i].url + "#www.ditanshow.com\")'> <b>" + hot_news[i].source + "</b> : " + title + "</a></ul>";
+                 var html = "<ul><a type='button' onclick='window.open(\"" + hot_news[i].url + "#www.ditanshow.com\")'> <b>" + hot_news[i].source + "</b> : " + title + "</a></ul>";
                  $("#hot-news").append(html);
              }
          }
