@@ -30,7 +30,8 @@ def list(request):
         response["msg"] = "ok"
         response["gbook"] = []
 
-        records = GBook.objects.filter(parent_id=-1).order_by("id").values()
+        #records = GBook.objects.filter(parent_id=-1).order_by("id").values()
+        records = GBook.objects.filter().order_by("id").values()
         if records:
             for r in records:
                 response["gbook"].append(r)

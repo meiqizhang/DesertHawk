@@ -35,7 +35,7 @@ def home(request):
     context["articles"] = articles[3:]
     context['page_id'] = page_id  # 当前页面
     context['total_pages'] = total_pages  # 页面总数
-    print(context)
+    #print(context)
 
     if 'page_id' in request.GET:
         return HttpResponse(json.dumps(context, cls=JsonCustomEncoder), content_type="application/json")
