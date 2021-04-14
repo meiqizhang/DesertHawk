@@ -10,6 +10,11 @@
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/gbook.css' }}" rel="stylesheet">
 {% endblock %}
 
+{% block meta %}
+    <link href="https://cdn.bootcdn.net/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+{% endblock %}
+
 {% block content %}
     <style>
     .gbook-container {
@@ -51,8 +56,6 @@
             float: left;
             margin-left: 20px;
         }
-
-
     </style>
     <article>
         <aside>
@@ -93,6 +96,17 @@
     </article>
 
 <script>
+    toastr.options = {
+            closeButton: false,
+            debug: false,
+            progressBar: true,
+            onclick: null,
+            showDuration: "500",
+            hideDuration: "1000",
+            timeOut: "5000",
+            extendedTimeOut: "1000",
+            positionClass: "toast-top-center",
+      };
      $("document").ready(function(){
          $.ajax({
             type:'POST',
@@ -155,6 +169,8 @@
         });
      })
 
+     $("#gbook-commit-btn").unbind("click").click(function (){
+     });
     $("#gbook-commit-form").ajaxForm(function(data){
         var oEditor = CKEDITOR.instances["comment-input-text"];
         var content = oEditor.getData();
@@ -162,6 +178,7 @@
             alert("留言为空呀~");
             return false;
         }
+        oEditor.setData("")
         $.ajax({
             type:'POST',
             data:{
@@ -169,10 +186,11 @@
                 "parent": -1,
                 csrfmiddlewaretoken:'{{ csrf_token }}'
             },
+            async: false,
             url:'{% url 'gbook:add' %}',
             datatype:JSON,
             success:function(rsp) {
-                alert(rsp.msg);
+                toastr.success(rsp.msg);
                 return false;
             },
             error:function () {
