@@ -125,7 +125,7 @@ function show_gbook_tree(idx, gbook_list) {
         '   <div style="float: left; margin-top: -10px; margin-left: 60px;">' +
                 message.content +
         '   </div>'+
-        '   <div>' +
+        '   <div style="clear: both">' +
         '       <div class="gbook-reply-tool" id="cai-' + message.id + '" onclick="gbook_cai(this.id)">踩(' + message.cai + ')</div>' +
         '       <div class="gbook-reply-tool" style="margin-right: 64px" id="ding-' + message.id + '" onclick="gbook_ding(this.id)">顶(' + message.ding + ')</div>' +
         '       <div class="gbook-reply-tool" style="margin-right: 64px" id=' + message.id + ' onclick="click_gbook_reply_btn(this.id)">回复</div>' +
