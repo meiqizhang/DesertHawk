@@ -22,7 +22,6 @@ def list(request):
                 header = UserProfile.objects.get(user_id=user_id).header
             else:
                 user_id = None
-
         return render(request, 'templates/gbook.html', context={'user': {'id': user_id, 'header': header}})
     elif request.method == 'POST':
         response = dict()
@@ -43,7 +42,7 @@ def list(request):
 def add(request):
     response = dict()
     response["status"] = "success"
-    response["msg"] = "您的评论/留言成功啦，刷新页面就能看见了~感谢支持...^_^"
+    response["msg"] = "您的评论/留言成功啦~~感谢支持...^_^"
 
     parent_id = request.POST.get("parent", "-1")
     content = request.POST.get("content", None)
@@ -62,10 +61,10 @@ def add(request):
 
     try:
         time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
-        content = content.strip()
-        print('xxx%s' % content)
-        if content is not None and len(content) > 0:
-            GBook(parent_id=parent_id, user_name=username, content=content, ip=ip_str, address=address, create_time=time_now).save()
+        if content is not None:
+            content = content.strip()
+            if len(content) > 0:
+                GBook(parent_id=parent_id, user_name=username, content=content, ip=ip_str, address=address, create_time=time_now).save()
     except Exception as e:
         print("catch an exception when add msg into gbook, user_id=%s, e=%s" % (username, e))
 

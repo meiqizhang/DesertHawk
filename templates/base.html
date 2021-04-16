@@ -5,6 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script src="/static/ckeditor/ckeditor/ckeditor.js"></script>
     <meta name="baidu-site-verification" content="WmM9Nymwhq" />
     <link href="https://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://pv.sohu.com/cityjson?ie=utf-8"></script>
@@ -41,6 +42,9 @@
     <script src="{% static 'js/map/china.js' %}"></script>
 
     <SCRIPT>
+        $.ajaxSetup({
+            data: {csrfmiddlewaretoken: '{{ csrf_token }}'}
+        })
         function getWidth() {
             var winWidth;
             if(window.innerWidth) {

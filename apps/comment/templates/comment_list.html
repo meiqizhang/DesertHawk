@@ -99,34 +99,7 @@
         $("#" + reply_div_id).css("display", "");
     }
 
-    function comment_ding(id) {
-         $.ajax({
-            type:'POST',
-            data:{'id': id.substring(5), csrfmiddlewaretoken: '{{ csrf_token }}'},
-            url:'{% url 'comment:ding' %}',
-            datatype:JSON,
-            success:function(data) {
-                $("#" + id).text("顶(" + data.data.ding + ")");
-            },
-            error:function () {
-                console.log('ajax刷新分页数据失败！');
-            }
-        });
-    }
-    function comment_cai(id) {
-        $.ajax({
-            type:'POST',
-            data:{'id': id.substring(4), csrfmiddlewaretoken: '{{ csrf_token }}'},
-            url:'{% url 'comment:cai' %}',
-            datatype:JSON,
-             success:function(data) {
-                $("#" + id).text("踩(" + data.data.cai + ")");
-            },
-            error:function () {
-                console.log('ajax刷新分页数据失败！');
-            }
-        });
-     }
+
 
 
     function create_comment_item(comment, isReply, userId) {

@@ -9,4 +9,5 @@ urlpatterns = [
     path('reply', views.reply, name='reply'),
     path('ding', views.ding, name='ding'),
     path('cai', views.cai, name='cai'),
+    path('comment.html', views.comment_html, name='comment_html'),
 ]

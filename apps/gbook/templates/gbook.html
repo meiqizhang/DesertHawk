@@ -10,9 +10,16 @@
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/gbook.css' }}" rel="stylesheet">
 {% endblock %}
 
+
+
 {% block meta %}
     <link href="https://cdn.bootcdn.net/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
     <script src="https://cdn.bootcdn.net/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="{% static 'js/gbook.js' %}"></script>
+    <script src="/static/ckeditor/ckeditor/adapters/jquery.js"></script>
+    <script src="/static/ckeditor/ckeditor/ckeditor.js"></script>
+
+<div id="input">
 {% endblock %}
 
 {% block content %}
@@ -33,14 +40,16 @@
             width: 48px;
             height: 48px;
         }
-        .gbook-reply {
-            clear: both;
+        .gbook-reply-tool {
             height: auto;
             float: right;
             color: grey;
             font-size: 12px;
-            padding-top: 10px;
             text-decoration: underline;
+        }
+        .gbook-reply-tool:hover {
+            color: red;
+            cursor: pointer;
         }
         .gbook-reply > div{
             float: right;
@@ -59,37 +68,18 @@
     </style>
     <article>
         <aside>
-            <div class="gbook-container" style="padding-bottom: 30px">
-                <h2 class="ctitle"><b>留言板</b>
-                    <!--span style="margin-right: 20px">不要轻易放弃。学习成长的路上，我们长路漫漫，只因学无止境。</span-->
-                </h2>
-                <div style="padding-left: 30px; padding-right: 30px;padding-top: 30px">
-                     <form action="{% url 'gbook:add' %}" method="POST" enctype="multipart/form-data" id="gbook-commit-form">
-                         {% csrf_token %}
-                         {% include "comment.html" %}
-                         <span style="padding-left: 0px">
-                            <input type="submit" style="width:80px; height:30px; margin-top: 10px;" value="提交留言"/>
-                         </span>
-                    </form>
-{% comment %}                    <div class="gbook-message" style="padding-left: 30px; padding-right: 30px; padding-top: 30px">
-                        <div class="gbook-header" style="float: left"><img src="/static/images/user_02.jpg"/>
-                        </div>
-                        <div class="gbook-info" style="float: left; margin-right: 40px;width: calc(100% - 90px);">
-                            <p>
-                                <a style="color: red;padding-left: 10px">[zhangqi] 深圳市网友</a>
-                                <a style="float: right; color: grey">2020-06-01</a>
-                            <p>
-                        </div>
-                        <div style="padding-left: 60px; margin-top: 50px">
-                        ccccccccccccccccc
-                        </div>
-                        <div class="gbook-reply">
-                            <div>顶</div>
-                            <div>踩</div>
-                            <div>回复</div>
-                        </div>
-                        <div style="clear: both; padding-bottom:30px; border-bottom: 1px dashed grey;"></div>
-                    </div>{% endcomment %}
+            <div style="margin: 32px">
+                {% if user.id %}
+                    <img src="{{ user.header }}" style="width: 48px;height:48px; border-radius:50%;">
+                {% else %}
+                    {% include "login.html" %}
+                {% endif %}
+                <br>
+                {% include "comment.html" %}
+                <span>
+                    <button id="gbook-add-btn" class="btn btn-success" style="width:80px; height:30px; margin-top: 10px;">提交留言</button>
+                </span>
+                <div id="gbook-tree-root" style="margin-top: 0px; border: 0px solid red">
                 </div>
             </div>
         </aside>
@@ -107,209 +97,7 @@
             extendedTimeOut: "1000",
             positionClass: "toast-top-center",
       };
-     $("document").ready(function(){
-         $.ajax({
-            type:'POST',
-            data:{'parent': -1, csrfmiddlewaretoken:'{{ csrf_token }}'},
-            url:'{% url 'gbook:list' %}',
-            datatype:JSON,
 
-            success:function(data) {
-                //alert(data)
-                if (data.gbook.length < 1){
-                    return true;
-                }
-                for (var i = 0; i < data.gbook.length; ++i) {
-                    var parent_id = data.gbook[i].parent_id;
-                    if ( parent_id === -1) {
-                        $(".gbook-container").append(create_gbook_item(data.gbook[i]));
-                    }
-                    else {
-                        var current_url = window.location.href;
-                        var message = data.gbook[i];
-                        var gbook_reply_div_id = "input-area-div-" + parent_id;
-
-                        var id = data.gbook[i].id;
-                        var userId = 1;
-                        var gbook_reply_textarea_id = "input-area-" + message.id;
-                        var gbook_reply_show_content_id = "gbook-reply-show-content-" + message.id;
-                        console.log($("#" + gbook_reply_div_id))
-
-                        var html = '' +
-                            '<div class="gbook-message" style="padding-left: 30px; padding-right: 30px; padding-top: 30px">' +
-                            '    <div class="gbook-header" style="float: left"><img src="/static/images/user_02.jpg"/>' +
-                            '    </div>' +
-                            '    <div class="gbook-info" style="float: left; margin-right: 40px;width: calc(100% - 90px);">' +
-                            '        <p>' +
-                            '            <a style="color: red;padding-left: 10px">' +  message.user_name + ' <span style="color: grey">[' + message.address + '网友]<span></a>' +
-                            '            <a style="float: right; color: grey">' + message.create_time + '</a>' +
-                            '        <p>' +
-                            '    </div>' +
-                            '    <div style="padding-left: 60px; margin-top: 50px" id=' + gbook_reply_show_content_id + '>' +
-                                    message.content +
-                            '    </div>' +
-                            '   <div id=' + gbook_reply_div_id + ' style="display:none; padding-top:40px;">' +
-                            '       <form action="{% url 'gbook:add' %}" method="POST" enctype="multipart/form-data" id="gbook-commit-form">' +
-                            '           {% csrf_token %}' +
-                            '           <textarea name="content" id=' + gbook_reply_textarea_id + '></textarea>' +
-                            '           <input type="submit" style="width:80px; height:30px; margin-top: 10px;" value="回复"/>' +
-                            '           <input name="parent" type="text" value="' + id + '" style="float:right; visibility: hidden">' +
-                            '           <input name="current_url" type="text" value="' + current_url + '" style="float:right; visibility: hidden">' +
-                            '       </form>' +
-                            '   </div>' +
-                            '</div>';
-
-                        $("#" + "gbook-reply-show-content-" + parent_id).append(html)
-                    }
-                }
-            },
-            error:function () {
-                console.log('ajax刷新分页数据失败！');
-            }
-        });
-     })
-
-     $("#gbook-commit-btn").unbind("click").click(function (){
-     });
-    $("#gbook-commit-form").ajaxForm(function(data){
-        var oEditor = CKEDITOR.instances["comment-input-text"];
-        var content = oEditor.getData();
-        if (content.length === 0) {
-            alert("留言为空呀~");
-            return false;
-        }
-        oEditor.setData("")
-        $.ajax({
-            type:'POST',
-            data:{
-                "content": content,
-                "parent": -1,
-                csrfmiddlewaretoken:'{{ csrf_token }}'
-            },
-            async: false,
-            url:'{% url 'gbook:add' %}',
-            datatype:JSON,
-            success:function(rsp) {
-                toastr.success(rsp.msg);
-                return false;
-            },
-            error:function () {
-                console.log('ajax刷新分页数据失败！');
-            }
-        });
-    });
-
-     function gbook_ding(id) {
-         $.ajax({
-            type:'POST',
-            data:{'id': id.substring(5), csrfmiddlewaretoken: '{{ csrf_token }}'},
-            url:'{% url 'gbook:ding' %}',
-            datatype:JSON,
-            success:function(data) {
-                $("#" + id).text("顶(" + data.data.ding + ")");
-            },
-            error:function () {
-                console.log('ajax刷新分页数据失败！');
-            }
-        });
-     }
-
-     function gbook_cai(id) {
-         $.ajax({
-            type:'POST',
-            data:{'id': id.substring(4), csrfmiddlewaretoken: '{{ csrf_token }}'},
-            url:'{% url 'gbook:cai' %}',
-            datatype:JSON,
-             success:function(data) {
-                $("#" + id).text("踩(" + data.data.cai + ")");
-            },
-            error:function () {
-                console.log('ajax刷新分页数据失败！');
-            }
-        });
-     }
-
-     var reply_input = new Array();
-     function click_gbook_reply_btn(gbook_id, isLogin) {
-        if (!isLogin){
-            alert("登录后才能评论或者回复评论哟~")
-            return;
-        }
-
-        var gbook_reply_div_id = "input-area-div-" + gbook_id;
-        var gbook_reply_textarea_id = "input-area-" + gbook_id;
-
-        if ($("#" + gbook_reply_div_id).css("display") !== "none"){
-            $("#" + gbook_reply_div_id).css("display", "none")
-            return
-        }
-
-        if (reply_input[gbook_id] !== undefined){
-            $("#" + gbook_reply_div_id).css("display", "");
-            return;
-        }
-        else {
-            CKEDITOR.replace(gbook_reply_textarea_id,
-                {
-                    'width': 'auto',
-                    'height': 150,
-                    dialog_backgroundCoverOpacity: 0.5,
-                    resize_enabled: false,
-                    extraPlugins: 'codesnippet',
-                    codeSnippet_theme: 'zenburn',
-                    toolbar:
-                        [
-                            ['Source'],
-                            ['Bold',],
-                            ['Image'],
-                            ['Format', 'Font', 'FontSize', 'TextColor', 'BGColor', 'Smiley', 'Indent'],
-                            ['CodeSnippet']
-                        ]
-                });
-        }
-
-        reply_input[gbook_id] = 1;
-       // $("#" + gbook_reply_div_id).css("display", "");
-    }
-    function create_gbook_item(message) {
-        var current_url = window.location.href;
-        var id = message.id;
-        var userId = 1;
-        var gbook_reply_div_id = "input-area-div-" + message.id;
-        var gbook_reply_textarea_id = "input-area-" + message.id;
-        var gbook_reply_show_content_id = "gbook-reply-show-content-" + message.id;
-
-        var html = '' +
-            '<div class="gbook-message" style="padding-left: 30px; padding-right: 30px; padding-top: 30px">' +
-            '    <div class="gbook-header" style="float: left"><img src="/static/images/user_02.jpg"/>' +
-            '    </div>' +
-            '    <div class="gbook-info" style="float: left; margin-right: 40px;width: calc(100% - 90px);">' +
-            '        <p>' +
-            '            <a style="color: red;padding-left: 10px">' +  message.user_name + ' <span style="color: grey">[' + message.address + '网友]<span></a>' +
-            '            <a style="float: right; color: grey">' + message.create_time + '</a>' +
-            '        <p>' +
-            '    </div>' +
-            '    <div style="padding-left: 60px; margin-top: 50px" id=' + gbook_reply_show_content_id + '>' +
-                    message.content +
-            '    </div>' +
-            '    <div class="gbook-reply">' +
-            '        <div id="cai-' + id + '" onclick="gbook_cai(this.id)">踩(' + message.cai + ')</div>' +
-            '        <div id="ding-' + id + '" onclick="gbook_ding(this.id)">顶(' + message.ding + ')</div>' +
-            '        <div id=' + id + ' onclick="click_gbook_reply_btn(this.id, ' + userId + ')">回复</div>' +
-            '    </div>' +
-            '   <div id=' + gbook_reply_div_id + ' style="display:none; padding-top:40px;">' +
-            '       <form action="{% url 'gbook:add' %}" method="POST" enctype="multipart/form-data" id="gbook-commit-form">' +
-            '           {% csrf_token %}' +
-            '           <textarea name="content" id=' + gbook_reply_textarea_id + '></textarea>' +
-            '           <input type="submit" style="width:80px; height:30px; margin-top: 10px;" value="回复"/>' +
-            '           <input name="parent" type="text" value="' + id + '" style="float:right; visibility: hidden">' +
-            '           <input name="current_url" type="text" value="' + current_url + '" style="float:right; visibility: hidden">' +
-            '       </form>' +
-            '   </div>' +
-            '   <div style="clear: both; padding-bottom:30px; border-bottom: 1px dashed grey;"></div>' +
-            '</div>'
-        return html;
-    }
 </script>
 {% endblock %}
 

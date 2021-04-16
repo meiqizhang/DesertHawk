@@ -145,3 +145,6 @@ def cai(request):
     response["data"] = dict()
     response["data"]["cai"] = gbook["cai"] + 1
     return HttpResponse(json.dumps(response), content_type="application/json")
+
+def comment_html(request):
+    return render(request, 'templates/comment.html', context={})

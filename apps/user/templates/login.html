@@ -1,0 +1,241 @@
+{% load static %}
+<head xmlns="http://www.w3.org/1999/html">
+    <style>
+        .login-logo {
+            margin-top: 12px;
+            margin-left: 8px;
+            color: #03910e;
+        }
+        .login-logo:hover {
+            margin-top: 12px;
+            margin-left: 8px;
+            color: red;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .current-user img{
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 1px solid white;
+        }
+
+         .btn-circle:hover {
+             cursor: pointer;
+             top: -2px;
+         }
+    </style>
+</head>
+
+<script>
+    baseTime = 90;
+    tryTimes = 1;
+    login_type = "username";
+
+    function login_with_qq() {
+        alert("QQ登录暂未开通");
+        return false
+    }
+    function login_with_wechat() {
+        alert("微信登录暂未开通");
+        return false;
+    }
+    function login_with_github() {
+        alert("GitHub登录暂未开通");
+        return false;
+    }
+    function login_with_phone() {
+        $("#login-with-username").attr("class", "hide");
+        $("#login-with-sms").attr("class", "show");
+        login_type = "sms";
+        return false;
+    }
+
+    function send_sms_code() {
+        var send_btn = $("#login-with-sms-code-btn");
+        var text = send_btn.text();
+        if (text.indexOf("s") > 0){
+            alert("不要重复发送~");
+            return false;
+        }
+
+        login_type = 'sms';
+        var phone_number = $("#login-with-sms-phone-number").val();
+        if (phone_number.length === 0) {
+            alert("手机号不能为空");
+            return ;
+        }
+
+        if (phone_number.length !== 11) {
+            alert("手机号长度错误");
+            return ;
+        }
+
+        for (var i = 0; i < phone_number.length; ++i) {
+            if (phone_number[i] < '0' || phone_number[i] > '9') {
+                alert("手机号错误");
+                return ;
+            }
+        }
+
+        $.ajax({
+            type:'POST',
+            data:{'phone_number': phone_number, csrfmiddlewaretoken: '{{ csrf_token }}'},
+            url:'{% url 'user:send_code' %}',
+            datatype: JSON,
+            async: false,
+            success:function (rsp) {
+                if(rsp.code !== 0) {
+                    alert(rsp.msg);
+                    return;
+                }
+                var waitTime = baseTime * tryTimes;
+                var intervalId = window.setInterval(function () {
+                    // 15692097691
+                     if (waitTime <= 0){
+                         clearInterval(intervalId);
+                         send_btn.val(' 发送验证码');
+                         tryTimes += 1
+                         return ;
+                     }
+                     send_btn.val(' '+ waitTime + 's');
+                     waitTime -= 1;
+                }, 1000);
+            },
+            error:function () {
+                console.log('ajax刷新分页数据失败！');
+            }
+        });
+        return false;
+    }
+    function click_login_btn() {
+        var username_phone = $("#login-with-username-username-phone").val();
+        var password = $("#login-with-username-password").val();
+        var sms_code = $("#login-with-sms-sms-code").val();
+        var phone_number = $("#login-with-sms-phone-number").val();
+
+        if (login_type === "username") {
+            if (username_phone.length === 0 || password.length === 0) {
+                alert("手机号或用户名和密码不能为空");
+                return
+            }
+        }
+        else if (login_type === "sms") {
+        }
+
+        $.ajax({
+            type:'POST',
+            data:{
+                    'ip': getCookie('ip'),
+                    'address': getCookie('address'),
+                    'login_type': login_type,
+                    'username_phone': username_phone,
+                    'phone_number': phone_number,
+                    'password': password,
+                    'sms_code': sms_code,
+                csrfmiddlewaretoken:'{{ csrf_token }}'
+            },
+
+            url:'{% url 'user:login' %}',
+            datatype:JSON,      //希望返回Json格式的数据
+            success:function (data) {
+                if (data.status === "error") {
+                    alert(data.msg);
+                } else {
+                    alert("登录成功，刷新当前页面就可以留言评论啦~")
+                    image_download_and_set("visit-header", data.user.header);
+                    $('#login-btn').modal('hide');
+                }
+            },
+            error:function () {
+                console.log('ajax刷新分页数据失败！');
+            }
+        });
+    }
+
+    function regist_btn() {
+        //window.location.reload();
+        window.open("/user/regist");
+    }
+</script>
+
+<div data-toggle="modal" data-target="#login-btn">
+    <div class="current-user">
+        <div style="width: 48px;height:48px; border-radius:50%; border: 1px solid gray;">
+            <div class="login-logo">登录</div>
+        </div>
+    </div>
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="login-btn" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width:400px; padding-top: 5%;">
+        <div class="modal-content">
+            <div class="modal-body" style="text-align: center">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" >
+                    &times;
+                </button>
+                    <div class="" id="login-with-username">
+                        <br><br><br>
+                            <b>用户名登录</b>
+                        <br><br>
+                        <div class="form-group">
+                            <input id="login-with-username-username-phone" type="text" class="form-control" placeholder="请输入用户名或手机号">
+                        </div>
+                        <div class="form-group">
+                            <input id="login-with-username-password" type="password" class="form-control" placeholder="请输入密码">
+                        </div>
+                    </div>
+                    <div class="hidden" id="login-with-sms">
+                        <br><br><br>
+                            <b>使用手机登录</b>
+                        <br><br>
+                        <div class="form-group">
+                            <input id="login-with-sms-phone-number" type="text" class="form-control" placeholder="请输入手机号">
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-8 col-sm-8">
+                                    <input id="login-with-sms-sms-code"type="text" class="form-control" placeholder="输入验证码"></input>
+                                </div>
+                                <div class="col-md-4 col-sm-4">
+                                    <input id="login-with-sms-code-btn" type="button" class="btn btn-primary active" onclick="send_sms_code()"
+                                           style="width: 100%" value="发送验证码" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="padding-top:0px">
+                        <p type="" class="btn btn-link" onclick="regist_btn()">前往注册</p>
+                        <p type="" class="btn btn-link" onclick="alert('忘记密码暂未开通');return false;">忘记密码</p>
+                    <br><br><br>
+                    <label id="login-btn-commit" class="btn btn-success" style="width:100%; font-size: larger" onclick="return click_login_btn()">登录评论</label>
+                    </div>
+            </div>
+
+            <br>
+            <div class="row" >
+                <div class="col-md-offset-2 col-sm-offset-2 col-md-8 col-sm-8" style="border: 0px solid #ff0000;">
+                    <label type="button" class="btn btn-defaul btn-circle col-md-1 col-sm-1 "
+                            style="background-image: url('/static/images/wechat.png'); height: 48px; width: 48px"
+                            onclick="return login_with_wechat()"></label>
+                    <label type="button" class="btn btn-defaul btn-circle col-md-1 col-sm-1 col-md-push-1 col-sm-push-1"
+                            style="background-image: url('/static/images/qq.png'); height: 48px; width: 48px"
+                            onclick="return login_with_qq()"></label>
+                    <label type="button" class="btn btn-defaul btn-circle col-md-1 col-sm-1 col-md-push-2 col-sm-push-2"
+                            style="background-image: url('/static/images/github.png'); height: 48px; width: 48px"
+                            onclick="return login_with_github()"></label>
+                    <label type="button" class="btn btn-defaul btn-circle col-md-1 col-sm-1 col-md-push-3 col-sm-push-3"
+                            style="background-image: url('/static/images/phone.png');  height: 48px; width: 48px"
+                            onclick="return login_with_phone()"></label>
+                </div>
+            </div>
+            <br>
+            <br>
+            <div class="modal-footer">
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
