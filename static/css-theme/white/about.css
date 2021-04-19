@@ -134,7 +134,7 @@ width:840px;
 .dateview {
     position: absolute;
     top: -50px;
-    left: 20px;
+    left: 10px;
     display: block;
     width: 88px;
     background: url(../../images/dtime.png) no-repeat;
