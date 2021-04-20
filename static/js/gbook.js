@@ -118,11 +118,12 @@ function show_gbook_tree(idx, gbook_list) {
 
     $("#" + parent_id).append('' +
         '<div id="gbook-tree-' + message.id + '" style="padding-top: 48px; clear: both; padding-left: ' + padding_left + '">' +
-        '   <img style="width: 48px; height: 48px" src="/static/images/user_02.jpg"/>' +
-        '   <div style="float: left; margin-top: -48px; padding-left: 60px">' +
-        '       <a style="color: red; margin-right: 10px">' + message.user_name + '</a>[<a style="color: grey">' + message.address + '网友</a>]</div>' +
-        '    <div style="float: right; margin-top: -48px; color: grey">' + message.create_time + '</div>' +
-        '   <div style="float: left; margin-top: -10px; margin-left: 60px;">' +
+        '   <img style="width: 48px; height: 48px; float: left" src="/static/images/user_02.jpg"/>' +
+        '   <div style="margin-top: -48px; padding-left: 60px">' +
+        '       <div style="float: left; color: red;">' + message.user_name + ' <a style="color: grey">[' + message.address + '网友]</a></div>' +
+        '       <div style="float: right;  color: grey">' + message.create_time + '</div>' +
+        '   </div>' +
+        '   <div style="clear: both; margin-top: -10px; margin-left: 60px;">' +
                 message.content +
         '   </div>'+
         '   <div style="clear: both">' +

@@ -11,11 +11,12 @@ from apps.user.views import get_user_info_from_cookie, add_visit_history_log
 
 
 @add_visit_history_log
-def commit(request):
+def add(request):
     response = dict()
 
     title = request.POST.get("title")
     content = request.POST.get("content")
+    parent_id = request.POST.get("parent_id", -1)
 
     ip_str = request.session.get("ip")
     address = request.session.get("address")
@@ -32,13 +33,13 @@ def commit(request):
     try:
         time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
         username = User.objects.get(id=user_id).username
-        Comment.objects.create(title=title, parent_id=-1, user_name=username, content=content,
+        Comment.objects.create(title=title, parent_id=parent_id, user_name=username, content=content,
                                ip=ip_str, address=address, create_time=time_now).save()
     except Exception as e:
         print(e)
 
     response["status"] = "success"
-    response["msg"] = "评论成功啦，刷新就能看见了~"
+    response["msg"] = "成功啦~"
 
     return HttpResponse(json.dumps(response).encode('utf-8').decode("unicode-escape"), content_type="application/json")
 
@@ -46,25 +47,23 @@ def commit(request):
 # @add_visit_history_log
 def lists(request):
     title = request.POST.get("title", None)
-    parent = request.POST.get("parent", None)
-
     response = dict()
     response["status"] = "success"
     response["msg"] = "ok"
 
-    if not title or not parent:
+    if not title:
         response["status"] = "error"
         response["msg"] = "参数非法"
 
         return HttpResponse(json.dumps(response), content_type="application/json")
 
-    response["comment"] = list()
+    response["comments"] = list()
 
-    comments = Comment.objects.filter(title=title, parent_id=parent).values()
+    comments = Comment.objects.filter(title=title).values()
     for c in comments:
-        response["comment"].append(c)
+        response["comments"].append(c)
 
-    logging.info("list comment title=%s, parent=%s, result=%d" % (title, parent, len(comments)))
+    logging.info("list comment title=%s, result=%d" % (title, len(comments)))
 
     return HttpResponse(json.dumps(response), content_type="application/json")
 

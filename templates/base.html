@@ -40,6 +40,8 @@
     <script src="{% static 'js/article/request-image.js' %}"></script>
     <script src="{% static 'js/map/echarts.min.js' %}"></script>
     <script src="{% static 'js/map/china.js' %}"></script>
+    <link href="https://cdn.bootcdn.net/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
     <SCRIPT>
         $.ajaxSetup({
@@ -54,6 +56,17 @@
             }
             return winWidth;
         }
+        toastr.options = {
+            closeButton: false,
+            debug: false,
+            progressBar: false,
+            onclick: null,
+            showDuration: "300",
+            hideDuration: "1000",
+            timeOut: "2000",
+            extendedTimeOut: "1000",
+            positionClass: "toast-top-center",
+      };
     </SCRIPT>
 </head>
 <body>

@@ -202,5 +202,5 @@ def detail(request):
                                                              'list_about': abouts,
                                                              'article_pre': article_pre,
                                                              'article_next': article_next,
-                                                             'user': {'id': user_id, 'header': header}
+                                                             'user': {'id': user_id, 'header': header},
                                                              })

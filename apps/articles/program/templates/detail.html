@@ -47,6 +47,18 @@
           padding-left: 10px;
           white-space: pre;
         }
+
+        .comment-reply-tool {
+            height: auto;
+            float: right;
+            color: grey;
+            font-size: 12px;
+            text-decoration: underline;
+        }
+        .comment-reply-tool:hover {
+            color: red;
+            cursor: pointer;
+        }
     </style>
 {% endblock %}
 
@@ -110,52 +122,223 @@
                     <div>还没有其他相关文章哟~</div>
                 {% endif %}
             </div>
-            <div style="margin-top:30px; border-top: #000 2px solid;">
-                 <form action="/comment/commit" method="POST" enctype="multipart/form-data" id="articles-comment-commit-form">
-                     {% csrf_token %}
-                     <div style="padding-bottom: 30px"></div>
-                     {% include "comment.html" %}
-                     <input type="submit" style="width:80px; height:30px; margin-top: 10px;" value="发表评论"/>
-                     <input name="title" type="text" value="{{ article.title }}" style="float:right; visibility: hidden">
-                </form>
-            </div>
         </div>
-        {% include "comment_list.html" %}
-        <script>
-            list_comments("{{ article.title }}", "{{ user.id }}");
-        </script>
-        <br><br>
+        <aside>
+            <div style="margin: 32px">
+                {% if user.id %}
+                    <img src="{{ user.header }}" style="width: 48px;height:48px; border-radius:50%;">
+                {% else %}
+                    {% include "login.html" %}
+                {% endif %}
+                <br>
+                {% include "comment.html" %}
+                <span>
+                    <button id="commit-add-btn" class="btn btn-success" style="width:80px; height:30px; margin-top: 10px;">提交评论</button>
+                </span>
+                <div id="comment-tree-root" style="margin-top: 0px; border: 0px solid red">
+                </div>
+            </div>
+        </aside>
     </article>
 
     <script>
         hljs.initHighlightingOnLoad();
         hljs.initLineNumbersOnLoad();
 
-
-    $("#articles-comment-commit-form").ajaxForm(function(data){
-        var oEditor = CKEDITOR.instances["comment-input-text"];
-        var content = oEditor.getData();
-        $.ajax({
-            type:'POST',
-            data:{
-                "content": content,
-                "parent": -1,
-                csrfmiddlewaretoken:'{{ csrf_token }}'
-            },
-            url:'{% url 'comment:commit' %}',
-            datatype:JSON,
-            success:function(rsp) {
-                alert(rsp.msg);
-            },
-            error:function () {
-                console.log('ajax刷新分页数据失败！');
+        var comment_reply_ckedits = [];
+        function click_comment_reply_btn(comment_id) {
+            var status = comment_reply_ckedits[comment_id];
+            if (status === 1) {
+                $("#comment-reply-ckeditor-" + comment_id).parent().css("display", "none");
+                comment_reply_ckedits[comment_id] = 0;
+                return
+             }
+            else {
+                $("#comment-reply-ckeditor-" + comment_id).parent().css("display", "");
+                comment_reply_ckedits[comment_id] = 1;
+                 if (status === 0) {
+                     return;
+                 }
             }
-        });
-    });
+            CKEDITOR.replace("comment-reply-ckeditor-" + comment_id,
+                {
+                    'width': 'auto',
+                    'height': 150,
+                    dialog_backgroundCoverOpacity: 0.5,
+                    resize_enabled: false,
+                    extraPlugins: 'codesnippet',
+                    codeSnippet_theme: 'zenburn',
+                    toolbar:
+                        [
+                            ['Source'],
+                            ['Bold',],
+                            ['Image'],
+                            ['Format', 'Font', 'FontSize', 'TextColor', 'BGColor', 'Smiley', 'Indent'],
+                            ['CodeSnippet']
+                        ]
+                 });
+        }
 
-    </script>
+        function comment_ding(id) {
+            $.ajax({
+                type:'POST',
+                data:{'id': id.substring(5)},
+                url: "/comment/ding/",
+                datatype:JSON,
+                success:function(data) {
+                    $("#" + id).text("顶(" + data.data.ding + ")");
+                },
+                error:function () {
+                    console.log('ajax刷新分页数据失败！');
+                }
+            });
+        }
+
+        function comment_cai(id) {
+            $.ajax({
+                type:'POST',
+                data:{'id': id.substring(4)},
+                url: "/comment/cai/",
+                datatype:JSON,
+                success:function(data) {
+                    $("#" + id).text("踩(" + data.data.cai + ")");
+                },
+                error:function () {
+                    console.log('ajax刷新分页数据失败！');
+                }
+            });
+        }
+
+        function click_reply_comment_submit_btn(title, comment_id) {
+            var oEditor = CKEDITOR.instances["comment-reply-ckeditor-" + comment_id];
+            var content = oEditor.getData();
+
+            if (content.length === 0) {
+                toastr.warning("回复不能为空呀~");
+                return false;
+            }
+            oEditor.setData("");
+
+            $.ajax({
+                type:'POST',
+                data: {
+                    "content": content,
+                    "title": title,
+                    "parent_id": comment_id,
+                },
+                async: false,
+                url:"/comment/add/",
+                success: function(rsp) {
+                    if (rsp.status === "success") {
+                        toastr.success(rsp.msg);
+                        list_comments(title);
+                    }
+                    else {
+                        toastr.warning(rsp.msg)
+                    }
+                    return false;
+                },
+                error: function () {
+                    toastr.error("回复评论失败了~");
+                }
+            });
+        }
+
+        function show_comment_tree(idx, comments) {
+            if (idx >= comments.length) {
+                return true;
+            }
+            const message = comments[idx];
+            var parent_id = "comment-tree-root";
+            var padding_left = "0px";
+
+            if (message.parent_id !== -1) {
+                padding_left = "48px";
+                parent_id = "comment-tree-" + message.parent_id;
+            }
+
+            console.log(message)
+            console.log($("#" + parent_id))
+
+            $("#" + parent_id).append('' +
+                '<div id="comment-tree-' + message.id + '" style="padding-top: 48px; clear: both; padding-left: ' + padding_left + '">' +
+                '   <img style="width: 48px; height: 48px; float: left" src="/static/images/user_02.jpg"/>' +
+                '   <div style="margin-top: -48px; padding-left: 60px">' +
+                '       <div style="float: left; color: red;">' + message.user_name + ' <a style="color: grey">[' + message.address + '网友]</a></div>' +
+                '       <div style="float: right;  color: grey">' + message.create_time + '</div>' +
+                '   </div>' +
+                '   <div style="clear: both; margin-top: -10px; margin-left: 60px;">' +
+                        message.content +
+                '   </div>'+
+                '   <div style="clear: both">' +
+                '       <div class="comment-reply-tool" id="cai-' + message.id + '" onclick="comment_cai(this.id)">踩(' + message.cai + ')</div>' +
+                '       <div class="comment-reply-tool" style="margin-right: 64px" id="ding-' + message.id + '" onclick="comment_ding(this.id)">顶(' + message.ding + ')</div>' +
+                '       <div class="comment-reply-tool" style="margin-right: 64px" id=' + message.id + ' onclick="click_comment_reply_btn(this.id)">回复</div>' +
+                '       <div style="padding-top: 32px; display: none"> ' +
+                '           <textarea cols="20" rows="2" id="comment-reply-ckeditor-' + message.id + '"></textarea>' +
+                '           <button class="btn btn-info" style="width:80px; height:30px; margin-top: 10px;" ' +
+                '               onclick="click_reply_comment_submit_btn(\'{{ article.title }}\', ' + message.id +')">确认回复</button>' +
+                '       </div>' +
+                '   </div>' +
+                '   <div style="clear: both;border-bottom: 1px dashed grey; padding-top: 10px;"></div>' +
+                '</div>')
+            return show_comment_tree(idx + 1, comments)
+        }
+
+        function list_comments(title) {
+            $("#comment-tree-root").empty();
+            $.ajax({
+                type:'POST',
+                data: {'parent': -1, "title": title},
+                url: "/comment/list/",
+                success:function(data) {
+                    console.log("list commnet", data);
+                    show_comment_tree(0, data.comments);
+                },
+                error: function (){
+                }
+            })
+        }
+
+        function click_add_comment_btn(title) {
+            var oEditor = CKEDITOR.instances["ckeditor-input-area"];
+            var content = oEditor.getData();
+            if (content.length === 0) {
+                alert("留言为空呀~");
+                return false;
+            }
+            oEditor.setData("");
+
+            $.ajax({
+                type:'POST',
+                data: {
+                    "content": content,
+                    "parent": -1,
+                    "title": title,
+                },
+                async: false,
+                url:"/comment/add/",
+                success: function(rsp) {
+                    console.log(rsp)
+                    if (rsp.status === "success") {
+                        toastr.success(rsp.msg);
+                        list_comments(title);
+                    }
+                    else {
+                        toastr.warning(rsp.msg)
+                    }
+                    return false;
+                },
+                error: function () {
+                    toastr.error("提交评论失败了~");
+                }
+            });
+        }
+        $(document).ready(function(){
+            $("#commit-add-btn").unbind("click").click(function (){
+                click_add_comment_btn("{{ article.title }}");
+            });
+            list_comments("{{ article.title }}");
+        })
+        </script>
 {% endblock %}
-
-
-
-
