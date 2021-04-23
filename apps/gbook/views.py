@@ -33,6 +33,8 @@ def list(request):
         records = GBook.objects.filter().order_by("id").values()
         if records:
             for r in records:
+                if r["content"].find("<img") >= 0:
+                    r["content"] = r["content"].replace("<img", '<img style="width:100%"')
                 response["gbook"].append(r)
 
         return HttpResponse(json.dumps(response), content_type="application/json")
