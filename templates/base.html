@@ -351,7 +351,7 @@
  });
 </script>
 
-<div id="main-container" class="container show" style="width: 100%;">
+<div id="main-container" class="container show" style="width: 100%; border: 0px solid red">
     <div class="row">
         <div id="statistic-bar" class="col-xs-0 col-0 col-sm-0 col-md-0 col-lg-0 hidden">
             <div class="container" style="width: 100%;">
@@ -376,6 +376,30 @@
         </div>
     </div>
 </div>
+
+{#<div id="main-container" class="container show" style="width: 100%; border: 0px solid red">#}
+{#    <div class="row">#}
+{#        <div id="statistic-bar" class="col-xs-0 col-sm-0 col-md-0 col-lg-0" style="border: 1px solid red">#}
+{#            <div class="container" style="width: 100%;">#}
+{#                <div class="row" style="text-align: center">#}
+{#                    <div id="site-statistic" class="col-sm-12 col-md-12"></div>#}
+{#                    <p>您是小站的第<span style="color: red"> {{ VISIT_COUNT }} </span>位访客，欢迎~</p>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div id="article-bar" class="col-xs-8 col-sm-8 col-md-6 col-lg-6" style="border: 1px solid greenyellow" >#}
+{#            <article>#}
+{#                <div class="my-container" >#}
+{#                    {% block content %}#}
+{#                    {% endblock %}#}
+{#                </div>#}
+{#            </article>#}
+{#        </div>#}
+{#        <div class="col-xs-0 col-sm-0 col-md-3 col-lg-3" style="border: 1px solid red">#}
+{#            <iframe name="" frameborder="0" scrolling="no" marginwidth="0" marginheight="0" style="height:250px;margin: 10px" src="/calendar.html"></iframe>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
 
 <script>
     var screenWidth = getWidth();

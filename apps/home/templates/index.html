@@ -7,51 +7,56 @@
 {% endblock %}
 
 {% block content %}
-    <div class="blog" data-scroll-reveal="enter top" style="border: 0px solid red">
-        {% for figure_article in figure_articles %}
-            <figure id="my-figure">
-                <ul style="padding: 0;">
-                    <a href="{{ figure_article.url }}?title={{ figure_article.title }}" style="padding: 0">
-                        <img id="image-{{ figure_article.article_id }}" title="{{ figure_article.title }}" style="width: 100%; height: 100%; padding: 0;" src="/static/images/loading.gif">
-                        <span>点击查看详情</span>
-                    </a>
-                </ul>
-                <p>
-                    <a href="{{ figure_article.url }}?title={{ figure_article.title }}">{{ figure_article.title }}</a>
-                </p>
-                <figcaption>
-                    <span>
-                        {{ figure_article.description }}
-                    </span>
-                </figcaption>
-            </figure>
+    <div class="blog row" data-scroll-reveal="enter top" style="border: 0px solid red">
+        {% for figure_article in figure_articles  %}
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" style="border: 0px solid red;">
+                <figure id="my-figure">
+                    <ul style="padding: 0;">
+                        <a href="{{ figure_article.url }}?title={{ figure_article.title }}" style="padding: 0">
+                            <img id="image-{{ figure_article.article_id }}" title="{{ figure_article.title }}" style="width: 100%; height: 100%; padding: 0;" src="/static/images/loading.gif">
+                            <span>点击查看详情</span>
+                        </a>
+                    </ul>
+                    <p>
+                        <a href="{{ figure_article.url }}?title={{ figure_article.title }}">{{ figure_article.title }}</a>
+                    </p>
+                    <figcaption>
+                        <span>
+                            {{ figure_article.description }}
+                        </span>
+                    </figcaption>
+                </figure>
+            </div>
         {% endfor %}
     </div>
 
-    <ul class="cbp_tmtimeline">
-        {% for darticle in articles %}
-            <li>
-                <time class="cbp_tmtime">
-                    <span>{{ darticle.year }}</span>
-                    <span>{{ darticle.day }}</span>
-                </time>
-                <div class="cbp_tmicon"></div>
-                <div class="cbp_tmlabel" data-scroll-reveal="enter right over 1s">
-                    <h2>{{ darticle.title }}</h2>
-                    <p>
-                        <span class="blogpic">
-                            <img id="image-{{ darticle.article_id }}" title="{{ darticle.title }}" style="height: 85%" src="/static/images/loading.gif">
-                        </span>
-                        <a class="article-description" href="{{darticle.url}}?title={{darticle.title}}">
-                            {{ darticle.description }}
-                        </a>
-                    </p>
-                    <a href="{{ darticle.url }}?title={{ darticle.title }}" class="readmore">阅读全文&gt;&gt;</a>
-                </div>
-            </li>
-
-        {% endfor %}
-    </ul>
+    <div id="articles-for-md" class="row hidden"  style="margin-top: 64px; ">
+        <ul class="cbp_tmtimeline">
+            {% for darticle in articles %}
+                <li>
+                    <div>
+                        <time class="cbp_tmtime">
+                            <span>{{ darticle.year }}</span>
+                            <span>{{ darticle.day }}</span>
+                        </time>
+                    </div>
+                    <div class="cbp_tmicon"  style="border: 0px saddlebrown solid;"></div>
+                    <div class="cbp_tmlabel" data-scroll-reveal="enter right over 1s">
+                        <h2>{{ darticle.title }}</h2>
+                        <p>
+                            <span class="blogpic">
+                                <img id="image-{{ darticle.article_id }}" title="{{ darticle.title }}" style="height: 85%" src="/static/images/loading.gif">
+                            </span>
+                            <a class="article-description" href="{{darticle.url}}?title={{darticle.title}}">
+                                {{ darticle.description }}
+                            </a>
+                        </p>
+                        <a href="{{ darticle.url }}?title={{ darticle.title }}" class="readmore">阅读全文&gt;&gt;</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 
     <div class="pages">
         <a title="前一页"><b> < </b> </a>
@@ -60,6 +65,15 @@
     </div>
 
     <script>
+        var screenWidth = getWidth();
+        if (screenWidth > 980) {
+            $("#articles-for-sm").attr("class", "hidden")
+            $("#articles-for-md").attr("class", "show")
+        }
+        else {
+            //$("#articles-for-sm").attr("class", "show")
+            //$("#articles-for-md").attr("class", "hidden")
+        }
         $("img").each(function() {
             image_download_and_set($(this).attr("id"), "/articles/d_icon/?title=" + $(this).attr("title"))
             }
@@ -125,7 +139,7 @@
         function go_to_page(){
             $.ajax({
                 type:'GET',
-                url: "/?page_id=" + select_idx,
+                url: "/?page_id=" + select_idx + "&width=" + getWidth(),
                 datatype: JSON,
                 success:function (rsp) {
                     f1(rsp);
@@ -141,26 +155,28 @@
 
             for (var i = 0; i < rsp.figure_articles.length; i++) {
                 var url = encodeURI(rsp.figure_articles[i].url + "?title=" + rsp.figure_articles[i].title);
-                var figure = $("#my-figure");
-                figure.children("ul").remove();
-                figure.children("p").remove();
-                figure.children("figcaption").remove()
+                //var figure = $("#my-figure");
+                $("my-figure").foreach(function (){
+                    $(this).children("ul").remove();
+                    $(this).children("p").remove();
+                    $(this).children("figcaption").remove()
 
-                figure.append(
-                    '<ul style="padding: 0; margin: 0;">' +
-                    '<a href="' + url + '" target="_blank">' +
-                    '<img id="image-' + i + '" title="' + rsp.figure_articles[i].title +'" style="width: 100%; height: 100%; margin: auto;" src="/static/images/loading.gif">' +
-                    '<span>点击查看详情</span>' +
-                    '</a>' +
-                    '</ul>' +
-                    '<p>' +
-                    '<br><a href="' + url + '" target="_blank">' + rsp.figure_articles[i].title + '</a>' +
-                    '</p>' +
-                    '<figcaption>' +
-                     rsp.figure_articles[i].description +
-                    '</figcaption>' +
-                    '</figure>'
-                )
+                    $(this).append(
+                        '<ul style="padding: 0; margin: 0;">' +
+                        '<a href="' + url + '" target="_blank">' +
+                        '<img id="image-' + i + '" title="' + rsp.figure_articles[i].title +'" style="width: 100%; height: 100%; margin: auto;" src="/static/images/loading.gif">' +
+                        '<span>点击查看详情</span>' +
+                        '</a>' +
+                        '</ul>' +
+                        '<p>' +
+                        '<br><a href="' + url + '" target="_blank">' + rsp.figure_articles[i].title + '</a>' +
+                        '</p>' +
+                        '<figcaption>' +
+                         rsp.figure_articles[i].description +
+                        '</figcaption>' +
+                        '</figure>'
+                    )
+                })
             }
 
             for (var i = 0; i < rsp.articles.length; i++) {

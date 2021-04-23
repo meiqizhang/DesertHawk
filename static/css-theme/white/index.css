@@ -9,7 +9,7 @@
     overflow: hidden;
     border: 0px solid red;
 }
-.blog figure {
+.blog figurex {
     background: #ececec;
     border: #FFF 10px solid;
     width: 33%;
@@ -91,7 +91,6 @@
 }
 
 .cbp_tmtimeline {
-    margin: 30px 0 0 0;
     padding: 0;
     list-style: none;
     position: relative;
