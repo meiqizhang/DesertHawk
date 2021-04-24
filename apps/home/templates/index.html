@@ -155,28 +155,26 @@
 
             for (var i = 0; i < rsp.figure_articles.length; i++) {
                 var url = encodeURI(rsp.figure_articles[i].url + "?title=" + rsp.figure_articles[i].title);
-                //var figure = $("#my-figure");
-                $("#my-figure").foreach(function (){
-                    $(this).children("ul").remove();
-                    $(this).children("p").remove();
-                    $(this).children("figcaption").remove()
+                var figure = $("#my-figure");
+                figure.children("ul").remove();
+                figure.children("p").remove();
+                figure.children("figcaption").remove()
 
-                    $(this).append(
-                        '<ul style="padding: 0; margin: 0;">' +
-                        '<a href="' + url + '" target="_blank">' +
-                        '<img id="image-' + i + '" title="' + rsp.figure_articles[i].title +'" style="width: 100%; height: 100%; margin: auto;" src="/static/images/loading.gif">' +
-                        '<span>点击查看详情</span>' +
-                        '</a>' +
-                        '</ul>' +
-                        '<p>' +
-                        '<br><a href="' + url + '" target="_blank">' + rsp.figure_articles[i].title + '</a>' +
-                        '</p>' +
-                        '<figcaption>' +
-                         rsp.figure_articles[i].description +
-                        '</figcaption>' +
-                        '</figure>'
-                    )
-                })
+                figure.append(
+                    '<ul style="padding: 0; margin: 0;">' +
+                    '<a href="' + url + '" target="_blank">' +
+                    '<img id="image-' + i + '" title="' + rsp.figure_articles[i].title +'" style="width: 100%; height: 100%; margin: auto;" src="/static/images/loading.gif">' +
+                    '<span>点击查看详情</span>' +
+                    '</a>' +
+                    '</ul>' +
+                    '<p>' +
+                    '<br><a href="' + url + '" target="_blank">' + rsp.figure_articles[i].title + '</a>' +
+                    '</p>' +
+                    '<figcaption>' +
+                     rsp.figure_articles[i].description +
+                    '</figcaption>' +
+                    '</figure>'
+                )
             }
 
             for (var i = 0; i < rsp.articles.length; i++) {
