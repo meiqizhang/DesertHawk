@@ -156,7 +156,7 @@
             for (var i = 0; i < rsp.figure_articles.length; i++) {
                 var url = encodeURI(rsp.figure_articles[i].url + "?title=" + rsp.figure_articles[i].title);
                 //var figure = $("#my-figure");
-                $("my-figure").foreach(function (){
+                $("#my-figure").foreach(function (){
                     $(this).children("ul").remove();
                     $(this).children("p").remove();
                     $(this).children("figcaption").remove()

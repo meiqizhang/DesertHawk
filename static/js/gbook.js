@@ -105,12 +105,23 @@ function gbook_cai(id) {
 
 function show_gbook_tree(idx, gbook_list) {
     if (idx >= gbook_list.length) {
+        $(".gbook-img").each(function () {
+            console.log($(this).attr("src"), $(this).css("width"));
+            var width = parseInt($(this).css("width"))
+            if (width > 480) {
+                $(this).css("width", "100%")
+            }
+        })
         return true;
     }
     const message = gbook_list[idx];
     var parent_id = "gbook-tree-root";
     var padding_left = "0px";
 
+    if (message === undefined) {
+        return
+    }
+    console.log(message)
     if (message.parent_id !== -1) {
         padding_left = "48px";
         parent_id = "gbook-tree-" + message.parent_id;
@@ -145,13 +156,14 @@ function show_gbook_tree(idx, gbook_list) {
 function list_gbook() {
      $("#gbook-tree-root").empty();
      $.ajax({
-        type:'POST',
-        data: {'parent': -1},
-        url: "/gbook/list/",
-        success:function(data) {
-            show_gbook_tree(0, data.gbook);
-        },
-        error: function (){
+         type:'POST',
+         sync: true,
+         url: "/gbook/list/",
+         success:function(data) {
+             console.log("reply...")
+             show_gbook_tree(0, data.gbook);
+             },
+         error: function (){
         }
     })
 }

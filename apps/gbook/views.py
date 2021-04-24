@@ -34,7 +34,7 @@ def list(request):
         if records:
             for r in records:
                 if r["content"].find("<img") >= 0:
-                    r["content"] = r["content"].replace("<img", '<img style="width:100%"')
+                    r["content"] = r["content"].replace("<img", '<img class="gbook-img"')
                 response["gbook"].append(r)
 
         return HttpResponse(json.dumps(response), content_type="application/json")
