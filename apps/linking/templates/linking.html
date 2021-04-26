@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    友情链接
+{% endblock %}
+
+{% block mycss %}
+    {{ block.super }}
+{% endblock %}
+
+{% block meta %}
+    <style>
+        .linking-img {
+            clear: both;
+            width: 32px;
+            height: 32px;
+        }
+        .linking-href {
+            float: left;
+            margin-left: 36px;
+            margin-top: -26px;
+            block-size: 16px;
+        }
+        .linking-href:hover {
+            text-decoration: underline;
+            color: #1fad83;
+        }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+    <div style="padding-top: 32px;">
+        <ul style="color: #00cc66">
+            <li>互链可以增加网站的曝光率，可以更容易被搜索引擎记录</li>
+            <li>需要互链的小伙伴在留言板上留下自己的网站名称和网站logo，我会不定期同步</li>
+        </ul>
+    </div>
+    <article style="padding: 32px">
+        <aside>
+            <div class="row">
+                <div class=" col-xs-6 col-sm-4 col-md-4 col-lg-3">
+                    <img class="linking-img" src="https://inews.gtimg.com/newsapp_bt/0/13457103475/1000"/>
+                    <a class="linking-href" href="" style="color: black">链接一</a>
+                </div>
+                <div class="col-xs-6 col-sm-4 col-md-4 col-lg-3">
+                        <img class="linking-img" src="https://inews.gtimg.com/newsapp_bt/0/13457103475/1000"/>
+                        <a class="linking-href" href="" style="color: black">链接一</a>
+                </div>
+                <div class=" col-xs-6 col-sm-4 col-md-4 col-lg-3">
+                        <img class="linking-img" src="https://inews.gtimg.com/newsapp_bt/0/13457103475/1000"/>
+                        <a class="linking-href" href="" style="color: black">链接一</a>
+                </div>
+                <div class=" col-xs-6 col-sm-4 col-md-4 col-lg-3">
+                        <img class="linking-img" src="https://inews.gtimg.com/newsapp_bt/0/13457103475/1000"/>
+                        <a class="linking-href" href="" style="color: black">链接一</a>
+                </div>
+            </div>
+        </aside>
+    </article>
+{% endblock %}
+
+
+
+

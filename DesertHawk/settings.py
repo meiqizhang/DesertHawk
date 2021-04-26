@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'apps.search',
     'apps.document',
     'apps.administrator',
+    'apps.linking',
     'libs.mdeditor',
     'DesertHawk',
 ]
@@ -90,6 +91,7 @@ TEMPLATES = [
                  os.path.join(BASE_DIR, 'apps/gbook'),
                  os.path.join(BASE_DIR, 'apps/aboutme'),
                  os.path.join(BASE_DIR, 'apps/search'),
+                 os.path.join(BASE_DIR, 'apps/linking'),
                  ],
         'APP_DIRS': True,
         'OPTIONS': {
