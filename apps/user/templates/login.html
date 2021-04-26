@@ -33,7 +33,6 @@
     login_type = "username";
 
     function login_with_qq() {
-        alert("QQ登录暂未开通");
         return false
     }
     function login_with_wechat() {
@@ -220,9 +219,9 @@
                     <label type="button" class="btn btn-defaul btn-circle col-md-1 col-sm-1 "
                             style="background-image: url('/static/images/wechat.png'); height: 48px; width: 48px"
                             onclick="return login_with_wechat()"></label>
-                    <label type="button" class="btn btn-defaul btn-circle col-md-1 col-sm-1 col-md-push-1 col-sm-push-1"
+                    <a type="button" class="btn btn-defaul btn-circle col-md-1 col-sm-1 col-md-push-1 col-sm-push-1"
                             style="background-image: url('/static/images/qq.png'); height: 48px; width: 48px"
-                            onclick="return login_with_qq()"></label>
+                            href="/user/login_with_qq" rel="external nofollow"></a>
                     <label type="button" class="btn btn-defaul btn-circle col-md-1 col-sm-1 col-md-push-2 col-sm-push-2"
                             style="background-image: url('/static/images/github.png'); height: 48px; width: 48px"
                             onclick="return login_with_github()"></label>

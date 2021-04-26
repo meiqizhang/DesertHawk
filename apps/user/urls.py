@@ -5,6 +5,8 @@ app_name = 'user'
 
 urlpatterns = [
     path('login/', views.login, name='login'),
+    path('login_with_qq/', views.login_with_qq, name='login_with_qq'),
+    path('login_with_qq_returns/', views.login_with_qq_returns, name='login_with_qq_returns'),
     path('regist/', views.regist, name='regist'),
     path('send_code/', views.send_code, name='send_code'),
 ]

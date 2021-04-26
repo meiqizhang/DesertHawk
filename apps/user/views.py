@@ -4,6 +4,7 @@ import json
 import urllib
 import time
 import random
+from urllib import parse
 from urllib.parse import urlencode
 
 from django.contrib.auth import logout
@@ -66,6 +67,8 @@ def login(request):
         response = login_with_user_name(request)
     elif login_type == "sms":
         response = login_with_sms_code(request)
+    elif login_type == "qq":
+        response = login_with_qq(request)
 
     if response and response["status"] == "success":
         request.session["ip"] = request.POST.get("ip")
@@ -73,7 +76,6 @@ def login(request):
         print("login success, save ip and address into session..., ip=%s, address=%s" % (request.session["ip"], request.session["address"]))
 
     return HttpResponse(json.dumps(response), content_type="application/json")
-
 
 # 用户注册
 @add_visit_history_log
@@ -310,20 +312,32 @@ def user_center(request):
         return render(request, 'center.html', context={'user': user})
 
 
-def login_qq(request):
-    if request.method == 'GET':
-        return render(request, 'login.html')
-    else:
-        code_url = 'https://graph.qq.com/oauth2.0/authorize'
-        parm = {
-            'response_type': 'code',
-            'client_id': '1110505456',
-            'redirect_uri': 'www.ditanshouw.com/user/login/qq',
-            'state':  'test'
-        }
-        auth_url = '%s?%s'%(code_url, urlencode(parm))
-        return HttpResponseRedirect(auth_url)
+@add_visit_history_log
+def login_with_qq(request):
+    # code_url = 'https://graph.qq.com/oauth2.0/authorize'
+    # parm = {
+    #     'response_type': 'code',
+    #     'client_id': '1110505456',
+    #     'redirect_uri': 'http://www.ditanshouw.com/user/login_with_qq_returns',
+    #     'state':  'test'
+    # }
+    # auth_url = '%s?%s'%(code_url, urlencode(parm))
+    # return HttpResponseRedirect(auth_url)
 
+
+    state = str(random.randrange(100000, 999999)) # 定义一个随机状态码，防止跨域伪造攻击。
+    request.session['state'] = state # 将随机状态码存入Session，用于授权信息返回时验证。
+    client_id = "101879973" # QQ互联中网站应用的APP ID。
+    # 对回调地址进行编码，用户同意授权后将调用此链接。
+    callback = parse.urlencode({'redirect_uri': "http://www.ditanshow.com/user/login_with_qq_returns"})
+    # 组织QQ第三方登录链接
+    login_url = 'https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=%s&%s&state=%s'%(client_id, callback, state)
+    return HttpResponseRedirect(login_url) # 重定向到QQ第三方登录授权页面
+
+
+def login_with_qq_returns(request):
+    response = {"status": "success"}
+    return  HttpResponse(json.dumps(response))
 
 #其中redirect_uri为回调url，qq服务器收到登录请求后调用你的后台实现
 #www.323.com/qq  指向如下实现
