@@ -1,0 +1,16 @@
+<script src="https://cdn.bootcdn.net/ajax/libs/flv.js/1.5.0/flv.min.js"></script>
+   <video id="videoElement" autoplay="autoplay">
+     您的浏览器不支持 video 标签。
+   </video>
+   <script>
+     if (flvjs.isSupported()) {
+       var videoElement = document.getElementById('videoElement');
+       var flvPlayer = flvjs.createPlayer({
+         type: 'flv',
+         url: 'http://ditanshow.com:8001/live?port=1935&app=myapp&stream=test'
+       });
+       flvPlayer.attachMediaElement(videoElement);
+       flvPlayer.load();
+       flvPlayer.play();
+     }
+   </script>

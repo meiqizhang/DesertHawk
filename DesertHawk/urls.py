@@ -31,6 +31,7 @@ urlpatterns = [
     path('search/', include(('apps.search.urls'), namespace='search')),
     path('document/', include(('apps.document.urls'), namespace='document')),
     path('linking/', include(('apps.linking.urls'), namespace='linking')),
+    path('live/', include(('apps.live.urls'), namespace='live')),
     path('', include(('apps.home.urls'), namespace="index")),
     path('home/', include(('apps.home.urls'), namespace="home")),
     path('articles/', include(('apps.articles.urls', 'articles'), namespace='articles')),

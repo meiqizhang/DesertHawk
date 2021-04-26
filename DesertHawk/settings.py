@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'apps.document',
     'apps.administrator',
     'apps.linking',
+    'apps.live',
     'libs.mdeditor',
     'DesertHawk',
 ]
@@ -92,6 +93,7 @@ TEMPLATES = [
                  os.path.join(BASE_DIR, 'apps/aboutme'),
                  os.path.join(BASE_DIR, 'apps/search'),
                  os.path.join(BASE_DIR, 'apps/linking'),
+                 os.path.join(BASE_DIR, 'apps/live'),
                  ],
         'APP_DIRS': True,
         'OPTIONS': {
