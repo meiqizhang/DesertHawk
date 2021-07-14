@@ -103,12 +103,15 @@ def tag(request):
 
 
 class HighlightRenderer(mistune.Renderer):
-    def block_code(self, code, lang):
-        return '<div><pre style="padding:0px"><code>%s</code></pre></div>' % mistune.escape(code)
+    def block_code(self, code, lang=None):
+        return '<div><pre style="padding:0px; border: 1px solid gray; background: #f0f0f0" class="prettyprint linenums"><code>%s</code></pre></div>' % mistune.escape(code)
 
     """def block_quote(self, text):  # 引用块
         html = '<blockquote style="color:gray; font-size:14px;font-style:italic">%s</blockquote>' % text
         return html """
+
+    def codespan(self, text):
+        return '<code style="color: #0000ff; font-weight:bold">' + text + '</code>'
 
     def image(self, src, title, alt_text):
         img = '<div style="text-align:center;"><img style="margin:auto" src="%s"></div>' % src

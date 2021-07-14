@@ -13,40 +13,30 @@
 
 {% block mycss %}
     {{ block.super }}
-    <link href="https://cdn.bootcss.com/highlight.js/9.6.0/styles/atelier-lakeside-dark.min.css" rel="stylesheet"/>
-    <script src="https://cdn.bootcss.com/highlight.js/9.15.8/highlight.min.js"></script>
-    <script src="https://cdn.bootcss.com/highlightjs-line-numbers.js/2.7.0/highlightjs-line-numbers.min.js"></script>
+    <link href="https://cdn.bootcss.com/highlight.js/9.6.0/styles/atelier-cave-dark.min.cs" rel="stylesheet"/>
+    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.js"></script>
 
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/article/m.css' }}"  rel="stylesheet">
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/article/detail.css' }}"  rel="stylesheet">
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/article/code.css' }}"  rel="stylesheet">
 
     <style>
-        /* for block of numbers */
-        .hljs-ln-numbers {
-          -webkit-touch-callout: none;
-          -webkit-user-select: none;
-          -khtml-user-select: none;
-          -moz-user-select: none;
-          -ms-user-select: none;
-          user-select: none;
-
-          text-align: center;
-          color: #ccc;
-          border-right: 1px solid #CCC;
-          vertical-align: top;
-          padding-right: 5px;
-        }
-
-        .hljs-ln-n {
-          width: 30px;
-        }
-
-        /* for block of code */
-        .hljs-ln .hljs-ln-code {
-          padding-left: 10px;
-          white-space: pre;
-        }
+        .prettyprint *{font-family:'courier new',monospace;}
+        .prettyprint .com { color: #93a1a1; }
+        .prettyprint .lit { color: #AE81FF; }
+        .prettyprint .pun,
+        .prettyprint .opn { color: #ff0000; }
+        .prettyprint .clo { color: #F8F8F2; }
+        .prettyprint .fun { color: #dc322f; }
+        .prettyprint .str { color: #0000FF; }
+        .prettyprint .atv { color: #E6DB74; }
+        .prettyprint .kwd { color: #0000FF; }
+        .prettyprint .tag { color: #F92659; }
+        .prettyprint .typ,
+        .prettyprint .atn,
+        .prettyprint .dec,
+        .prettyprint .var { color: #ff0000; }
+        .prettyprint .pln { color: #66D9EF; }
 
         .comment-reply-tool {
             height: auto;
@@ -142,8 +132,8 @@
     </article>
 
     <script>
-        hljs.initHighlightingOnLoad();
-        hljs.initLineNumbersOnLoad();
+       // hljs.initHighlightingOnLoad();
+        //hljs.initLineNumbersOnLoad();
 
         var comment_reply_ckedits = [];
         function click_comment_reply_btn(comment_id) {
@@ -335,6 +325,7 @@
             });
         }
         $(document).ready(function(){
+            prettyPrint();//代替body上的onload事件加载该方法
             $("#commit-add-btn").unbind("click").click(function (){
                 click_add_comment_btn("{{ article.title }}");
             });
