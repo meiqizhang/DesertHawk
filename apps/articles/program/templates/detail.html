@@ -13,30 +13,30 @@
 
 {% block mycss %}
     {{ block.super }}
-    <link href="https://cdn.bootcss.com/highlight.js/9.6.0/styles/atelier-cave-dark.min.cs" rel="stylesheet"/>
     <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/lang-css.min.js"></script>
 
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/article/m.css' }}"  rel="stylesheet">
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/article/detail.css' }}"  rel="stylesheet">
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/article/code.css' }}"  rel="stylesheet">
 
     <style>
-        .prettyprint *{font-family:'courier new',monospace;}
-        .prettyprint .com { color: #93a1a1; }
+        .prettyprint *{font-family:'courier new',monospace; font-size: 14px}
+        .prettyprint .com { color: grey; }
         .prettyprint .lit { color: #AE81FF; }
-        .prettyprint .pun,
-        .prettyprint .opn { color: #ff0000; }
+        .prettyprint .pun { color: saddlebrown; }
+        .prettyprint .opn,
         .prettyprint .clo { color: #F8F8F2; }
-        .prettyprint .fun { color: #dc322f; }
+        .prettyprint .fun { color: #0000FF; }
         .prettyprint .str { color: #0000FF; }
         .prettyprint .atv { color: #E6DB74; }
-        .prettyprint .kwd { color: #0000FF; }
-        .prettyprint .tag { color: #F92659; }
+        .prettyprint .kwd,
+        .prettyprint .tag { color: #ff0000; }
         .prettyprint .typ,
         .prettyprint .atn,
         .prettyprint .dec,
-        .prettyprint .var { color: #ff0000; }
-        .prettyprint .pln { color: #66D9EF; }
+        .prettyprint .var { color: blueviolet; }
+        .prettyprint .pln { color: #000000; }
 
         .comment-reply-tool {
             height: auto;

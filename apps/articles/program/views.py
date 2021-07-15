@@ -104,7 +104,7 @@ def tag(request):
 
 class HighlightRenderer(mistune.Renderer):
     def block_code(self, code, lang=None):
-        return '<div><pre style="padding:0px; border: 1px solid gray; background: #f0f0f0" class="prettyprint linenums"><code>%s</code></pre></div>' % mistune.escape(code)
+        return '<div><pre style="padding:0px; background: #f0f0f0" class="prettyprint linenums:1"><code>%s</code></pre></div>' % mistune.escape(code)
 
     """def block_quote(self, text):  # 引用块
         html = '<blockquote style="color:gray; font-size:14px;font-style:italic">%s</blockquote>' % text
