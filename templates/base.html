@@ -125,7 +125,7 @@
             datatype:JSON,
                 success:function (data) {
                 },
-                    error:function () {
+                error:function () {
                 }
             });
         }
@@ -184,7 +184,7 @@
                 <span class="en" style="color: #BC7A00">About</span>
             </a>
 
-            <a href="{% url 'articles:program:home' %}">
+            <a href="/articles/programing">
                 <span>程序设计</span>
                 <span class="en" style="color: #BC7A00">Program</span>
             </a>
@@ -193,11 +193,6 @@
 {#                <span>旅行摄影</span>#}
 {#                <span class="en" style="color: #BC7A00">Travel</span>#}
 {#            </a>#}
-
-            <a href="{% url 'articles:mindsay:home' %}">
-                <span>碎言碎语</span>
-                <span class="en" style="color: #BC7A00">Saying</span>
-            </a>
 
             <a href="{% url 'document:list' %}">
                 <span>文档资源</span>
@@ -326,33 +321,6 @@
             var myChart = echarts.init(document.getElementById('site-statistic'));
             myChart.setOption(optionMap);
         }
-
-        var hot_news_str = getCookie("hot_news");
-        if (!hot_news_str || hot_news_str.length === 0 && getWidth() > 1480) {
-            $.ajax({
-                type: 'GET',
-                url: "/fetch_news",
-                datatype: JSON,      //希望返回Json格式的数据
-                success: function (rsp) {
-                    console.log(rsp);
-                    setCookie("hot_news", JSON.stringify(rsp.news), 0.02); // 30分钟过期
-                },
-                error: function () {
-                    console.log('ajax刷新分页数据失败！');
-                }
-            });
-        }
-
-        hot_news_str = getCookie("hot_news");
-         if (hot_news_str && hot_news_str.length > 0) {
-             var hot_news = eval('(' + hot_news_str + ')');
-             console.log(hot_news)
-             for (var i = 0; i < hot_news.length; i++) {
-                 var title = hot_news[i].title;
-                 var html = "<ul><a type='button' onclick='window.open(\"" + hot_news[i].url + "#www.ditanshow.com\")'> <b>" + hot_news[i].source + "</b> : " + title + "</a></ul>";
-                 $("#hot-news").append(html);
-             }
-         }
  });
 </script>
 

@@ -25,13 +25,11 @@ function set_image(key, id, isThumb = true){
     url = url.replace(/\&/g, "%26");//"&"
     url = url.replace(/\#/g, "%23");//"#"
 
-    var xhr = new XMLHttpRequest();  
-    xhr.open('GET', url, true);                                                                        
-    xhr.responseType = "blob";  
-    //xhr.setRequestHeader("client_type", "DESKTOP_WEB");  
-    //xhr.setRequestHeader("desktop_web_access_key", _desktop_web_access_key);  
-    xhr.onload = function () {  
-        var blob = this.response;  
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = "blob";
+    xhr.onload = function () {
+        var blob = this.response;
         if (blob.size > 1) {
             var img = document.getElementById(id);
             console.info(id);
@@ -40,8 +38,8 @@ function set_image(key, id, isThumb = true){
             };
             img.src = window.URL.createObjectURL(blob);
         }
-    }  
-    xhr.send(); 
+    }
+    xhr.send();
 }
 
 
@@ -49,12 +47,11 @@ function image_download_and_set(id, url){
     url = url.replace(/\+/g, "%2B");//"+"转义
     url = url.replace(/\&/g, "%26");//"&"
     url = url.replace(/\#/g, "%23");//"#"
-
-    var xhr = new XMLHttpRequest();  
-    xhr.open('GET', url, true);                                                                        
-    xhr.responseType = "blob"; 
-    xhr.onload = function () {  
-        var blob = this.response;  
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = "blob";
+    xhr.onload = function () {
+        var blob = this.response;
         if (blob.size > 1) {
             var img = document.getElementById(id);
             console.info(id);
@@ -63,6 +60,6 @@ function image_download_and_set(id, url){
             };
             img.src = window.URL.createObjectURL(blob);
         }
-    }  
-    xhr.send(); 
+    }
+    xhr.send();
 }

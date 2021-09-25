@@ -62,8 +62,10 @@
                 <span class="intitle">
                     <a class="location">您现在的位置是：</a>
                     <a class="location" href="/">网站首页</a>
-                    <a class="location" href="/articles/program">&gt;&nbsp;程序设计</a>&nbsp
-                    <a class="location" href="">&gt;&nbsp;{{ article.second_category }}</a>
+                    {% if article.first_category == '程序设计' %}
+                        <a class="location" href="/articles/programing">&gt;&nbsp;{{ article.first_category }}</a>&nbsp
+                        <a class="location" href="/articles/programing?category={{ article.second_category }}">&gt;&nbsp;{{ article.second_category }}</a>
+                    {% endif %}
                 </span>
 
                 <div>
@@ -76,7 +78,7 @@
                 <br>
                 <div class="tags">
                     {% for tag in article.tags %}
-                        <a href="{% url 'articles:program:tag' %}?tag={{ tag }}" target="_blank">{{ tag }}</a>
+                        <a href="/articles/tag/{{ tag }}" target="_blank">{{ tag }}</a>
                     {% endfor %}
 
                 </div>
@@ -91,13 +93,13 @@
             <div class="nextinfo">
                 {% if  article_pre.article_id %}
                     <p>上一篇：
-                        <a href="{% url 'articles:program:detail' %}{{ article_pre.article_id }}.html">{{ article_pre.title }}</a>
+                        <a href="/articles/p/{{ article_pre.article_id }}.html">{{ article_pre.title }}</a>
                     </p>
                 {% endif %}
 
                 {% if article_next.article_id %}
                     <p>下一篇：
-                        <a href="{% url 'articles:program:detail' %}{{ article_next.article_id }}.html">{{ article_next.title }}</a>
+                        <a href="/articles/p/{{ article_next.article_id }}.html">{{ article_next.title }}</a>
                     </p>
                 {% endif %}
             </div>
@@ -107,7 +109,7 @@
                     <ul>
                         {% for article_tag in list_about %}
                             <li>
-                                <a href="{% url 'articles:program:detail' %}{{ article_tag.article_id }}.html" target="_blank">{{ article_tag.title }}</a>
+                                <a href="/articles/p/{{ article_tag.article_id }}.html" target="_blank">{{ article_tag.title }}</a>
                             </li>
                         {% endfor %}
                     </ul>
