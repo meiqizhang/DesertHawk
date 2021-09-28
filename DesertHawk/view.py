@@ -157,9 +157,10 @@ class StorageObject(Storage):
         # 上传完之后，已经返回的是全路径了
         return name
 
+
 def page_not_found(request, exception):
     return render(request, '404.html')
 
-# 500
+
 def page_error(request):
     return render(request, '500.html')
