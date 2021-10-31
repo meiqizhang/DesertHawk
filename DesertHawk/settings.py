@@ -209,7 +209,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'libs')]
 
 BLOG_ROOT = './'
-THEME = "white"
+THEME = "gray"
 MEDIA_URL = '/media/'
 THUMB_URL = '/articles/thumb/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

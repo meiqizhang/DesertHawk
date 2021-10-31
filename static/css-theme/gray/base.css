@@ -1,0 +1,225 @@
+@charset "gb2312";
+/* 共用css */
+ {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font: 14px "微软雅黑", Arial, Helvetica, sans-serif;
+    background: no-repeat center top #FAFAE9;
+    /*background: no-repeat center top #F5F5F5;*/
+}
+
+img {
+    display: block
+}
+
+ul, li {
+    list-style: none;
+    /*border: 1px solid green;*/
+}
+
+a:link, a:visited, a:active {
+    text-decoration: none;
+    /*color: #ffffff;*/
+}
+a:hover {
+    text-decoration: none;
+    color: #f3910e;
+}
+.clear { clear: both; }
+.blank { height: 8px; overflow: hidden; width: 100%; margin: auto; clear: both }
+.f_l { float: left }
+.f_r { float: right }
+
+header, article, footer {
+    /*width: 1000px;
+    margin: auto;*/
+    overflow: hidden;
+}
+.logo {
+    margin-left: 24%;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+.logo > a{
+    color: #BB6622;
+    font-size: 38px;
+}
+nav {
+    margin-bottom: 30px ;
+}
+nav a {
+    position: relative;
+    display: inline-block;
+    font-size: 18px;
+    margin-right: 30px;
+}
+.topnav a {
+    font-size: 18px;
+    font-weight: bolder;
+    color: #8a6d3b;
+}
+
+
+.en1 {
+    color: #f3910e;
+    font-size: 12px;
+    z-index: 1;
+    display: block;
+}/* ie */
+
+article {
+    background: url(../../images/articlebg.png) repeat;
+}
+
+.search_div{
+    display: inline-block;
+    position: relative;
+}
+
+.search_div input{
+    width: 100%;
+    height: 32px;
+    border-radius: 5px;
+    background-color: #ffffef;
+    border: 1px solid rgba(210, 210, 210, 0.9);
+}
+.my-container {
+    /*box-shadow: 0px 0px 10px #1AAB8A inset;*/
+    /*box-shadow: 0px 0px 10px rgba(200, 200, 200, 1) inset;*/
+    border:1px solid #FAFAE9;
+}
+footer {
+    text-align: center;
+    padding: 20px 0
+}
+
+#site-statistic {
+    height: 300px;
+    width: 100%;
+}
+
+.pages{
+    list-style: none;
+    text-align: center;
+    width:100%;
+    margin-bottom: 24px;
+    overflow: hidden;
+    position:relative;
+
+    /*不能选中文本*/
+    -moz-user-select: none; /*火狐*/
+    -webkit-user-select: none; /*webkit浏览器*/
+    -ms-user-select: none; /*IE10*/
+    -khtml-user-select: none; /*早期浏览器*/
+    -o-user-select: none; /* Opera*/
+    user-select: none;
+}
+
+.pages a{
+    display: inline-block;
+    /*margin: 0 8px;*/
+    margin-top: 10px;
+    margin-left: 10px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: solid 1px gray;
+    text-decoration: none;
+    color: #666;
+    text-align: center;
+    font:bold 4px/24px 'Microsoft Yahei';
+}
+
+.pages a:hover{
+    opacity: 0.6;
+    background-color: #bbbbbb;
+    border: 1px solid #bbbbbb;
+}
+
+.pages .active{
+    opacity: 0.8;
+    background-color: #bbbbbb;
+    border: 1px solid #bbbbbb;
+}
+
+
+.ctitle{
+    /*position:relative*/
+    margin: 0;
+}
+.ctitle {
+    font-size: 22px;
+    color: white;
+    /*/background: rgba(52, 73, 94, 0.94);*/
+    /*background: rgba(111, 184, 249, 1);*/
+    background: #a49e3c;
+    padding: 10px 0;
+    width: 200px;
+    text-align: center;
+    border-radius: 0 30px 30px 0;
+    box-shadow: #21566f 1px 1px 1px;
+    border-left: #dae1e4 6px solid;
+    display:block;
+    /*margin:30px 0 0 30px;*/
+    text-shadow: rgba(7, 84, 152, 0.71) 1px 1px 1px;
+}
+
+/*.article-list {*/
+/*    padding: 0;*/
+/*    !*border: 1px solid red;*!*/
+/*    list-style: none;*/
+/*    position: relative;*/
+/*}*/
+
+/*.article-list > li {*/
+/*    margin-bottom: 30px;*/
+/*    !*margin-left: 20px;*!*/
+/*    !*margin-right: 20px;  !*这两个值应该根据屏幕大小改变，手机下margin为0*!*!*/
+
+/*    padding: 16px;*/
+/*    !*padding-left: 2em;*!*/
+/*    padding-top: 1em;*/
+/*    position: relative;*/
+/*    border-radius: 8px;*/
+/*    height: 200px;*/
+/*    background: rgba(215, 215, 215, 0.3);*/
+/*    border: 1px solid rgba(215, 215, 215, 0.3);*/
+/*}*/
+
+/*.article-list  h2 {*/
+/*    margin-top: 0;*/
+/*    padding-bottom: 10px;*/
+/*    font-size: 16px;*/
+/*    color: rgba(52, 73, 94, 0.94);*/
+/*    font-weight: bolder;*/
+/*}*/
+.out-links {
+    margin-bottom: 20px;
+    width: 100%;
+    text-align: left
+}
+.out-links > a {
+    color: rgba(52, 73, 94, 0.94);
+    padding-right: 10px;
+    line-height: 23px;
+}
+.out-links > a:hover {
+    color: #f3910e;
+    border-bottom: 1px solid #f3910e;
+}
+.my-links {
+    padding-top: 10px;
+    margin-bottom: 30px;
+    text-align: center;
+    font-size: 16px
+}
+.my-links > a {
+    margin-right: 10px;
+}
+.my-links > a:hover {
+    color: #f3910e;
+    border-bottom: 1px solid #f3910e;
+}

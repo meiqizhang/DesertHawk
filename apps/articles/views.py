@@ -181,6 +181,7 @@ def tag(request):
 @add_visit_history_log
 def programing(request):
     category = request.GET.get("category", None)
+    page_id = request.GET.get("page", "1")
     articles = Article.objects.filter(status=1, first_category='程序设计').order_by("-article_id").\
         values("article_id", "title", "second_category", "description", "date")
 
@@ -191,12 +192,26 @@ def programing(request):
         article["year"] = article["date"].strftime('%Y')
         article["day"] = article["date"].strftime('%m-%d')
 
+    if category is None:
+        category = "程序设计"
+    else:
+        articles = [x for x in articles if x["second_category"] == category]
+
     context = dict()
     context["code"] = 200
     context["categories"] = list(categories)
-    context["category"] = category if category is not None else "程序设计"
-    if category is None:
-        context["articles"] = articles
-    else:
-        context["articles"] = [x for x in articles if x["second_category"] == category]
-    return render(request, "programing.html",context=context)
+    context["category"] = category
+
+    page_id = int(page_id)
+    page_size = 10
+    total_pages = int(len(articles) / page_size) + 1
+
+    from_idx = page_size * (page_id - 1)
+    end_idx = from_idx + page_size
+    articles = articles[from_idx: end_idx]
+
+    context["page"] = page_id
+    context["total_pages"] = total_pages
+    context["category"] = category
+    context["articles"] = articles
+    return render(request, "programing.html", context=context)

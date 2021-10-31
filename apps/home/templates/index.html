@@ -10,260 +10,96 @@
     <div class="blog row" data-scroll-reveal="enter top">
         {% for figure_article in figure_articles  %}
             <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                <figure id="my-figure">
+{#                <figure id="my-figure" >#}
                     <ul style="padding: 0;">
-                         <a href="/articles/p/{{ figure_article.article_id }}.html">
-                            <img id="image-{{ figure_article.article_id }}" title="{{ figure_article.title }}" style="width: 100%; height: 100%" src="/static/images/loading.gif">
-                            <span>点击查看详情</span>
-                        </a>
+                        <img class='article-figure' id="image-{{ figure_article.article_id }}" title="{{ figure_article.title }}" style="border-radius:4px; width: 100%; height: 100%" src="/static/images/loading.gif">
+                        <a href="/articles/p/{{ figure_article.article_id }}.html"></a>
                     </ul>
-                    <p>
-                        <a href="/articles/p/{{ figure_article.article_id }}.html">{{ figure_article.title }}</a>
+                    <p style="text-align: center">
+                        <a href="/articles/p/{{ figure_article.article_id }}.html" style="color: rgba(52, 73, 94, 0.94); font-weight: bolder; font-size: 14px">
+                            {{ figure_article.title }}
+                        </a>
                     </p>
-                    <figcaption>
-                        <span>
-                            {{ figure_article.description }}
-                        </span>
-                    </figcaption>
-                </figure>
+                    <span class="article-description">
+                        {{ figure_article.description }}
+                    </span>
+{#                </figure>#}
             </div>
         {% endfor %}
     </div>
 
-    <div id="articles-for-md" class="row hidden" style="margin-top: 64px; ">
-        <ul class="cbp_tmtimeline">
+    <div style="margin-top: 24px; ">
+        <ul class="article-list">
             {% for darticle in articles %}
                 <li>
-                    <div>
-                        <time class="cbp_tmtime">
-                            <span>{{ darticle.year }}</span>
-                            <span>{{ darticle.day }}</span>
-                        </time>
+                    <div class="row">
+                        <img class="article-figure col-lg-4 col-md-4 col-sm-12 col-xs-12" style="height:auto; border-radius: 1px" id="image-{{ darticle.article_id }}" title="{{ darticle.title }}" src="/static/images/loading.gif">
+{#                        <div class="col-lg-4 col-md-4 col-sm-10 col-xs-10" style="height:150px; border: 1px solid grey"></div>#}
+                        <div class="col-md-8 col-md-8 col-sm-10 col-xs-10">
+                            <h2><a style="color: rgba(52, 73, 94, 0.94); font-weight: bolder; font-size: 16px">{{ darticle.title }}</a></h2>
+                            <hr style="border: 1px solid rgba(52, 73, 94, 0.14)">
+                            <div class="article-description">{{ darticle.description }}</div>
+                        </div>
                     </div>
-                    <div class="cbp_tmicon"></div>
-                    <div class="cbp_tmlabel" data-scroll-reveal="enter right over 1s">
-                        <h2>{{ darticle.title }}</h2>
-                        <p>
-                            <span class="blogpic">
-                                <img id="image-{{ darticle.article_id }}" title="{{ darticle.title }}" style="height: 85%" src="/static/images/loading.gif">
-                            </span>
-                            <a class="article-description" href="/articles/p/{{ darticle.article_id }}.html">
-                                {{ darticle.description }}
-                            </a>
-                        </p>
-                        <a href="/articles/p/{{ darticle.article_id }}.html" class="readmore">阅读全文&gt;&gt;</a>
-                    </div>
+                    <a class="publish-date">{{ darticle.date }}</a>
+                    <a href="/articles/p/{{ darticle.article_id }}.html" class="read-more">阅读全文&gt;&gt;</a>
                 </li>
             {% endfor %}
         </ul>
     </div>
-
     <div class="pages">
-        <a title="前一页"><b> < </b> </a>
-        <a title="后一页"><b> > </b> </a>
-        <label id="total-pages">共{{total_pages}}页</label>
+        <a class="prev-page"><</a>
+        <a class="next-page">></a>
+        <label id="total-pages" style="margin-left: 0; margin-top: 6px">共{{total_pages}}页</label>
     </div>
 
     <script>
         var screenWidth = getWidth();
-        if (screenWidth > 980) {
-            $("#articles-for-sm").attr("class", "hidden")
-            $("#articles-for-md").attr("class", "show")
-        }
-        else {
-            //$("#articles-for-sm").attr("class", "show")
-            //$("#articles-for-md").attr("class", "hidden")
-        }
-        $("img").each(function() {
-            image_download_and_set($(this).attr("id"), "/articles/d_icon/?title=" + $(this).attr("title"))
-            }
-        )
+        console.log("screenWidth=" + screenWidth)
+        let totalPages = parseInt({{ total_pages }});
+        let curPage = parseInt({{ page }})
 
-        $('.pages a:not(":first,:last")').remove();
-        $("#total-pages").text("共 {{ total_pages }} 页");
-
-        let idx = parseInt("{{ page_id }}");
-        var total_pages = parseInt({{ total_pages }});
-        var select_idx = 1;
-        console.log(idx, total_pages)
-        if(total_pages <= 5) {     //如果总页码数小于等于5，则全部显示
-            for(var i = 1; i <= total_pages; i++){
-                $('.pages a:last').before('<a title="第' + i +'页" id="page-index"><b>' + i + '</b></a>');
-            }
+        /*分页处理太麻烦了，简单粗暴的方法往往更有效*/
+        let idx = 1
+        if (curPage <= 10) {
+            idx = 1
+        } else if (curPage <= 21) {
+            idx = 11
+        } else if (curPage <= 31) {
+            idx = 21
         }
-        else { // 页面数大于5，看当前页面情况
-            if (idx < 5 - 2) {
-                for (var i = 1; i <= 5; i++) {
-                    $('.pages a:last').before('<a title="第' + i + '页" id="page-index"><b>' + i + '</b></a>');
-                }
-            } else if(idx > total_pages - 2) {
-                for (var i = total_pages - 5 + 1; i <= total_pages; i++) {
-                    $('.pages a:last').before('<a title="第' + i + '页" id="page-index"><b>' + i + '</b></a>');
-                }
+        for (let i = idx; i <= totalPages && i < idx + 10; i++) {
+            let obj = $('<a href="#">' + i + '</a>').insertBefore($('.next-page'))
+            console.log(obj.text())
+            if (i === curPage) {
+                obj.addClass('active');
+            }
+            obj.attr('href', '/?page=' + i)
+        }
+
+        if (curPage === 1) {
+            $('.prev-page').addClass('hidden')
+        } else if (curPage === totalPages) {
+            $('.next-page').addClass('hidden')
+        }
+        $('.pages > a').unbind('click').click(function (){
+            let text = $(this).text()
+            if (text === '<') {
+                window.location.href = "/?page=" + (curPage - 1)
+            } else if (text === '>') {
+                window.location.href = "/?page=" + (curPage + 1)
             } else {
-                 for (var i = idx - 2; i <= idx + 2; i++) {
-                    $('.pages a:last').before('<a title="第' + i + '页" id="page-index"><b>' + i + '</b></a>');
-                }
+                let pageId = parseInt($(this).text());
             }
-        }
-
-       $('.pages a:not(":first,:last")').each(function (){
-            if (parseInt($(this).text()) === idx)  {
-                $(this).addClass('active');
-            }
-       }).click(function () {
-           select_idx = parseInt($(this).text());
-           go_to_page();
-       });
-
-        $('.pages a:first').unbind("click").click(function () {
-            if (select_idx === 1) {
-                alert("已经是第一页了咩~");
-            }
-            else {
-                select_idx -= 1;
-                go_to_page();
-            }
-        });
-
-        $('.pages a:last').unbind("click").click(function () {
-            if (select_idx === total_pages) {
-                alert("已经是最后一页了~");
-            }
-            else {
-                select_idx += 1;
-                go_to_page();
-            }
-        });
-
-        function go_to_page(){
-            $.ajax({
-                type:'GET',
-                url: "/?page_id=" + select_idx + "&width=" + getWidth(),
-                datatype: JSON,
-                success:function (rsp) {
-                    f1(rsp);
-                },
-                error:function () {
-                    console.log('ajax刷新分页数据失败！');
-                }
-            });
-        }
-
-        function f1(rsp) {
-            $('.cbp_tmtimeline li').remove();
-
-            for (let i = 0; i < rsp['figure_articles'].length; i++) {
-                let article = rsp.figure_articles[i];
-                var figure = $("#my-figure");
-                figure.children("ul").remove();
-                figure.children("p").remove();
-                figure.children("figcaption").remove()
-
-                figure.append(
-                    '<ul style="padding: 0; margin: 0;">' +
-                    '   <a href="/articles/p/' + article['article_id'] + '.html" target="_blank">' +
-                    '       <img id="image-' + i + '" title="' + article.title +'" style="width: 100%; height: 100%; margin: auto;" src="/static/images/loading.gif">' +
-                    '       <span>点击查看详情</span>' +
-                    '   </a>' +
-                    '</ul>' +
-                    '<p>' +
-                    '   <br><a href="/articles/p/' + article['article_id'] + '.html" target="_blank">' + article.title + '</a>' +
-                    '</p>' +
-                    '<figcaption>' +
-                        article.description +
-                    '</figcaption>'
-                )
-            }
-
-            for (let i = 0; i < rsp['articles'].length; i++) {
-                let article = rsp['articles'][i];
-                $('.cbp_tmtimeline').append('' +
-                    '<li>' +
-                    '<time class="cbp_tmtime">' +
-                    '<span>' + rsp.articles[i].year + '</span>' +
-                    '<span>' + rsp.articles[i].day + '</span>' +
-                    '</time>' +
-                    '<div class="cbp_tmicon" style=""></div>' +
-                    '<div class="cbp_tmlabel" data-scroll-reveal="enter right over 1s">' +
-                    '<h2>' + article.title + '</h2>' +
-                    '<p>' +
-                    '<span class="blogpic">' +
-                    '<img id="' + i + '" title="' + article.title + '"style="width: 100%; height: 85%" src="/static/images/loading.gif">' +
-                    '</span>' +
-                    '<a href="/articles/p/' + article['article_id'] + '.html" class="article-description">' +
-                        article.description +
-                    '</a>' +
-                    '</p>' +
-                    '<a href="/articles/p/' + article['article_id'] + '.html"  class="readmore" target="_blank">阅读全文&gt;&gt;</a>' +
-                    '</div>' +
-                    '</li>'
-                );
-            }
-
-            $("img").each(function() {
+        })
+        $(document).ready(function(){
+            $(".article-figure").each(function() {
+                {#所有的图标都是3*5#}
                 image_download_and_set($(this).attr("id"), "/articles/d_icon/?title=" + $(this).attr("title"))
-                }
-            )
-
-            $('.pages a:not(":first,:last")').each(function () {
-                $(this).remove();
+                let width =$(this).width()
+                $(this).height(width * 3 / 5)
             })
-
-            if(total_pages <= 5) {     //如果总页码数小于等于5，则全部显示
-                for(var i = 1; i <= total_pages; i++){
-                    $('.pages a:last').before('<a title="第' + i +'页" id="page-index"><b>' + i + '</b></a>');
-                }
-            }
-            else { // 页面数大于5，看当前页面情况
-                if (select_idx < 5 - 2) {
-                    for (var i = 1; i <= 5; i++) {
-                        $('.pages a:last').before('<a title="第' + i + '页" id="page-index"><b>' + i + '</b></a>');
-                    }
-                } else if(select_idx > total_pages - 2) {
-                    for (var i = total_pages - 5 + 1; i <= total_pages; i++) {
-                        $('.pages a:last').before('<a title="第' + i + '页" id="page-index"><b>' + i + '</b></a>');
-                    }
-                } else {
-                     for (var i = select_idx - 2; i <= select_idx + 2; i++) {
-                        $('.pages a:last').before('<a title="第' + i + '页" id="page-index"><b>' + i + '</b></a>');
-                    }
-                }
-            }
-
-            $('.pages a:not(":first,:last")').each(function () {
-                if (parseInt($(this).text()) === select_idx) {
-                    $(this).addClass('active');
-                } else {
-                    $(this).removeClass('active');
-                }
-            });
-
-            $('.pages a:not(":first,:last")').each(function (){}).click(function () {
-                select_idx = parseInt($(this).text());
-                go_to_page();
-            });
-
-            $('.pages a:first').unbind("click").click(function () {
-                if (select_idx === 1) {
-                    alert("已经是第一页了咩~");
-                }
-                else {
-                    select_idx -= 1;
-                    go_to_page();
-                }
-            });
-
-            $('.pages a:last').unbind("click").click(function () {
-                if (select_idx === total_pages) {
-                    alert("已经是最后一页了~");
-                }
-                else {
-                    select_idx += 1;
-                    go_to_page();
-                }
-            });
-        }
+        })
     </script>
 {% endblock %}
 

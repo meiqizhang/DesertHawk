@@ -1,0 +1,148 @@
+@charset "gb2312";
+/* blog */
+
+.blog {
+    margin: 30px;
+    overflow: hidden;
+}
+
+.article-description {
+    /*cursor:hand;*/
+    line-height: 24px;
+    font-family: "YaHei Consolas Hybrid", Consolas, "微软雅黑", "Meiryo UI", "Malgun Gothic", "Segoe UI", "Trebuchet MS", Helvetica, "Monaco", courier, monospace;
+    color: #666;
+}
+
+.blog figure ul {
+    overflow: hidden;
+    height: 160px;
+    margin-bottom: 20px;
+}
+
+.cbp_tmtimeline {
+    padding: 0;
+    list-style: none;
+    position: relative;
+}
+
+.cbp_tmtimeline > li {
+    position: relative;
+}
+
+@media (min-width: 2200px) {
+    .statstic-bar {
+        display: block;
+    }
+}
+
+@media (min-width: 2200px) {
+    .statstic-bar {
+        display: block;
+    }
+}
+
+.cbp_tmtimeline > li .cbp_tmlabel {
+    margin-bottom: 30px;
+    margin-left: 50px;
+    margin-right: 50px;  /*这两个值应该根据屏幕大小改变，手机下margin为0*/
+
+    padding: 2em;
+    position: relative;
+    border-radius: 8px;
+    height: 200px;
+    background: rgba(215, 215, 215, 0.3);
+    border: 1px solid rgba(215, 215, 215, 0.3);
+}
+
+.cbp_tmtimeline > li .cbp_tmlabel h2 {
+    margin-top: 0;
+    padding-bottom: 10px;
+    font-size: 16px;
+    color: rgba(52, 73, 94, 0.94);
+    font-weight: bolder;
+}
+
+.cbp_tmtimeline > li .cbp_tmlabel:after {
+    right: 100%;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    top: 10px;
+}
+
+.read-more{
+    color: rgba(52, 73, 94, 0.94);
+    padding: 5px 10px;
+    float: right;
+    bottom: 10px;
+    position: absolute;
+    right: 10px
+}
+.publish-date {
+    color: rgba(52, 73, 94, 0.54);
+    font-size: 13px;
+    padding: 5px 10px;
+    float: right;
+    bottom: 10px;
+    /*bottom: calc(100% - 30px);*/
+    position: absolute;
+    left: calc(30% + 40px);
+}
+
+.cbp_tmlabel > p > a {
+    font-family: "YaHei Consolas Hybrid", Consolas, "微软雅黑", "Meiryo UI", "Malgun Gothic", "Segoe UI", "Trebuchet MS", Helvetica, "Monaco", courier, monospace;
+    color: #666;
+}
+
+
+.article-list {
+    padding: 0;
+    list-style: none;
+    position: relative;
+}
+
+.article-list > li {
+    margin-bottom: 30px;
+    /*margin-left: 20px;*/
+    /*margin-right: 20px;  !*这两个值应该根据屏幕大小改变，手机下margin为0*!*/
+
+    padding: 16px;
+    /*padding-left: 2em;*/
+    padding-top: 1em;
+    position: relative;
+    border-radius: 8px;
+    height: 200px;
+    background: rgba(215, 215, 215, 0.3);
+    border: 1px solid rgba(215, 215, 215, 0.3);
+}
+
+.article-list  h2 {
+    margin-top: 0;
+    padding-bottom: 10px;
+    font-size: 16px;
+    color: rgba(52, 73, 94, 0.94);
+    font-weight: bolder;
+}
+.article-list  h2 > a {
+}
+
+.article-list  h2 > a:hover {
+    border-bottom: 1px solid rgba(52, 73, 94, 0.94);
+    cursor: hand;
+}
+
+.blogpic {
+    width: 30%;
+    height: auto;
+    overflow: hidden;
+    display: block; float: left;
+    margin-right: 20px;
+    border-radius: 4px;
+}
+.blogpic img {
+    width: 100%;
+    height: auto;
+    margin: auto;
+}

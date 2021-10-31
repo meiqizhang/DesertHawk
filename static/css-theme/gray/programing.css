@@ -1,0 +1,119 @@
+@charset "gb2312";
+.rnav { }
+.rnav {
+    overflow: hidden;
+    margin-left: 50px;
+    margin-top: 30px;
+}
+
+.rnav li {
+    width: 120px;
+    text-align: center;
+    display: inline-block;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    float: left;
+    height: 40px;
+    line-height: 38px;
+    background: rgba(255,255,255,0.2);
+}
+
+.rnav li a {
+    color: #ffff;
+    display: block;
+    -webkit-transition: all 1s;
+    -moz-transition: all 1s;
+    -o-transition: all 1s;
+    transition: all 1s;
+    border: #fff 1px solid
+}
+.rnav ul li a:hover {
+    background: red;
+}
+.rnav li:nth-child(1) {
+    background: #FE5187
+}
+.rnav li:nth-child(2) {
+    background: #339967
+}
+.rnav li:nth-child(3) {
+    background: #FF8151
+}
+.rnav li:nth-child(4) {
+    background: #3594cb
+}
+.rnav li:nth-child(5) {
+    background: #66CC9A
+}
+.rnav li:nth-child(6) {
+    background: #079798
+}
+.rnav li:nth-child(7) {
+    background: #BB6622;
+}
+.rnav li:nth-child(8) {
+    background: #39b3d7;
+}
+.rnav li:nth-child(9) {
+    background: #a49e3c;
+}
+.rnav li:nth-child(10) {
+    background: #f9b3d7;
+}
+.rnav li:nth-child(11) {
+    background: #610C9A
+}
+.rnav li:nth-child(12) {
+    background: #079ff8
+}
+.rnav li:nth-child(13) {
+    background: #005187
+}
+.rnav li:nth-child(14) {
+    background: #339900
+}
+.rnav li:nth-child(15) {
+    background: #F00151
+}
+.rnav li:nth-child(16) {
+    background: #3004cb
+}
+.rnav li:nth-child(17) {
+    background: #06CC90
+}
+.rnav li:nth-child(18) {
+    background: #009790
+}
+.rnav li:nth-child(19) {
+    background: #FE0180
+}
+.rnav li:nth-child(20) {
+    background: #339060
+}
+.rnav li:nth-child(21) {
+    background: #FF8100
+}
+.rnav li:nth-child(22) {
+    background: #05940b
+}
+.rnav li:nth-child(23) {
+    background: #60CC0A
+}
+.rnav li:nth-child(24) {
+    background: #070708
+}
+
+.blogpic {
+    width: 200px;
+    /*height: 150px;*/
+    overflow: hidden;
+    display: block; float: left; margin-right: 20px;
+    /*border: 1px solid grey;*/
+}
+.blogpic img {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    background-repeat:repeat;
+
+}
