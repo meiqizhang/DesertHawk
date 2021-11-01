@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
+
 {% block meta %}
     <meta name="keywords" content="python+django搭建自己的博客,搭建博客" charset="utf-8"/>
     <meta name="description" content=" python+django搭建自己的博客,搭建博客" charset="utf-8"/>
@@ -41,7 +42,13 @@
                             <div class="article-description">{{ darticle.description }}</div>
                         </div>
                     </div>
-                    <a class="publish-date">{{ darticle.date }}</a>
+{#                    <a class="publish-date">{{ darticle.date }}</a>#}
+
+
+                    <span class="publish-date">
+                        <i style="font-size:16px" class="fa">&#xf073</i>
+                        <span style="padding-left: 4px">{{ darticle.year }}-{{ darticle.day }}</span>
+                    </span>
                     <a href="/articles/p/{{ darticle.article_id }}.html" class="read-more">阅读全文&gt;&gt;</a>
                 </li>
             {% endfor %}

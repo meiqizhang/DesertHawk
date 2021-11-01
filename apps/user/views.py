@@ -45,9 +45,7 @@ def get_user_info_from_cookie(request):
     user["username"] = request.COOKIES.get("username")
     user["ip"] = request.COOKIES.get("ip")
     user["address"] = request.COOKIES.get("address")
-
     return user
-
 
 @add_visit_history_log
 def login(request):

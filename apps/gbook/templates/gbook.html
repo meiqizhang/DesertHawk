@@ -70,31 +70,23 @@
             margin-left: 20px;
         }
         /*width:calc(100% - 2px)*/
-        /*.gbook-img {
-            border: 1px solid red;
-            margin:0;
-            padding:0;
-            max-width:600px;
-            width:calc(width>600?"600px":width);
-            max-height:600px;
-            height:calc(height>600?"600px":height);
-        }*/
-
     </style>
     <article>
         <aside>
             <div style="margin: 32px">
-                {% if user.id %}
-                    <img src="{{ user.header }}" style="width: 48px;height:48px; border-radius:50%;">
-                {% else %}
-                    {% include "login.html" %}
-                {% endif %}
-                <br>
+{#                {% if user.id %}#}
+{#                    <img src="{{ user.header }}" style="width: 48px;height:48px; border-radius:50%;">#}
+{#                {% else %}#}
+{#                    {% include "login.html" %}#}
+{#                {% endif %}#}
+{#                <br>#}
+
+                <i style="font-size:14px; margin-bottom: 24px" class="fa">开放匿名留言，留下文明的足迹 &#xf209</i>
                 {% include "comment.html" %}
                 <span>
-                    <button id="gbook-add-btn" class="btn btn-success" style="width:80px; height:30px; margin-top: 10px;">提交留言</button>
+                    <button id="gbook-add-btn" class="btn btn-primary" style="width:80px; height:30px; margin-top: 10px;">提交留言</button>
                 </span>
-                <div id="gbook-tree-root" style="margin-top: 0px; border: 0px solid red">
+                <div id="gbook-tree-root">
                 </div>
             </div>
         </aside>

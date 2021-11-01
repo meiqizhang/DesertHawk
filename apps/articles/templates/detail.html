@@ -120,15 +120,15 @@
         </div>
         <aside>
             <div style="margin: 32px">
-                {% if user.id %}
-                    <img src="{{ user.header }}" style="width: 48px;height:48px; border-radius:50%;">
-                {% else %}
-                    {% include "login.html" %}
-                {% endif %}
-                <br>
+{#                {% if user.id %}#}
+{#                    <img src="{{ user.header }}" style="width: 48px;height:48px; border-radius:50%;">#}
+{#                {% else %}#}
+{#                    {% include "login.html" %}#}
+{#                {% endif %}#}
+{#                <br>#}
                 {% include "comment.html" %}
                 <span>
-                    <button id="commit-add-btn" class="btn btn-success" style="width:80px; height:30px; margin-top: 10px;">提交评论</button>
+                    <button id="commit-add-btn" class="btn btn-primary" style="width:80px; height:30px; margin-top: 10px;">提交评论</button>
                 </span>
                 <div id="comment-tree-root" style="margin-top: 0px; border: 0px solid red">
                 </div>

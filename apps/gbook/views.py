@@ -49,24 +49,27 @@ def add(request):
     parent_id = request.POST.get("parent", "-1")
     content = request.POST.get("content", None)
 
-    ip_str = request.session.get("ip")
-    address = request.session.get("address")
-    username = request.session.get("username", None)
+    # ip_str = request.session.get("ip")
+    # address = request.session.get("address")
+    username = request.session.get("username", "匿名")
+    ip_str = request.COOKIES.get("ip")
+    address = request.COOKIES.get("address")
 
     logging.info("user %s add gbook from %s, ip=%s" % (username, address, ip_str))
 
-    if not username:
-        response["status"] = "error"
-        response["msg"] = "登录后才能留言哟~"
-
-        return HttpResponse(json.dumps(response).encode("utf-8").decode("unicode-escape"), content_type="application/json")
+    # if not username:
+    #     response["status"] = "error"
+    #     response["msg"] = "登录后才能留言哟~"
+    #     return HttpResponse(json.dumps(response).encode("utf-8").decode("unicode-escape"), content_type="application/json")
 
     try:
         time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
         if content is not None:
             content = content.strip()
             if len(content) > 0:
+                # GBook(parent_id=parent_id, user_name=username, content=content, ip=ip_str, address=address, create_time=time_now).save()
                 GBook(parent_id=parent_id, user_name=username, content=content, ip=ip_str, address=address, create_time=time_now).save()
+
     except Exception as e:
         print("catch an exception when add msg into gbook, user_id=%s, e=%s" % (username, e))
 

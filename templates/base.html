@@ -17,7 +17,7 @@
 
     <title>
         {% block title %}
-            愿你历尽千帆，归来仍是少年
+            第耕读 - 小张个人博客 - 记录学习笔记分享生活日记的个人博客网站
         {% endblock %}
     </title>
 
@@ -34,6 +34,7 @@
     <link id="baseCss" rel="stylesheet" />
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/base.css' }}"  rel="stylesheet">
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/index.css' }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
 
     <script src="{% static 'js/modernizr.js' %}"></script>
     <script src="{% static 'js/scrollReveal.js' %}"></script>
@@ -131,6 +132,7 @@
         }
 
         ip = getCookie("ip")
+        addr = getCookie("address")
         if (ip === ""){
             getAddress();
         }
@@ -144,7 +146,7 @@
                 var x = e.pageX,
                 y = e.pageY;
                 $i.css({
-                    "z-index": 9999999999999999999999999999999999999999,
+                    "z-index": 1024,
                     "top": y - 20,
                     "left": x,
                     "position": "absolute",
