@@ -1,0 +1,16 @@
+{% load static %}
+<li>
+    <div class="row">
+        <img class="article-figure col-lg-4 col-md-4 col-sm-12 col-xs-12" style="height:auto; border-radius: 1px" id="image-{{ article.article_id }}" title="{{ article.title }}" src="/static/images/loading.gif">
+        <div class="col-md-8 col-md-8 col-sm-10 col-xs-10">
+            <h2><a style="color: rgba(52, 73, 94, 0.94); font-weight: bolder; font-size: 16px">{{ article.title }}</a></h2>
+            <hr style="border: 1px solid rgba(52, 73, 94, 0.14)">
+            <div class="article-description">{{ article.description }}</div>
+        </div>
+    </div>
+    <span class="publish-date">
+        <i style="font-size:16px" class="fa">&#xf073</i>
+        <span style="padding-left: 4px">{{ article.year }}-{{ article.day }}</span>
+    </span>
+    <a href="/articles/p/{{ article.article_id }}.html" class="read-more">阅读全文&gt;&gt;</a>
+</li>

@@ -32,17 +32,8 @@
     </div>
     <div style="margin-top: 24px; ">
         <ul class="article-list">
-            {% for darticle in articles %}
-                <li>
-                    <div class="row">
-                        <img class="article-figure col-lg-4 col-md-4 col-sm-12 col-xs-12" style="height:auto; border-radius: 1px" id="image-{{ darticle.article_id }}" title="{{ darticle.title }}" src="/static/images/loading.gif">
-                        <div class="col-md-8 col-md-8 col-sm-10 col-xs-10">
-                            <h2>{{ darticle.title }}</h2>
-                            <div class="article-description">{{ darticle.description }}</div>
-                        </div>
-                    </div>
-                    <a href="/articles/p/{{ darticle.article_id }}.html" class="read-more">阅读全文&gt;&gt;</a>
-                </li>
+            {% for article in articles %}
+                {% include "article_list.html" %}
             {% endfor %}
         </ul>
     </div>

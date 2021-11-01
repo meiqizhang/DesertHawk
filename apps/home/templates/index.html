@@ -31,26 +31,8 @@
 
     <div style="margin-top: 24px; ">
         <ul class="article-list">
-            {% for darticle in articles %}
-                <li>
-                    <div class="row">
-                        <img class="article-figure col-lg-4 col-md-4 col-sm-12 col-xs-12" style="height:auto; border-radius: 1px" id="image-{{ darticle.article_id }}" title="{{ darticle.title }}" src="/static/images/loading.gif">
-{#                        <div class="col-lg-4 col-md-4 col-sm-10 col-xs-10" style="height:150px; border: 1px solid grey"></div>#}
-                        <div class="col-md-8 col-md-8 col-sm-10 col-xs-10">
-                            <h2><a style="color: rgba(52, 73, 94, 0.94); font-weight: bolder; font-size: 16px">{{ darticle.title }}</a></h2>
-                            <hr style="border: 1px solid rgba(52, 73, 94, 0.14)">
-                            <div class="article-description">{{ darticle.description }}</div>
-                        </div>
-                    </div>
-{#                    <a class="publish-date">{{ darticle.date }}</a>#}
-
-
-                    <span class="publish-date">
-                        <i style="font-size:16px" class="fa">&#xf073</i>
-                        <span style="padding-left: 4px">{{ darticle.year }}-{{ darticle.day }}</span>
-                    </span>
-                    <a href="/articles/p/{{ darticle.article_id }}.html" class="read-more">阅读全文&gt;&gt;</a>
-                </li>
+            {% for article in articles %}
+                {% include "article_list.html" %}
             {% endfor %}
         </ul>
     </div>
