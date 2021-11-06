@@ -32,8 +32,17 @@
     {% endblock %}
 
     <link id="baseCss" rel="stylesheet" />
-    <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/base.css' }}"  rel="stylesheet">
-    <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/index.css' }}" rel="stylesheet">
+
+    <link media="screen and (max-width: 580px)" href="{% static 'css-theme/' %}{{ THEME }}{{ '/base-small-screen.css' }}" rel="stylesheet" >
+    <link media="screen and (max-width: 580px)" href="{% static 'css-theme/' %}{{ THEME }}{{ '/index-small-screen.css' }}" rel="stylesheet" >
+
+    <link media="screen and (min-width: 580px) and (max-width: 1000px)" href="{% static 'css-theme/' %}{{ THEME }}{{ '/base-middle-screen.css' }}" rel="stylesheet" >
+    <link media="screen and (min-width: 580px) and (max-width: 1000px)" href="{% static 'css-theme/' %}{{ THEME }}{{ '/index-middle-screen.css' }}" rel="stylesheet" >
+
+
+    <link media="screen and (min-width: 1000px)" href="{% static 'css-theme/' %}{{ THEME }}{{ '/base-big-screen.css' }}" rel="stylesheet" >
+    <link media="screen and (min-width: 1000px)" href="{% static 'css-theme/' %}{{ THEME }}{{ '/index-big-screen.css' }}" rel="stylesheet" >
+
 
     <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
 
@@ -167,51 +176,6 @@
         });
     </script>
 
-    <div class="logo" data-scroll-reveal="enter right over 1s">
-        <a><b>愿你历尽千帆，归来仍是少年</b></a>
-    </div>
-
- <div class="rowx">
-    <div id="top-nav-layout" class="hidden">
-        <nav class="topnav row" data-scroll-reveal="enter bottom over 0.8s after 0.8s">
-            <div class="col-md-10">
-                <a href="{% url 'home:home' %}">
-                    <span>首页</span>
-                </a>
-                <a href="/aboutme/">
-                    <span>关于我</span>
-                </a>
-
-                <a href="/articles/programing">
-                    <span>程序设计</span>
-                </a>
-
-                <a href="/articles/programing">
-                    <span>旅行摄影</span>
-                </a>
-
-                <a href="{% url 'document:list' %}">
-                    <span>文档资源</span>
-                </a>
-
-                <a href="{% url 'gbook:list' %}" >
-                    <span>留言</span>
-                </a>
-            </div>
-            <div class="search_div col-md-2">
-                <form method="get" action="/search/">
-                    {% if key_word %}
-                        <input id="key_word" type="text" name="keyword" value={{ key_word }} />
-                    {% else %}
-                        <input type="text" name="keyword" placeholder=" 站内搜索..." />
-                    {% endif %}
-                </form>
-            </div>
-        </nav>
-    </div>
- </div>
-</header>
-
 <script>
     $(function(){
         $.ajax({
@@ -309,128 +273,116 @@
  });
 </script>
 
-<div id="main-container" class="container show" style="width: 100%">
-    <div class="row">
-        <div id="statistic-bar" class="col-xs-0 col-0 col-sm-0 col-md-0 col-lg-0 hidden">
-            <div class="container" style="width: 100%;">
-                <div class="row" style="text-align: center">
-                    <div id="site-statistic" class="col-sm-12 col-md-12"></div>
-                    <p>您是小站的第<span style="color: red"> {{ VISIT_COUNT }} </span>位访客，欢迎~</p>
-                </div>
+<div style="display: flex">
+    <div class="statistic-bar">
+        <div id="site-statistic"></div>
+        <p style="text-align: center">您是小站的第<span style="color: red"> {{ VISIT_COUNT }} </span>位访客，欢迎~</p>
+    </div>
+    <div class="blog">
+        <div class="logo" data-scroll-reveal="enter right over 1s">
+            <a><b>愿你历尽千帆，归来仍是少年</b></a>
+        </div>
+        <div class="top-nav" data-scroll-reveal="enter bottom over 0.8s after 0.8s">
+            <a href="{% url 'home:home' %}">
+                <span>首页</span>
+            </a>
+            <a href="/aboutme/">
+                <span>关于我</span>
+            </a>
+
+            <a href="/articles/programing">
+                <span>程序设计</span>
+            </a>
+
+            <a href="/articles/programing">
+                <span>旅行摄影</span>
+            </a>
+
+            <a href="{% url 'document:list' %}">
+                <span>文档资源</span>
+            </a>
+
+            <a href="{% url 'gbook:list' %}" >
+                <span>留言</span>
+            </a>
+            <div class="inner-search form-group">
+                <input type="text" class="form-control" id="name" placeholder=" 站内搜索...">
             </div>
         </div>
-        <div id="article-bar" class="col-xs-12 col-12 col-sm-12 col-md-12 col-lg-6 hidden">
-{#            <article>#}
-            <div class="my-container" >
-                {% block content %}
-                {% endblock %}
-            </div>
-{#            </article>#}
-            <hr style="border: 1px solid rgba(52, 73, 94, 0.54)">
-            <div>
-                <div class="my-links">
-                    <span>联系我：</span>
-                    <a href="https://github.com/meiqizhang/DesertHawk" target="_blank">github</a>
-                    <a href="https://blog.csdn.net/zhangqi_gsts" target="_blank">csdn</a>
-                    <a>QQ<img style="width:0; height: 0; position: absolute" src="https://content-image-1251916339.cos.ap-beijing.myqcloud.com/2021/11/qq-QR.png"></a>
-                    <a>微信<img style="width:0; height: 0; position: absolute" src="https://content-image-1251916339.cos.ap-beijing.myqcloud.com/2021/11/wechat-QR.png"></a>
-                </div>
-                <div class="out-links">
-{#                    友情链接：#}
-                    <a href="https://www.tjcblog.com/" target="_blank" >杨青青个人博客</a>
-                    <a href="https://wenyuanblog.com/" target="_blank" >文渊博客</a>
-                    <a href="https://www.hmchang.com/" target="_blank" >黄茂昌个人博客</a>
-                    <a href="http://www.hcgzc.cn/" target="_blank" title="抖音剧本">抖音剧本</a>
-                    <a href="https://www.laoliubiji.com/" target="_blank" title="老刘笔记">老刘笔记</a>
-                    <a href="https://c69p.com/" target="_blank" title="陈大剩博客">陈大剩博客</a>
-                    <a href="https://xuqssq.com/" target="_blank" title="XuQian博客">XuQian博客</a>
-                    <a href="https://www.biiiiii.com/" target="_blank" title="舍逸斋个人博客">舍逸斋个人博客</a>
-                    <a href="https://www.dreamwings.cn/" target="_blank" title="继续踏上旅途，在没有你的春天……">千千</a>
-                    <a href="https://www.itkuniao.com/" target="_blank" title="IT酷鸟">IT酷鸟</a>
-                    <a href="https://www.duanliang920.com" target="_blank" title="段亮博客">段亮博客</a>
-                    <a href="http://www.77ketang.com" target="_blank" title="7分钟课堂">7分钟课堂</a>
-                    <a href="https://www.feizhimeng.com" target="_blank" title="记录和分享水文地质,工程地质,环境地质相关知识的个人站点。">飞之梦工作室</a>
-                    <a href="https://www.yaohuanet.com/" target="_blank" title="云月怡博客">云月怡博客</a>
-                    <a href="http://www.old-wan.com/" target="_blank" title="西安SEO优化">西安SEO优化</a>
-                    <a href="http://gsht.nszbf.me/" target="_blank" title="面向生活，发现美好 博客">NS.ZBF 博客</a>
-                    <a href="http://benblog.cn" target="_blank" title="严与律己宽于律人">ben's blog</a>
-                    <a href="https://honto.cc/" target="_blank" title="分享一些自己工作中遇到的问题和学习时候遇到的问题，并把难点拆分成若干个知识点通过图文和视频分享出来。">鸿来博客园</a>
-                    <a href="https://www.deep-os.com/" target="_blank" title="linux运维">linux运维</a>
-                    <a href="https://lidada.cn/" target="_blank" title="一个专注于互联网运营的伪CISE个人网站">李大大个人博客</a>
-                    <a href="http://www.sunfahui.com/" target="_blank" title="灰灰个人博客">灰灰个人博客</a>
-                    <a href="https://www.piyao8.cn/" target="_blank">辟谣吧个人博客</a>
-                    <a href="http://www.shmianfei.com/" target="_blank">周朝阳博客</a>
-                    <a href="https://www.jguok.com/" target="_blank">坚果壳</a>
-                    <a href="https://zsh2401.top/" target="_blank">2401的晚秋咖啡 </a>
-                    <a href="https://www.usuuu.com/" target="_blank">悠悠个人博客</a>
-                    <a href="https://www.cuiwenyuan.com/" target="_blank">崔文远的个人网站</a>
-                    <a href="https://www.frbkw.com/" target="_blank">枫瑞博客</a>
-                    <a href="https://wxy97.com/" target="_blank">王旭阳个人博客</a>
-                    <a href="https://www.biiiiii.com" target="_blank">舍逸斋</a>
-                </div>
-            </div>
+        <div>
+            {% block content %}
+            {% endblock %}
         </div>
     </div>
 </div>
-
-
-<script>
-        $('.my-links > a').mouseenter(function (e) {
-            let top = $(this).offset().top;
-            let left = $(this).offset().left;
-            let text = $(this).text()
-            if (text === 'QQ' || text === "微信") {
-                top -= 140
-                left -= 45
-                $(this).children("img").offset({ top: top, left: left}).css("width", "130px").css('height', '130px')
-            }
-        }).mouseout(function(){
-             let text = $(this).text()
-            if (text === 'QQ' || text === "微信") {
-                $(this).children("img").css("width", "0").css('height', '0')
-            }
-        })
-
-
-    var screenWidth = getWidth();
-    console.log("width=" + screenWidth);
-     if (screenWidth > 1700) {
-        $("#statistic-bar").attr("class", "col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3 show");
-        $("#article-bar").attr("class", "col-xs-12 col-12 col-sm-12 col-md-12 col-lg-6 show");
-        $("#calendar-bar").attr("class", "col-xs-0 col-0 col-sm-0 col-md-0 col-lg-3 show");
-        $("#top-nav-layout").attr("class", "col-xs-offset-3 col-sm-offset-3 col-md-offset-3 col-lg-offset-3 col-xs-6 col-sm-6 col-md-6 col-lg-6");
-    }
-     else  if (screenWidth > 1600) {
-        $("#statistic-bar").attr("class", "col-xs-2 col-3 col-sm-3 col-md-3 col-lg-3 show");
-        $("#article-bar").attr("class", "col-xs-6 col-6 col-sm-6 col-md-6 col-lg-6 show");
-        $("#calendar-bar").attr("class", "col-xs-3 col-3 col-sm-3 col-md-3 col-lg-3 show");
-        $("#top-nav-layout").attr("class", "col-xs-offset-3 col-sm-offset-3 col-md-offset-3 col-lg-offset-3 col-xs-8 col-sm-8 col-md-8 col-lg-8");
-    }
-    else if (screenWidth > 1480) {
-        $("#statistic-bar").attr("class", "col-xs-2 col-2 col-sm-2 col-md-2 col-lg-2 show");
-        $("#article-bar").attr("class", "col-xs-8 col-8 col-sm-8 col-md-8 col-lg-8 show");
-        $("#calendar-bar").attr("class", "col-xs-2 col-2 col-sm-2 col-md-2 col-lg-2 show");
-        $("#top-nav-layout").attr("class", "col-xs-offset-2 col-sm-offset-2 col-md-offset-2 col-lg-offset-2 col-xs-8 col-sm-8 col-md-8 col-lg-8");
-    } else if (screenWidth > 1280) {
-        $("#article-bar").attr("class", "col-xs-offset-2 col-sm-offset-2 col-md-offset-2 col-lg-offset-2 col-xs-8 col-8 col-sm-8 col-md-8 col-lg-8 show");
-        $("#statistic-bar").attr("class", "hidden");
-        $("#calendar-bar").attr("class", "hidden");
-        $("#top-nav-layout").attr("class", "col-xs-offset-2 col-sm-offset-2 col-md-offset-2 col-xs-8 col-sm-8 col-md-8 col-lg-8");
-    } else {
-        $("#article-bar").attr("class", "col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1 col-xs-10 col-10 col-sm-10 col-md-10 col-lg-10 show");
-        $("#statistic-bar").attr("class", "hidden");
-        $("#calendar-bar").attr("class", "hidden");
-        $("#top-nav-layout").attr("class", "col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-xs-10 col-sm-10 col-md-10 col-lg-10");
-    }
-</script>
-
-<footer style="margin-top: 10px; margin-bottom: 10px">
+<div>
+    <hr style="border: 1px solid rgba(52, 73, 94, 0.54)">
+    <div>
+        <div class="my-links">
+            <span>联系我：</span>
+            <a href="https://github.com/meiqizhang/DesertHawk" target="_blank">github</a>
+            <a href="https://blog.csdn.net/zhangqi_gsts" target="_blank">csdn</a>
+            <a>QQ<img style="width:0; height: 0; position: absolute" src="https://content-image-1251916339.cos.ap-beijing.myqcloud.com/2021/11/qq-QR.png"></a>
+            <a>微信<img style="width:0; height: 0; position: absolute" src="https://content-image-1251916339.cos.ap-beijing.myqcloud.com/2021/11/wechat-QR.png"></a>
+        </div>
+        <div class="out-links">
+            <a href="https://www.tjcblog.com/" target="_blank" >杨青青个人博客</a>
+            <a href="https://wenyuanblog.com/" target="_blank" >文渊博客</a>
+            <a href="https://www.hmchang.com/" target="_blank" >黄茂昌个人博客</a>
+            <a href="http://www.hcgzc.cn/" target="_blank" title="抖音剧本">抖音剧本</a>
+            <a href="https://www.laoliubiji.com/" target="_blank" title="老刘笔记">老刘笔记</a>
+            <a href="https://c69p.com/" target="_blank" title="陈大剩博客">陈大剩博客</a>
+            <a href="https://xuqssq.com/" target="_blank" title="XuQian博客">XuQian博客</a>
+            <a href="https://www.biiiiii.com/" target="_blank" title="舍逸斋个人博客">舍逸斋个人博客</a>
+            <a href="https://www.dreamwings.cn/" target="_blank" title="继续踏上旅途，在没有你的春天……">千千</a>
+            <a href="https://www.itkuniao.com/" target="_blank" title="IT酷鸟">IT酷鸟</a>
+            <a href="https://www.duanliang920.com" target="_blank" title="段亮博客">段亮博客</a>
+            <a href="http://www.77ketang.com" target="_blank" title="7分钟课堂">7分钟课堂</a>
+            <a href="https://www.feizhimeng.com" target="_blank" title="记录和分享水文地质,工程地质,环境地质相关知识的个人站点。">飞之梦工作室</a>
+            <a href="https://www.yaohuanet.com/" target="_blank" title="云月怡博客">云月怡博客</a>
+            <a href="http://www.old-wan.com/" target="_blank" title="西安SEO优化">西安SEO优化</a>
+            <a href="http://gsht.nszbf.me/" target="_blank" title="面向生活，发现美好 博客">NS.ZBF 博客</a>
+            <a href="http://benblog.cn" target="_blank" title="严与律己宽于律人">ben's blog</a>
+            <a href="https://honto.cc/" target="_blank" title="分享一些自己工作中遇到的问题和学习时候遇到的问题，并把难点拆分成若干个知识点通过图文和视频分享出来。">鸿来博客园</a>
+            <a href="https://www.deep-os.com/" target="_blank" title="linux运维">linux运维</a>
+            <a href="https://lidada.cn/" target="_blank" title="一个专注于互联网运营的伪CISE个人网站">李大大个人博客</a>
+            <a href="http://www.sunfahui.com/" target="_blank" title="灰灰个人博客">灰灰个人博客</a>
+            <a href="https://www.piyao8.cn/" target="_blank">辟谣吧个人博客</a>
+            <a href="http://www.shmianfei.com/" target="_blank">周朝阳博客</a>
+            <a href="https://www.jguok.com/" target="_blank">坚果壳</a>
+            <a href="https://zsh2401.top/" target="_blank">2401的晚秋咖啡 </a>
+            <a href="https://www.usuuu.com/" target="_blank">悠悠个人博客</a>
+            <a href="https://www.cuiwenyuan.com/" target="_blank">崔文远的个人网站</a>
+            <a href="https://www.frbkw.com/" target="_blank">枫瑞博客</a>
+            <a href="https://wxy97.com/" target="_blank">王旭阳个人博客</a>
+            <a href="https://www.biiiiii.com" target="_blank">舍逸斋</a>
+        </div>
+    </div>
+</div>
+<footer style="margin-bottom: 10px">
     <span style="color: grey">
         <a style="color: grey" href="http://beian.miit.gov.cn">粤ICP备20054363号</a> | 博客已运行<span class="run_time"></span>
     </span>
 </footer>
 
+
 <script>
+    $('.my-links > a').mouseenter(function (e) {
+        let top = $(this).offset().top;
+        let left = $(this).offset().left;
+        let text = $(this).text()
+        if (text === 'QQ' || text === "微信") {
+            top -= 140
+            left -= 45
+            $(this).children("img").offset({ top: top, left: left}).css("width", "130px").css('height', '130px')
+        }
+    }).mouseout(function(){
+         let text = $(this).text()
+        if (text === 'QQ' || text === "微信") {
+            $(this).children("img").css("width", "0").css('height', '0')
+        }
+    })
+
     if (!(/msie [6|7|8|9]/i.test(navigator.userAgent))) {
         (function () {
             window.scrollReveal = new scrollReveal({reset: true});
@@ -501,6 +453,6 @@
 {% block my_js %}
 
 {% endblock %}
-
+</header>
 </body>
 </html>

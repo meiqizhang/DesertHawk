@@ -7,7 +7,6 @@
 {% block mycss %}
     {{ block.super }}
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/programing.css' }}" rel="stylesheet">
-
 {% endblock %}
 
 {% block content %}
@@ -21,8 +20,9 @@
             user-select: none;
         }
     </style>
-    <h2 class="ctitle">{{ category }}</h2>
+    <h2 class="category-title">{{ category }}</h2>
     <div class="rnav">
+        <ul>
             {% for category in categories %}
                 <li>
                     <a id="category-btn" href="/articles/programing?category={{ category }}">{{ category }}</a>
@@ -31,7 +31,7 @@
         </ul>
     </div>
     <div style="margin-top: 24px; ">
-        <ul class="article-list">
+        <ul class="article-listxx">
             {% for article in articles %}
                 {% include "article_list.html" %}
             {% endfor %}
@@ -55,6 +55,7 @@
         } else if (curPage <= 31) {
             idx = 21
         }
+
         for (let i = idx; i <= totalPages && i < idx + 10; i++) {
             let obj = $('<a href="#">' + i + '</a>').insertBefore($('.next-page'))
             console.log(obj.text())
@@ -83,9 +84,17 @@
                 let pageId = parseInt($(this).text());
             }
         })
+        if (totalPages <= 10) {
+            $('#total-pages').css('visibility', 'hidden')
+            $('.prev-page').css('visibility', 'hidden')
+            $('.next-page').css('visibility', 'hidden')
+        }
+        if (totalPages < 2) {
+            $('.pages').css('visibility', 'hidden')
+        }
 
         $(document).ready(function(){
-            $(".article-figure").each(function() {
+            $(".article-pic").each(function() {
                 {#所有的图标都是3*5#}
                 image_download_and_set($(this).attr("id"), "/articles/d_icon/?title=" + $(this).attr("title"))
                 let width =$(this).width()

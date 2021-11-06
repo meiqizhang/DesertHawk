@@ -1,0 +1,100 @@
+@charset "gb2312";
+/* 共用css */
+ {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font: 14px "微软雅黑", Arial, Helvetica, sans-serif;
+    /*background: no-repeat center top #FAFAE9;*/
+    /*background: no-repeat center top #F5F5F5;*/
+}
+
+
+ul, li {
+    list-style: none;
+}
+
+.blog {
+    width: 50%;
+}
+
+.logo {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+.logo > a{
+    color: #BB6622;
+    font-size: 38px;
+}
+
+.statistic-bar {
+    visibility: visible;
+    width: 25%;
+    margin-top: 150px;
+}
+
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+}
+
+.top-nav > a {
+    font-size: 18px;
+    font-weight: bolder;
+    color: #8a6d3b;
+}
+
+footer {
+    text-align: center;
+    padding: 20px 0
+}
+
+#site-statistic {
+    height: 300px;
+    width: 100%;
+}
+
+.pages{
+    list-style: none;
+    text-align: center;
+    width:100%;
+    margin-bottom: 24px;
+    overflow: hidden;
+    position:relative;
+
+    /*不能选中文本*/
+    -moz-user-select: none; /*火狐*/
+    -webkit-user-select: none; /*webkit浏览器*/
+    -ms-user-select: none; /*IE10*/
+    -khtml-user-select: none; /*早期浏览器*/
+    -o-user-select: none; /* Opera*/
+    user-select: none;
+}
+
+.out-links {
+    margin: 15px;
+    text-align: left
+}
+.out-links > a {
+    color: rgba(52, 73, 94, 0.94);
+    padding-right: 10px;
+    line-height: 23px;
+}
+.out-links > a:hover {
+    color: #f3910e;
+}
+.my-links {
+    padding-top: 10px;
+    margin-bottom: 30px;
+    text-align: center;
+    font-size: 16px
+}
+.my-links > a {
+    margin-right: 10px;
+}
+.my-links > a:hover {
+    color: #f3910e;
+}

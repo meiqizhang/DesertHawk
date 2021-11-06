@@ -8,34 +8,27 @@
 {% endblock %}
 
 {% block content %}
-    <div class="blog row" data-scroll-reveal="enter top">
+    <div class="article-top-3" data-scroll-reveal="enter top">
         {% for figure_article in figure_articles  %}
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-{#                <figure id="my-figure" >#}
-                    <ul style="padding: 0;">
-                        <img class='article-figure' id="image-{{ figure_article.article_id }}" title="{{ figure_article.title }}" style="border-radius:4px; width: 100%; height: 100%" src="/static/images/loading.gif">
-                        <a href="/articles/p/{{ figure_article.article_id }}.html"></a>
-                    </ul>
-                    <p style="text-align: center">
-                        <a href="/articles/p/{{ figure_article.article_id }}.html" style="color: rgba(52, 73, 94, 0.94); font-weight: bolder; font-size: 14px">
-                            {{ figure_article.title }}
-                        </a>
-                    </p>
-                    <span class="article-description">
-                        {{ figure_article.description }}
-                    </span>
-{#                </figure>#}
+            <div class="article-top-3-item">
+                <img class='article-top-3-article-pic' id="image-{{ figure_article.article_id }}" title="{{ figure_article.title }}" src="/static/images/loading.gif">
+                <p style="text-align: center; margin-top: 10px">
+                    <a href="/articles/p/{{ figure_article.article_id }}.html" style="color: rgba(52, 73, 94, 0.94); font-weight: bolder; font-size: 14px">
+                        {{ figure_article.title }}
+                    </a>
+                </p>
+                <div class="article-description">
+                    {{ figure_article.description }}
+                </div>
             </div>
         {% endfor %}
     </div>
-
-    <div style="margin-top: 24px; ">
-        <ul class="article-list">
-            {% for article in articles %}
-                {% include "article_list.html" %}
-            {% endfor %}
-        </ul>
+    <div>
+        {% for article in articles %}
+            {% include "article_list.html" %}
+        {% endfor %}
     </div>
+
     <div class="pages">
         <a class="prev-page"><</a>
         <a class="next-page">></a>
@@ -81,12 +74,23 @@
                 let pageId = parseInt($(this).text());
             }
         })
+        // 小于1也的时候不显示< >
+        if (totalPages <= 10) {
+            $('#total-pages').css('visibility', 'hidden')
+            $('.prev-page').css('visibility', 'hidden')
+            $('.next-page').css('visibility', 'hidden')
+        }
+        // 小于2页的时候不显示分页
+        if (totalPages < 2) {
+            $('.pages').css('visibility', 'hidden')
+        }
         $(document).ready(function(){
-            $(".article-figure").each(function() {
-                {#所有的图标都是3*5#}
+            let screenWidth = getWidth()
+            $(".article-top-3-article-pic").each(function (){
                 image_download_and_set($(this).attr("id"), "/articles/d_icon/?title=" + $(this).attr("title"))
-                let width =$(this).width()
-                $(this).height(width * 3 / 5)
+            })
+            $(".article-pic").each(function() {
+                image_download_and_set($(this).attr("id"), "/articles/d_icon/?title=" + $(this).attr("title"))
             })
         })
     </script>

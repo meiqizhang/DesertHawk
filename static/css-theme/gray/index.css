@@ -31,30 +31,14 @@
     }
 }
 
-.read-more{
-    color: rgba(52, 73, 94, 0.94);
-    padding: 5px 10px;
-    float: right;
-    bottom: 10px;
-    position: absolute;
-    right: 10px
-}
 .publish-date {
     color: rgba(52, 73, 94, 0.54);
-    font-size: 13px;
-    padding: 5px 10px;
-    float: right;
-    bottom: 10px;
-    /*bottom: calc(100% - 30px);*/
-    position: absolute;
-    left: calc(30% + 40px);
+    font-size: 1px;
 }
-
-.cbp_tmlabel > p > a {
-    font-family: "YaHei Consolas Hybrid", Consolas, "Î¢ÈíÑÅºÚ", "Meiryo UI", "Malgun Gothic", "Segoe UI", "Trebuchet MS", Helvetica, "Monaco", courier, monospace;
-    color: #666;
+.xxx{
+    font-size: 20px;
+    border: 10px solid red;
 }
-
 
 .article-list {
     padding: 0;

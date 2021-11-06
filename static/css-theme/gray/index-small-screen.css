@@ -1,0 +1,144 @@
+@charset "gb2312";
+{
+    margin: 0;
+    padding: 0;
+}
+
+.article-blog {
+    margin: auto;
+    width: 100%;
+}
+
+.article-top-3 {
+    margin-top: 20px;
+    margin-bottom: 80px;
+    visibility: visible;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.article-top-3-item {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.article-top-3-article-pic {
+    width: 95%;
+    margin: auto;
+    height: 200px;
+    text-align: center;
+    /*margin: 10px;*/
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.article-description {
+    width: 0;
+    height: 0;
+    visibility: hidden;
+}
+
+.article-item {
+    border-radius: 6px;
+    background: rgba(215, 215, 215, 0.3);
+    border: 1px solid rgba(215, 215, 215, 0.3);
+    margin-bottom: 20px;
+    display: flex;
+}
+
+ul {
+    padding: 0;
+}
+
+.article-pic {
+    margin: 6px;
+    border-radius: 4px;
+    width: 150px;
+}
+
+.article-info {
+    /*margin-left: 3vw;*/
+    /*border: 1px solid red;*/
+    padding: 0;
+    position: relative;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+@media (max-width: 580px) {
+    .article-title {
+        margin-top: 5px;
+        font-size: 14px;
+        color: rgba(52, 73, 94, 0.94);
+        font-weight: bolder;
+    }
+}
+@media (min-width: 580px) {
+    .article-title {
+        margin-top: 5px;
+        font-size: 16px;
+        color: rgba(52, 73, 94, 0.94);
+        font-weight: bolder;
+    }
+}
+
+.article-footer {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    font-size: 14px;
+    justify-content: space-between;
+}
+
+.article-footer > div {
+    align-self: flex-end;
+}
+
+.pages{
+    list-style: none;
+    text-align: center;
+    width:100%;
+    margin-bottom: 24px;
+    overflow: hidden;
+    position:relative;
+
+    /*不能选中文本*/
+    -moz-user-select: none; /*火狐*/
+    -webkit-user-select: none; /*webkit浏览器*/
+    -ms-user-select: none; /*IE10*/
+    -khtml-user-select: none; /*早期浏览器*/
+    -o-user-select: none; /* Opera*/
+    user-select: none;
+}
+
+.pages a{
+    display: inline-block;
+    margin-top: 10px;
+    margin-left: 10px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: solid 1px gray;
+    text-decoration: none;
+    color: #666;
+    text-align: center;
+    font:bold 14px/24px 'Microsoft Yahei';
+}
+
+.pages a:hover{
+    opacity: 0.6;
+    background-color: #bbbbbb;
+    border: 1px solid #bbbbbb;
+}
+
+.pages .active{
+    opacity: 0.8;
+    background-color: #bbbbbb;
+    border: 1px solid #bbbbbb;
+}
