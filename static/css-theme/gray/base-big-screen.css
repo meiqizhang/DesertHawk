@@ -1,6 +1,5 @@
 @charset "gb2312";
-/* π≤”√css */
- {
+{
     margin: 0;
     padding: 0;
 }
@@ -46,7 +45,9 @@ ul, li {
     font-weight: bolder;
     color: #8a6d3b;
 }
-
+.inner-search {
+    width: 150px;
+}
 footer {
     text-align: center;
     padding: 20px 0

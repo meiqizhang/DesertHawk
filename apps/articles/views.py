@@ -160,27 +160,9 @@ def detail(request):
 
 
 @add_visit_history_log
-def tag(request):
-    req_tag = request.path.split('/')[-1]
-    titles = Tag.objects.filter(tag=req_tag).values_list("title", flat=True)
-
-    logging.info("query article with tag=%s, title=%s" % (req_tag, titles))
-
-    articles = list(Article.objects.filter(title__in=titles).order_by('-date').values())
-    for article in articles:
-        article["year"] = article["date"].strftime('%Y')
-        article["day"] = article["date"].strftime('%m-%d')
-    context = dict()
-    context["tag"] = req_tag
-    context["status"] = 'success'
-    context['msg'] = 'ok'
-    context["articles"] = articles
-    return render(request, "tag.html", context=context)
-
-
-@add_visit_history_log
 def programing(request):
     category = request.GET.get("category", None)
+    tag = request.GET.get("tag", None)
     page_id = request.GET.get("page", "1")
     articles = Article.objects.filter(status=1, first_category='程序设计').order_by("-article_id").\
         values("article_id", "title", "second_category", "description", "date")
@@ -192,15 +174,20 @@ def programing(request):
         article["year"] = article["date"].strftime('%Y')
         article["day"] = article["date"].strftime('%m-%d')
 
-    if category is None:
+    if category is None and tag is None:
         category = "程序设计"
     else:
-        articles = [x for x in articles if x["second_category"] == category]
+        if tag is not None:
+            titles = Tag.objects.filter(tag=tag).values_list("title", flat=True)
+            articles = [x for x in articles if x["title"] in titles]
+        else:
+            articles = [x for x in articles if x["second_category"] == category]
 
     context = dict()
     context["code"] = 200
     context["categories"] = list(categories)
     context["category"] = category
+    context["tag"] = tag
 
     page_id = int(page_id)
     page_size = 10

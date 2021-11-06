@@ -1,6 +1,5 @@
 @charset "gb2312";
-/* π≤”√css */
- {
+{
     margin: 0;
     padding: 0;
 }
@@ -9,8 +8,6 @@ body {
     font: 14px "Œ¢»Ì—≈∫⁄", Arial, Helvetica, sans-serif;
     /*background: no-repeat center top #FAFAE9;*/
     background: no-repeat center top #F5F5F5;
-    /*background-color: red;*/
-
 }
 
 ul, li {
@@ -49,6 +46,7 @@ ul, li {
 
 .inner-search {
     visibility: visible;
+    width: 100px;
 }
 
 .article-blog {
@@ -56,33 +54,15 @@ ul, li {
     width: 85%;
 }
 
-
 .statistic-bar {
     visibility: hidden;
     width: 0;
 }
 
-/*@media only screen and (max-width: 580px) {*/
-/*  body {*/
-/*    background-color: lightblue;*/
-/*  }*/
-/*}*/
-
-/*@media only screen and (max-width: 580px) {*/
-/*  .my-container {*/
-/*    border:10px solid black;*/
-/*  }*/
-/*}*/
-
 footer {
     text-align: center;
     padding: 20px 0
 }
-
-/*#site-statistic {*/
-/*    height: 300px;*/
-/*    width: 100%;*/
-/*}*/
 
 .out-links {
     margin-bottom: 20px;

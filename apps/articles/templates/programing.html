@@ -20,22 +20,22 @@
             user-select: none;
         }
     </style>
-    <h2 class="category-title">{{ category }}</h2>
+    {% if category %}
+        <h2 class="category-title">{{ category }}</h2>
+    {% elif tag %}
+        <h2 class="category-title">{{ tag }}</h2>
+    {% endif %}
     <div class="rnav">
-        <ul>
-            {% for category in categories %}
-                <li>
-                    <a id="category-btn" href="/articles/programing?category={{ category }}">{{ category }}</a>
-                </li>
-            {% endfor %}
-        </ul>
+        {% for category in categories %}
+            <li>
+                <a id="category-btn" href="/articles/programing?category={{ category }}">{{ category }}</a>
+            </li>
+        {% endfor %}
     </div>
     <div style="margin-top: 24px; ">
-        <ul class="article-listxx">
-            {% for article in articles %}
-                {% include "article_list.html" %}
-            {% endfor %}
-        </ul>
+        {% for article in articles %}
+            {% include "article_list.html" %}
+        {% endfor %}
     </div>
     <div class="pages">
         <a class="prev-page"><</a>
@@ -62,10 +62,14 @@
             if (i === curPage) {
                 obj.addClass('active');
             }
-            {% if category == "程序设计" %}
-                obj.attr('href', '/articles/programing?page=' + i)
-            {% else %}
-                obj.attr('href', '/articles/programing?category={{ category }}&page=' + i)
+            {% if tag %}
+                obj.attr('href', '/articles/programing?tag={{ tag }}&page=' + i)
+            {% elif category %}
+                {% if category == "程序设计" %}
+                    obj.attr('href', '/articles/programing?page=' + i)
+                {% else %}
+                    obj.attr('href', '/articles/programing?category={{ category }}&page=' + i)
+                {% endif %}
             {% endif %}
         }
 
@@ -89,7 +93,7 @@
             $('.prev-page').css('visibility', 'hidden')
             $('.next-page').css('visibility', 'hidden')
         }
-        if (totalPages < 2) {
+        if (totalPages < 2 || totalPages === undefined) {
             $('.pages').css('visibility', 'hidden')
         }
 

@@ -78,9 +78,9 @@
                 <br>
                 <div class="tags">
                     {% for tag in article.tags %}
-                        <a href="/articles/tag/{{ tag }}" target="_blank">{{ tag }}</a>
+{#                        <a href="/articles/tag/{{ tag }}" target="_blank">{{ tag }}</a>#}
+                        <a href="/articles/programing?tag={{ tag }}&page=1" target="_blank">{{ tag }}</a>
                     {% endfor %}
-
                 </div>
                     <div class="news_about"><strong>简介</strong>{{ article.description }}
                 </div>
