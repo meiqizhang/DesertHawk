@@ -1,0 +1,19 @@
+@charset "gb2312";
+.link_box { border-top: #a6c3bd 1px solid; padding: 20px 0; overflow: hidden; background: rgba(255,255,255,0.8); border-left: #055f5f 8px solid; }
+h2.ctitle { line-height: 30px; font-size: 16px; }
+.ctitle b { border-left: 10px solid #055f5f; background: #099; width: 120px; display: block; text-align: center; color: #fff; line-height: 40px; height: 40px; border-radius: 40px 0; transform: skewX(-30deg) }
+.blogsitetj li:nth-child(n) { background: #FE5187; }
+ul.blogsitetj, ul.blogsite { padding: 30px; overflow: hidden; }
+.blogsitetj li { float: left; width: 24%; text-align: center; line-height: 30px; background: #FAFAE9; padding: 5px 0; overflow: hidden; height: 30px; border: 1px solid #fff; }
+.blogsitetj li:nth-child(n) { background: #FE5187 }
+.blogsitetj li:nth-child(2n) { background: #339967 }
+.blogsitetj li:nth-child(3n) { background: #FF8151 }
+.blogsitetj li:nth-child(4n) { background: #3594cb }
+.blogsitetj li:nth-child(5n) { background: #66CC9A }
+.blogsitetj li:nth-child(6n) { background: #079798 }
+.blogsitetj li a { color: #fff }
+.blogsitetj li:hover { background: #055f5f }
+.blogsite li { float: left; width: 200px; text-align: center; line-height: 30px; background: #ecf1ee; padding: 5px 0; overflow: hidden; height: 30px; border: 1px solid #fff; position: relative }
+.blogsite li:before, .blogsite li:after { content: ''; position: absolute; top: 0; right: 0; height: 2px; width: 0; background: #1AAB8A; transition: 400ms ease all; }
+.blogsite li:after { right: inherit; top: inherit; left: 0; bottom: 0; }
+.blogsite li:hover:before, .blogsite li:hover:after { width: 100%; transition: 800ms ease all; }

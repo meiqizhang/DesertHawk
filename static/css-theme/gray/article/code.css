@@ -1,0 +1,113 @@
+/*
+Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-license.org/
+*/
+pre {
+/*控制代码不换行*/
+    white-space: pre;
+    word-wrap: normal;
+    border: none;
+    background: none;
+}
+.hljs {
+    font-size: 14px!important;
+    font-weight: lighter;
+    font-family: "consolas",monospace !important;
+    display: block;
+    overflow-x: auto;
+    padding: 0.5em;
+    background: #23241f !important;
+    color: #FFF;
+    white-space: pre;
+    word-break: normal;
+    border: none;
+
+    /*
+    background: #1E1E1E !important;
+    background-image: linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%);
+    */
+}
+
+code {
+    background: #f0f0f0;
+    color: black;
+}
+.hljs,
+.hljs-tag,
+.hljs-subst {
+  color: #f8f8f2;
+}
+
+.hljs-strong,
+.hljs-emphasis {
+  color: #a8a8a2;
+}
+
+.hljs-code {
+    color: black;
+}
+
+.hljs-title {
+    color: #10f000;
+    font-size: 16px;
+}
+
+.hljs-section,
+.hljs-selector-class {
+  color: #a6e22e;
+}
+
+
+.hljs-keyword {
+    color: red;
+}
+
+.hljs-selector-tag,
+.hljs-name,
+.hljs-attr {
+  color: gray;
+}
+
+.hljs-symbol,
+.hljs-attribute {
+  color: #66d9ef;
+}
+
+.hljs-params,
+.hljs-class {
+  color: white; /* 括号 （）*/
+}
+
+.hljs-string {
+    color: #0066ff;
+}
+
+.hljs-type,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-selector-id,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-addition,
+.hljs-variable,
+.hljs-template-variable {
+  color: #e6db74;
+}
+
+.hljs-comment,
+.hljs-deletion,
+.hljs-meta {
+    color: #707070; /* 注释 */
+    font-style: italic;
+}
+
+.hljs-number {
+    color: blue;
+}
+
+.hljs-bullet,
+.hljs-quote,
+.hljs-regexp,
+.hljs-literal,
+.hljs-link {
+    color: #B5CEA8;
+}
