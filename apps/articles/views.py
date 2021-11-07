@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
 from DesertHawk.settings import cos_client, JsonCustomEncoder
-from apps.articles.models import Article, Tag
+from apps.articles.models import Article, Tag, Cover
 from apps.articles.stop_words import stop_words
 from apps.user.models import UserProfile
 from apps.user.views import add_visit_history_log
@@ -67,6 +67,22 @@ def upload_icon(request):
         Key="%s.%s" % (title, imgtype),
         EnableMD5=False
     )
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+
+@csrf_exempt
+def update_cover_pic(request):
+    # file = request.FILES.get('file')
+    # pic_buf = file.read()
+    # Cover(pic_buf=pic_buf).save()
+    # return HttpResponse(json.dumps({"code": 0}), content_type="application/json")
+    logging.info(request.body)
+    req_body = json.loads(request.body)
+    cover_id = req_body["cover_id"]
+    article_id = req_body["article_id"]
+    logging.info("update article %d cover to %d" % (article_id, cover_id))
+    Article.objects.filter(article_id=article_id).update(cover=cover_id)
+    response = {"code": 0, "msg": "success"}
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 
@@ -164,13 +180,12 @@ def programing(request):
     category = request.GET.get("category", None)
     tag = request.GET.get("tag", None)
     page_id = request.GET.get("page", "1")
-    articles = Article.objects.filter(status=1, first_category='程序设计').order_by("-article_id").\
-        values("article_id", "title", "second_category", "description", "date")
+    articles = Article.objects.filter(status='p').order_by("-article_id").\
+        values("article_id", "title", "abstract", "date")
 
     categories = set()
     for article in articles:
-        categories.add(article['second_category'])
-        article["description"] = article["description"][:70]
+        article["abstract"] = article["abstract"][:70]
         article["year"] = article["date"].strftime('%Y')
         article["day"] = article["date"].strftime('%m-%d')
 

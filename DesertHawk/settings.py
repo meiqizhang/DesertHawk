@@ -57,7 +57,6 @@ INSTALLED_APPS = [
     'apps.home',
     'apps.comment',
     'apps.gbook',
-    'apps.search',
     'apps.document',
     'apps.administrator',
     'apps.linking',
@@ -89,7 +88,6 @@ TEMPLATES = [
                  os.path.join(BASE_DIR, 'apps/user'),
                  os.path.join(BASE_DIR, 'apps/gbook'),
                  os.path.join(BASE_DIR, 'apps/aboutme'),
-                 os.path.join(BASE_DIR, 'apps/search'),
                  os.path.join(BASE_DIR, 'apps/linking'),
                  os.path.join(BASE_DIR, 'apps/live'),
                  ],
@@ -116,10 +114,10 @@ WSGI_APPLICATION = 'DesertHawk.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME':'zhqiBlog',
-        'USER':'root',
-        'PASSWORD':'123456',
-        'HOST':'127.0.0.1',
+        'NAME': 'desert_hawk',
+        'USER': 'root',
+        'PASSWORD': '123456',
+        'HOST': '127.0.0.1',
         'PORT': '3306'
     }
 }

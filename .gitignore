@@ -2,3 +2,10 @@
 .idea
 __pycache__
 */.pyc
+apps/articles/migrations/00*
+apps/comment/migrations/00*
+apps/document/migrations/00*
+apps/gbook/migrations/00*
+apps/linking/migrations/00*
+apps/statistic/migrations/00*
+apps/user/migrations/00*

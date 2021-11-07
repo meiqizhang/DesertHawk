@@ -2,29 +2,26 @@ from django.db import models
 
 # Create your models here.
 
-"""
-CREATE TABLE `t_site_statistic` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `ip_int` INT,
-  `ip_str` VARCHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '',
-  `province` VARCHAR(32) DEFAULT '' COMMENT '省份',
-  `city` VARCHAR(64) DEFAULT '' COMMENT '城市',
-  `x` VARCHAR(32) DEFAULT '0' COMMENT '经度',
-  `y` VARCHAR(32) DEFAULT '0' COMMENT '维度',
-  PRIMARY KEY (`id`),
-  `create_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-) ENGINE=INNODB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8
 
-"""
-class SiteStatistic(models.Model):
-    id = models.IntegerField(primary_key=True)
-    ip_int = models.IntegerField(verbose_name="IP的10分进制")
-    ip_str = models.CharField(max_length=32)
+class IpCoordinate(models.Model):
+    id = models.AutoField(primary_key=True)
+    ip_str = models.CharField(verbose_name="ip地址", max_length=32, default=None, unique=True)
     province = models.CharField(max_length=32, verbose_name="省份")
     city = models.CharField(max_length=32, verbose_name="市/区")
     x = models.CharField(max_length=16, verbose_name='经度')
     y = models.CharField(max_length=16, verbose_name='维度')
-    visit_time = models.CharField(max_length=32, default='', verbose_name="访问时间")
+
+    class Meta:
+        db_table = 't_ip_coordinate'
+        verbose_name = "城市经纬度坐标"
+        verbose_name_plural = verbose_name
+
+
+class SiteStatistic(models.Model):
+    id = models.AutoField(primary_key=True)
+    url = models.CharField(verbose_name="访问地址", max_length=512, default=None)
+    coordinate = models.ForeignKey(IpCoordinate, default=None, on_delete=models.DO_NOTHING)
+    visit_time = models.DateTimeField(max_length=32, verbose_name="访问时间", auto_now_add=True)
 
     class Meta:
         db_table = 't_site_statistic'
@@ -32,13 +29,3 @@ class SiteStatistic(models.Model):
         verbose_name_plural = verbose_name
 
 
-class CityCoordinate(models.Model):
-    province = models.CharField(max_length=32, verbose_name="省份")
-    city = models.CharField(max_length=32, verbose_name="市/区")
-    x = models.CharField(max_length=16, verbose_name='经度')
-    y = models.CharField(max_length=16, verbose_name='维度')
-
-    class Meta:
-        db_table = 't_city_coordinate'
-        verbose_name = "城市经纬度坐标"
-        verbose_name_plural = verbose_name

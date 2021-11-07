@@ -19,21 +19,30 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from DesertHawk.settings import sms_app_id, sms_app_key
-from apps.user.models import UserProfile, SMSStatus, VisitHistory
+from apps.user.models import UserProfile, SMSStatus
 from qcloudsms_py import SmsSingleSender
+
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
 
 
 def add_visit_history_log(func):
     def wrapper(request, *args, **kwargs):
-        ip_str = request.COOKIES.get("ip")
+        ip_str = get_client_ip(request)
         params = '&'
         for p in request.GET:
             params += p + '=' + request.GET.get(p)
 
-        if len(params) > 1:
-            VisitHistory(ip_str=ip_str, url=request.path + "?" + params[1:]).save()
-        else:
-            VisitHistory(ip_str=ip_str, url=request.path).save()
+        # if len(params) > 1:
+        #     VisitHistory(ip_str=ip_str, url=request.path + "?" + params[1:]).save()
+        # else:
+        #     VisitHistory(ip_str=ip_str, url=request.path).save()
 
         return func(request, *args, **kwargs)
 

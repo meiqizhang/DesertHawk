@@ -28,7 +28,6 @@ urlpatterns = [
     path('user/', include(('apps.user.urls'), namespace='user')),
     path('gbook/', include(('apps.gbook.urls'), namespace='gbook')),
     path('aboutme/', include(('apps.aboutme.urls'), namespace='aboutme')),
-    path('search/', include(('apps.search.urls'), namespace='search')),
     path('document/', include(('apps.document.urls'), namespace='document')),
     path('linking/', include(('apps.linking.urls'), namespace='linking')),
     path('live/', include(('apps.live.urls'), namespace='live')),

@@ -31,8 +31,6 @@
     {% block meta %}
     {% endblock %}
 
-    <link id="baseCss" rel="stylesheet" />
-
     <link media="screen and (max-width: 580px)" href="{% static 'css-theme/' %}{{ THEME }}{{ '/base-small-screen.css' }}" rel="stylesheet" >
     <link media="screen and (max-width: 580px)" href="{% static 'css-theme/' %}{{ THEME }}{{ '/index-small-screen.css' }}" rel="stylesheet" >
 
@@ -82,71 +80,7 @@
 </head>
 <body>
 <header>
-    <script type="text/javascript">
-        function setCookie(cname, cvalue, exdays) {
-            var d = new Date();
-            d.setTime(d.getTime() + (exdays*24*60*60*1000));
-            var expires = "expires=" + d.toGMTString();
-            if (exdays > 0) {
-                document.cookie = cname + "=" + cvalue + "; " + expires;
-            } else {
-                document.cookie = cname + "=" + cvalue;
-            }
-        }
-
-        function getCookie(cname) {
-            var name = cname + "=";
-            var ca = document.cookie.split(';');
-            for(var i=0; i<ca.length; i++) {
-                var c = ca[i].trim();
-                if (c.indexOf(name) === 0) {
-                    return c.substring(name.length,c.length);
-                }
-            }
-            return "";
-        }
-
-        function getAddress() {
-            var ip = returnCitySN.cip; //客户端ip
-            $.getJSON("https://api.map.baidu.com/location/ip?callback=?", {
-                'ak': 'x2CC5dtMtwjAAe6epLt2s1Kxs0BmSxPu',
-                'coor': 'bd09ll',
-                'ip': ip
-            }, function(data) {
-                var x = data.content.point.x;//经度
-                var y = data.content.point.y;//纬度
-                var address = data.content.address;//所在市
-                req = {}
-                req["ip"] = ip;
-                req["x"] = x;
-                req["y"] = y;
-                req["address"] = address;
-
-                setVisit(req);
-                setCookie("ip", req["ip"], 0);
-                setCookie("address", req["address"], 0);
-            });
-        }
-
-        function setVisit(req) {
-            $.ajax({
-            type:'GET',
-            data: req,
-            url:'{% url 'statistic:set' %}',
-            datatype:JSON,
-                success:function (data) {
-                },
-                error:function () {
-                }
-            });
-        }
-
-        ip = getCookie("ip")
-        addr = getCookie("address")
-        if (ip === ""){
-            getAddress();
-        }
-
+    <script>
         var a_idx = 0;
         jQuery(document).ready(function($) {
             $("body").click(function(e) {
@@ -173,105 +107,86 @@
                     $i.remove();
                 });
             });
+
+            $.ajax({
+                    type:'GET',
+                    url:'{% url 'statistic:get' %}',
+                    datatype:JSON,
+                    success:function (data) {
+                        draw(data);
+                    },
+                    error:function () {
+                        console.log('ajax刷新分页数据失败！');
+                    }
+                });
+
+            //初始化echarts实例
+            function draw(data) {
+                result = $.parseJSON(data);
+                visitData = []
+                for (let i = 0; i < result.data.length; ++i) {
+                    visitData.push([result.data[i].x, result.data[i].y, result.data[i].count, result.data[i].city])
+                }
+                var optionMap = {
+                     tooltip: {
+                         /*返回需要的信息*/
+                         formatter: function (param) {
+                             var value = param.value;
+                             return '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 16px;padding-bottom: 7px;margin-bottom: 7px;"> ' +
+                                        value[3] + '(' + value[2] + ')' +
+                                 '</div>';
+                         }
+                     },
+                    geo: {
+                        map: 'china',
+                        label: {emphasis: {show: false}},
+                        roam: true,
+                        itemStyle: {
+                            normal: {areaColor: '#ffffff', borderColor: 'rgba(66, 203, 232, 0.63)'},
+                            emphasis: {areaColor: '#00ff'}
+                        }
+                    },
+                    series: [{
+                        type: 'scatter',
+                        coordinateSystem: 'geo',
+                        data: visitData,
+                        symbolSize: function (data) {
+                            var size = new Array()
+                            for (var i = 0; i <= 12; i++) {
+                                size[i] = i;
+                            }
+                            var idx = parseInt(data[2] / 10 +1 );
+                            if (idx > 12){
+                                idx = 12;
+                            }
+                            return size[idx];
+                        },
+                        itemStyle: { //基调颜色
+                            normal: {
+                                color: function (data) {
+                                    var idx = parseInt(data.data[2]);
+                                    idx = 130 - idx;
+                                    if (idx < 0) {
+                                        idx = 0;
+                                    }
+
+                                    var delt = Number(idx).toString(16);
+                                    delt += "";
+                                    if (delt.length < 2) {
+                                        delt += "0";
+                                    }
+                                    var color = "#FF" + delt + delt;
+                                    return color;
+                                }
+                            }
+                        },
+                    }]
+                };
+                var myChart = echarts.init(document.getElementById('site-statistic'));
+                myChart.setOption(optionMap);
+            }
         });
     </script>
-
-<script>
-    $(function(){
-        $.ajax({
-                type:'GET',
-                url:'{% url 'statistic:get' %}',
-                datatype:JSON,
-                success:function (data) {
-                    draw(data);
-                },
-                error:function () {
-                    console.log('ajax刷新分页数据失败！');
-                }
-            });
-
-        //初始化echarts实例
-        function draw(data) {
-            result = $.parseJSON(data);
-            visitData = []
-            for (i = 0; i < result.data.length; ++i) {
-                visitData.push([result.data[i].x, result.data[i].y, result.data[i].count, result.data[i].city])
-            }
-            var optionMap = {
-                /*visualMap: {
-                    bottom: 50, left: 30, min: 0, max: 500, splitNumber: 5,
-                    inRange: {color: ['#d94e5d', '#eac736', '#50a3ba'].reverse()},
-                    textStyle: {color: '#fff00'}
-                },*/
-                 tooltip: {
-                     /*返回需要的信息*/
-                     formatter: function (param) {
-                         var value = param.value;
-                         return '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 16px;padding-bottom: 7px;margin-bottom: 7px;"> ' +
-                                    value[3] + '(' + value[2] + ')' +
-                                '</div>';
-                     }
-                 },
-                geo: {
-                    map: 'china',
-                    label: {
-                        emphasis: {
-                            show: false
-                        }
-                    },
-                    roam: true,
-                    itemStyle: {
-                        normal: {areaColor: '#ffffff', borderColor: 'rgba(66, 203, 232, 0.63)'},
-                        emphasis: {areaColor: '#00ff'}
-                    }
-                },
-                series: [{
-                    type: 'scatter',
-                    //symbolSize: 10,
-                    coordinateSystem: 'geo',
-                    /*data: convertData([
-                    {name: "海门", value: 405},
-                ])*/
-                    data: visitData,//[[121.15, 31.89, 405]]
-                    symbolSize: function (data) {
-                        //return  data[2] * 1;
-                        var size = new Array()
-                        for (var i = 0; i <= 12; i++) {
-                            size[i] = i;
-                        }
-
-                        var idx = parseInt(data[2] / 10 +1 );
-                        if (idx > 12){
-                            idx = 12;
-                        }
-                        return size[idx];
-                    },
-                    itemStyle: { //基调颜色
-                        normal: {
-                            color: function (data) {
-                                var idx = parseInt(data.data[2]);
-                                idx = 130 - idx;
-                                if (idx < 0) {
-                                    idx = 0;
-                                }
-
-                                var delt = Number(idx).toString(16);
-                                delt += "";
-                                if (delt.length < 2) {
-                                    delt += "0";
-                                }
-                                var color = "#FF" + delt + delt;
-                                return color;
-                            }
-                        }
-                    },
-                }]
-            };
-            var myChart = echarts.init(document.getElementById('site-statistic'));
-            myChart.setOption(optionMap);
-        }
- });
-</script>
 
 <div style="display: flex">
     <div class="statistic-bar">
@@ -326,36 +241,6 @@
             <a>微信<img style="width:0; height: 0; position: absolute" src="https://content-image-1251916339.cos.ap-beijing.myqcloud.com/2021/11/wechat-QR.png"></a>
         </div>
         <div class="out-links">
-            <a href="https://www.tjcblog.com/" target="_blank" >杨青青个人博客</a>
-            <a href="https://wenyuanblog.com/" target="_blank" >文渊博客</a>
-            <a href="https://www.hmchang.com/" target="_blank" >黄茂昌个人博客</a>
-            <a href="http://www.hcgzc.cn/" target="_blank" title="抖音剧本">抖音剧本</a>
-            <a href="https://www.laoliubiji.com/" target="_blank" title="老刘笔记">老刘笔记</a>
-            <a href="https://c69p.com/" target="_blank" title="陈大剩博客">陈大剩博客</a>
-            <a href="https://xuqssq.com/" target="_blank" title="XuQian博客">XuQian博客</a>
-            <a href="https://www.biiiiii.com/" target="_blank" title="舍逸斋个人博客">舍逸斋个人博客</a>
-            <a href="https://www.dreamwings.cn/" target="_blank" title="继续踏上旅途，在没有你的春天……">千千</a>
-            <a href="https://www.itkuniao.com/" target="_blank" title="IT酷鸟">IT酷鸟</a>
-            <a href="https://www.duanliang920.com" target="_blank" title="段亮博客">段亮博客</a>
-            <a href="http://www.77ketang.com" target="_blank" title="7分钟课堂">7分钟课堂</a>
-            <a href="https://www.feizhimeng.com" target="_blank" title="记录和分享水文地质,工程地质,环境地质相关知识的个人站点。">飞之梦工作室</a>
-            <a href="https://www.yaohuanet.com/" target="_blank" title="云月怡博客">云月怡博客</a>
-            <a href="http://www.old-wan.com/" target="_blank" title="西安SEO优化">西安SEO优化</a>
-            <a href="http://gsht.nszbf.me/" target="_blank" title="面向生活，发现美好 博客">NS.ZBF 博客</a>
-            <a href="http://benblog.cn" target="_blank" title="严与律己宽于律人">ben's blog</a>
-            <a href="https://honto.cc/" target="_blank" title="分享一些自己工作中遇到的问题和学习时候遇到的问题，并把难点拆分成若干个知识点通过图文和视频分享出来。">鸿来博客园</a>
-            <a href="https://www.deep-os.com/" target="_blank" title="linux运维">linux运维</a>
-            <a href="https://lidada.cn/" target="_blank" title="一个专注于互联网运营的伪CISE个人网站">李大大个人博客</a>
-            <a href="http://www.sunfahui.com/" target="_blank" title="灰灰个人博客">灰灰个人博客</a>
-            <a href="https://www.piyao8.cn/" target="_blank">辟谣吧个人博客</a>
-            <a href="http://www.shmianfei.com/" target="_blank">周朝阳博客</a>
-            <a href="https://www.jguok.com/" target="_blank">坚果壳</a>
-            <a href="https://zsh2401.top/" target="_blank">2401的晚秋咖啡 </a>
-            <a href="https://www.usuuu.com/" target="_blank">悠悠个人博客</a>
-            <a href="https://www.cuiwenyuan.com/" target="_blank">崔文远的个人网站</a>
-            <a href="https://www.frbkw.com/" target="_blank">枫瑞博客</a>
-            <a href="https://wxy97.com/" target="_blank">王旭阳个人博客</a>
-            <a href="https://www.biiiiii.com" target="_blank">舍逸斋</a>
         </div>
     </div>
 </div>
@@ -367,27 +252,41 @@
 
 
 <script>
-    $('.my-links > a').mouseenter(function (e) {
-        let top = $(this).offset().top;
-        let left = $(this).offset().left;
-        let text = $(this).text()
-        if (text === 'QQ' || text === "微信") {
-            top -= 140
-            left -= 45
-            $(this).children("img").offset({ top: top, left: left}).css("width", "130px").css('height', '130px')
-        }
-    }).mouseout(function(){
-         let text = $(this).text()
-        if (text === 'QQ' || text === "微信") {
-            $(this).children("img").css("width", "0").css('height', '0')
-        }
-    })
+     $(document).ready(function(){
+         $.ajax({
+            type:'GET',
+            url: '/linking/list/',
+            success:function (data) {
+                for (let i in data.links) {
+                    let link = data.links[i]
+                    $(".out-links").append('<a href="' + link.href + '" target="_blank">' + link.name + '</a>')
+                }
+            },
+        });
+
+        $('.my-links > a').mouseenter(function (e) {
+            let top = $(this).offset().top;
+            let left = $(this).offset().left;
+            let text = $(this).text()
+            if (text === 'QQ' || text === "微信") {
+                top -= 140
+                left -= 45
+                $(this).children("img").offset({ top: top, left: left}).css("width", "130px").css('height', '130px')
+            }
+        }).mouseout(function(){
+             let text = $(this).text()
+            if (text === 'QQ' || text === "微信") {
+                $(this).children("img").css("width", "0").css('height', '0')
+            }
+        })
+     })
 
     if (!(/msie [6|7|8|9]/i.test(navigator.userAgent))) {
         (function () {
             window.scrollReveal = new scrollReveal({reset: true});
         })();
     }
+
     $(function(){
         var start_time = 0;
         $.ajax({
@@ -448,8 +347,8 @@
         }
         setInterval(showAuto, 1000);
     })
-
 </script>
+
 {% block my_js %}
 
 {% endblock %}

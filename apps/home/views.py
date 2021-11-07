@@ -4,13 +4,14 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from DesertHawk.settings import JsonCustomEncoder
-from apps.articles.models import ContentImage, Article
+from apps.articles.models import Article
+from apps.statistic.views import add_visit
 from apps.user.views import add_visit_history_log
 
 
-@add_visit_history_log
+@add_visit
 def home(request):
-    articles = Article.objects.filter(status=1).order_by("-article_id").values("article_id", "title", "first_category", "description", "date")
+    articles = Article.objects.filter(status='p').order_by("-article_id").values("article_id", "title", "cover__pic", "abstract", "date")
     page_id = request.GET.get("page", "1")
 
     page_id = int(page_id)
@@ -22,7 +23,8 @@ def home(request):
     articles = articles[from_idx: end_idx]
 
     for article in articles:
-        article["description"] = article["description"][:70]
+        article["cover_pic"] = article["cover__pic"]
+        article["abstract"] = article["abstract"][:70]
         article["year"] = article["date"].strftime('%Y')
         article["day"] = article["date"].strftime('%m-%d')
 

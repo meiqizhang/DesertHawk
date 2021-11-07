@@ -6,5 +6,4 @@ app_name = 'statistic'
 
 urlpatterns = [
     path('get', views.get_statistic, name='get'),
-    path('set', views.set_statistic, name='set'),
 ]

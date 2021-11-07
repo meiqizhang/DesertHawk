@@ -1,7 +1,14 @@
-from django.shortcuts import render
+import json
+
+from django.http import HttpResponse
 
 # Create your views here.
+from apps.linking.models import Linking
 
-def list(request):
-    context = {}
-    return render(request, "linking.html", context=context)  # 只返回页面，数据全部通过ajax获取
+
+def list_links(request):
+    links = Linking.objects.filter(status=1).values().all()
+    links = list(links)
+    response = {"code": 0, "links": links}
+    return HttpResponse(json.dumps(response), content_type="application/json")
+

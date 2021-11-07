@@ -11,14 +11,14 @@
     <div class="article-top-3" data-scroll-reveal="enter top">
         {% for figure_article in figure_articles  %}
             <div class="article-top-3-item">
-                <img class='article-top-3-article-pic' id="image-{{ figure_article.article_id }}" title="{{ figure_article.title }}" src="/static/images/loading.gif">
+                <img class='article-top-3-article-pic' src="{{ figure_article.cover_pic }}">
                 <p style="text-align: center; margin-top: 10px">
                     <a href="/articles/p/{{ figure_article.article_id }}.html" style="color: rgba(52, 73, 94, 0.94); font-weight: bolder; font-size: 14px">
                         {{ figure_article.title }}
                     </a>
                 </p>
                 <div class="article-description">
-                    {{ figure_article.description }}
+                    {{ figure_article.abstract }}
                 </div>
             </div>
         {% endfor %}
@@ -87,10 +87,10 @@
         $(document).ready(function(){
             let screenWidth = getWidth()
             $(".article-top-3-article-pic").each(function (){
-                image_download_and_set($(this).attr("id"), "/articles/d_icon/?title=" + $(this).attr("title"))
+                {#image_download_and_set($(this).attr("id"), "/articles/d_icon/?title=" + $(this).attr("title"))#}
             })
             $(".article-pic").each(function() {
-                image_download_and_set($(this).attr("id"), "/articles/d_icon/?title=" + $(this).attr("title"))
+                {#image_download_and_set($(this).attr("id"), "/articles/d_icon/?title=" + $(this).attr("title"))#}
             })
         })
     </script>

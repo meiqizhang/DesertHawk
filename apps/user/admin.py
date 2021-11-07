@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from django.contrib.auth.models import User
 
-from apps.user.models import UserProfile, VisitHistory, SMSStatus
+from apps.user.models import UserProfile, SMSStatus
 
 
 class ProfileAdmin(admin.ModelAdmin):
@@ -36,4 +36,4 @@ admin.site.unregister(User)
 admin.site.register(User, ProfileAdmin)
 # admin.site.register(UserProfile, ProfileAdmin)
 admin.site.register(SMSStatus, SMSStatusAdmin)
-admin.site.register(VisitHistory, VisitHistoryAdmin)
+# admin.site.register(VisitHistory, VisitHistoryAdmin)

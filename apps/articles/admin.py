@@ -1,24 +1,80 @@
-from django import db
+from django import db, forms
 from django.contrib import admin
 
 # Register your models here.
 from django.utils.safestring import mark_safe
-from apps.articles.models import Article, Tag, Category
+from apps.articles.models import Article, Tag, Category, Cover
 
 
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ["title", "first_category", "second_category", "tag_list", "date", "article_status", "click_num", "love_num", "article_surface", "upload_image", "location"]
-    #raw_id_fields = ["first_category"]
+    # list_display = ["title", "category", "tag_list", "date", "article_status", "click_num", "love_num", "article_surface", "upload_image", "location"]
+    list_display = ["article_id", "title", "category", "date", "status", "cover_pic"]
     readonly_fields = ["article_surface", "love_num", "click_num", "location"]
+    readonly_fields = []
 
-    def location(self, obj):
-        pass
+    def cover_pic(self, obj):
+        all_covers = Cover.objects.all()
+        # html = '''
+        #     <div>
+        #         <div style="float:left; width:100px; height:100px; border: 1px solid red"></div>
+        #         <div style="float:left; width:100px; height:100px; border: 1px solid red"></div>
+        #     </div>
+        # '''
+        covers_list = ""
+        for cover in all_covers:
+            covers_list += """
+                <tr style="background: %s">
+                    <td>
+                        <img style="width:90px; height:50px;" src="%s">
+                    </td>
+                    <td>
+                        <button cover_id=%d style="margin-top:20px">选择</button>
+                    </td>
+                </tr>
+                """ % ("white" if cover.id != obj.cover.id else "blue", cover.pic, cover.id)
 
-    def article_status(self, obj):
-        if obj.status == 0:
-            return "草稿箱"
-        else:
-            return "已发表"
+        html = '''
+            <style>
+                tr.focus{
+                    background-color:#eee;
+                }
+            </style>
+            <script src="https://how2j.cn/study/js/jquery/2.0.0/jquery.min.js"></script>
+            <div style="width:200px; height:100px; overflow:scroll">
+                <table border class="cover-pic-table">
+                    %s
+                </table>
+            </div>
+            <script>
+                $(".cover-pic-table tr").on("click", function () {
+                    $(this).parent().find("tr.focus").toggleClass("focus");
+                    $(this).toggleClass("focus");
+                });
+                $(".cover-pic-table button").on("click", function(){
+                    $.ajax({
+                        type:'POST',
+                        url: "/articles/update_cover_pic",
+                        data: JSON.stringify({"article_id": %d, "cover_id": parseInt($(this).attr("cover_id"))}),
+                        datatype:JSON,
+                        success:function (data) {alert("成功")},
+                        error:function () {alert("失败")}
+                    });
+                });
+            </script>
+        ''' % (covers_list, obj.article_id)
+
+        return mark_safe(html)
+
+    # formfield_overrides = {models.CharField: {'widget': forms.Textarea},}
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        formfield = super(ArticleAdmin, self).formfield_for_dbfield(db_field, **kwargs)
+        if db_field.name in ['abstract']:
+            pass
+            #formfield.widget = forms.Textarea(attrs=formfield.widget.attrs)
+        elif db_field.name in ["cover_url"]:
+            pass
+            #formfield.widget = forms.ImageField()
+        return formfield
 
     def tag_list(self, obj):
         try:
@@ -75,18 +131,19 @@ class ArticleAdmin(admin.ModelAdmin):
     tag_list.short_description = "标签"
     article_surface.short_description = "封面图片"
     upload_image.short_description = "上传封面"
-    article_status.short_description = "文章状态"
     article_surface.allow_tags = True
 
 
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ["category"]
+class CoverAdmin(admin.ModelAdmin):
+    list_display = ["id", "img"]
+
+    def img(self, obj):
+        return mark_safe('<img src="%s" style="width: 150px; height: 80px"/>' % (obj.pic))
+
+    img.short_description = "封面"
 
 
-class TagAdmin(admin.ModelAdmin):
-    list_display = ["title", "tag"]
-
-
-admin.site.register(Tag, TagAdmin)
+admin.site.register(Tag)
+admin.site.register(Cover, CoverAdmin)
+admin.site.register(Category)
 admin.site.register(Article, ArticleAdmin)
-admin.site.register(Category, CategoryAdmin)
