@@ -1,11 +1,7 @@
 import json
 import logging
-import socket
-import struct
-import time
 
 import requests
-from django.db import connection
 from django.db.models import Count
 from django.http import HttpResponse
 
@@ -22,30 +18,38 @@ def get_client_ip(request):
     return ip
 
 
+def get_ip_address_info(ip_str):
+    res = requests.get("https://api.map.baidu.com/location/ip"
+                       "?ak=HQi0eHpVOLlRuIFlsTZNGlYvqLO56un3&coor=bd09ll&ip=%s" % ip_str)
+    if res.status_code != 200:
+        return {"code": 1}
+    res_body = json.loads(res.text)
+    if res_body.get("status", -1) != 0:
+        logging.info("query ip %s info failed" % ip_str)
+        return {"code": 1}
+    content = res_body.get("content", dict())
+    point = content.get("point", dict())
+    address_detail = content.get("address_detail", dict())
+    x = point.get("x", 0)
+    y = point.get("y", 0)
+    city = address_detail.get("city", "")
+    province = address_detail.get("province", "")
+    return {"code": 0, "x": x, "y": y, "city": city, "province": province}
+
+
 def add_visit(func):
     def wrapper(request, *args, **kwargs):
         ip_str = get_client_ip(request)
-        params = '&'
-        for p in request.GET:
-            params += p + '=' + request.GET.get(p)
-        # ip_str = '183.94.105.244'
-        res = requests.get("https://api.map.baidu.com/location/ip"
-                           "?ak=HQi0eHpVOLlRuIFlsTZNGlYvqLO56un3&coor=bd09ll&ip=%s" % ip_str)
-        if res.status_code != 200:
+        #ip_str = '183.94.105.244'
+        ip_info = get_ip_address_info(ip_str)
+        if ip_info["code"] != 0:
             return func(request, *args, **kwargs)
 
-        res_body = json.loads(res.text)
-        if res_body.get("status", -1) != 0:
-            return func(request, *args, **kwargs)
+        x = ip_info["x"]
+        y = ip_info["y"]
+        city = ip_info["city"]
+        province = ip_info["province"]
 
-        content = res_body.get("content", dict())
-        point = content.get("point", dict())
-        address_detail = content.get("address_detail", dict())
-
-        x = point.get("x", 0)
-        y = point.get("y", 0)
-        city = address_detail.get("city", "")
-        province = address_detail.get("province", "")
         logging.info("recv visit info, ip=%s, x=%s, y=%s, province=%s, city=%s" % (ip_str, x, y, province, city))
 
         coordinate = IpCoordinate.objects.filter(ip_str=ip_str).first()
@@ -55,9 +59,8 @@ def add_visit(func):
         else:
             last_visit_time = SiteStatistic.objects.filter(coordinate__ip_str=ip_str). \
                 values("visit_time").order_by("-visit_time").first()
-        SiteStatistic(url='/', coordinate=coordinate).save()
+        SiteStatistic(url=request.path_info, coordinate=coordinate).save()
         return func(request, *args, **kwargs)
-
     return wrapper
 
 

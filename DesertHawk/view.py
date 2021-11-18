@@ -9,13 +9,13 @@ from django.db import connection
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from DesertHawk.settings import START_TIME, cos_client
+from DesertHawk.settings import START_TIME
 
 from apps.statistic.models import SiteStatistic
-from apps.user.views import add_visit_history_log
+from apps.statistic.views import add_visit
 
 
-@add_visit_history_log
+@add_visit
 def robots(request):
     txt = """
     User-agent: * 
@@ -125,37 +125,37 @@ def get_statistic(request):
     return HttpResponse(json.dumps(response))
 
 
-class StorageObject(Storage):
-    def __init__(self):
-        self.now = datetime.datetime.now()
-        self.file = None
-
-    def _new_name(self, name):
-        new_name = "{0}/{1}.{2}".format(self.now.strftime("%Y/%m/%d"), str(uuid.uuid4()).replace('-', ''),
-                                             name.split(".").pop())
-        return new_name
-
-    def _open(self, name, mode):
-        return self.file
-
-    def _save(self, name, content):
-        new_name = self._new_name(name)
-
-        response = cos_client.put_object(
-            Bucket='content-image-1251916339',
-            Body=content,
-            Key=new_name,
-            EnableMD5=False
-        )
-        return "https://content-image-1251916339.cos.ap-beijing.myqcloud.com/" + name
-
-    def exists(self, name):
-        # 验证文件是否存在，因为我这边会去生成一个新的名字去存储到七牛，所以没有必要验证
-        return False
-
-    def url(self, name):
-        # 上传完之后，已经返回的是全路径了
-        return name
+# class StorageObject(Storage):
+#     def __init__(self):
+#         self.now = datetime.datetime.now()
+#         self.file = None
+#
+#     def _new_name(self, name):
+#         new_name = "{0}/{1}.{2}".format(self.now.strftime("%Y/%m/%d"), str(uuid.uuid4()).replace('-', ''),
+#                                              name.split(".").pop())
+#         return new_name
+#
+#     def _open(self, name, mode):
+#         return self.file
+#
+#     def _save(self, name, content):
+#         new_name = self._new_name(name)
+#
+#         response = cos_client.put_object(
+#             Bucket='content-image-1251916339',
+#             Body=content,
+#             Key=new_name,
+#             EnableMD5=False
+#         )
+#         return "https://content-image-1251916339.cos.ap-beijing.myqcloud.com/" + name
+#
+#     def exists(self, name):
+#         # 验证文件是否存在，因为我这边会去生成一个新的名字去存储到七牛，所以没有必要验证
+#         return False
+#
+#     def url(self, name):
+#         # 上传完之后，已经返回的是全路径了
+#         return name
 
 
 def page_not_found(request, exception):

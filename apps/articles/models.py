@@ -1,26 +1,14 @@
 import os
 import time
-from django import db
-from ckeditor_uploader.fields import RichTextUploadingField
 from django.conf import settings
-from django.core.files import File
-from django.core.files.storage import Storage, FileSystemStorage
+from django.core.files.storage import FileSystemStorage
 from django.db import models
-from ckeditor.fields import RichTextField
-from django.utils.html import format_html
-from django.utils.safestring import mark_safe
-
-# from apps.articles.views import upload_icon
-from qcloud_cos import CosConfig, CosS3Client
-
-from DesertHawk.settings import BASE_DIR, cos_client
-from db_tool import db_connect
 from libs.mdeditor.fields import MDTextField
 
 
 class Tag(models.Model):
     id = models.AutoField(primary_key=True)
-    tag = models.CharField(max_length=32, verbose_name='标签', default="", unique=True)
+    name = models.CharField(max_length=32, verbose_name='标签', default="", unique=True)
 
     class Meta:
         db_table = 't_tag'
@@ -28,7 +16,7 @@ class Tag(models.Model):
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return self.tag
+        return self.name
 
 
 class Category(models.Model):
@@ -53,24 +41,34 @@ class Category(models.Model):
 class MyStorage(FileSystemStorage):
     def _save(self, name, content):
         filename = name.replace('\\', '/')
-        content = content.file.getvalue()
-        print(filename, content)
-        # Cover(pic_buf=content).save()
-        # with db.connection.cursor() as cur:
-        #     ret = cur.execute("insert into t_cover(`pic_buf`) value (%s)" % content)
-        #     print(ret)
-        time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
-        response = cos_client.put_object(
-            Bucket='article-1251916339',
-            Body=content,
-            Key=filename,
-            EnableMD5=False
-        )
-        return "https://article-1251916339.cos.ap-beijing.myqcloud.com/" + filename
+        image_buf = content.file.getvalue()
+
+        secret_id = os.environ.get("COS_SECRET_ID", None)
+        secret_key = os.environ.get("COS_SECRET_KEY", None)
+        secret_id = None
+        if secret_id is None or secret_key is None:
+            cover_path = settings.MEDIA_ROOT + "/cover-pic/"
+            if not os.path.exists(cover_path):
+                os.makedirs(cover_path)
+            with open(cover_path + filename, "wb") as fp:
+                fp.write(image_buf)
+            return settings.MEDIA_URL + "/cover-pic/" + filename
+        else:
+            from qcloud_cos import CosConfig, CosS3Client
+            config = CosConfig(Region='ap-beijing', SecretId=secret_id, SecretKey=secret_key)
+            cos_client = CosS3Client(config)
+            response = cos_client.put_object(
+                Bucket='blog-1251916339',
+                Body=content,
+                Key='/cover-pic/' + filename,
+                EnableMD5=False
+            )
+            return "https://blog-1251916339.cos.ap-beijing.myqcloud.com/cover-pic/" + filename
 
 
 class Cover(models.Model):
     id = models.AutoField(primary_key=True)
+    category = models.CharField(verbose_name="分类", max_length=32, default=None)
     pic = models.ImageField(verbose_name="封面图片", default=None, storage=MyStorage())
 
     class Meta:
@@ -80,7 +78,6 @@ class Cover(models.Model):
 
     def __str__(self):
         return str(self.pic)
-        # return mark_safe('<img src="%s" style="width: 100px; height:100px" />' % self.pic_buf)
 
 
 class Article(models.Model):
@@ -94,7 +91,8 @@ class Article(models.Model):
     category = models.ForeignKey(Category, default=None, verbose_name="文章分类", on_delete=models.PROTECT)
     tags = models.ManyToManyField('Tag', verbose_name='文章标签', blank=True)
     abstract = models.CharField(verbose_name='摘要', max_length=512, default=None)
-    content = MDTextField(verbose_name='文章正文')
+    content = MDTextField()
+    #content = MDTextField(verbose_name='文章正文')
     date = models.DateTimeField(verbose_name='发表日期')
     click_num = models.IntegerField(default=0, verbose_name='点击量')
     love_num = models.IntegerField(default=0, verbose_name='点赞量')
@@ -107,7 +105,7 @@ class Article(models.Model):
         verbose_name_plural = verbose_name
 
     def save(self, *args, **kwargs):
-        time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
+        # time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
         # response = cos_client.put_object(
         #     Bucket='article-1251916339',
         #     Body=self.content,
@@ -122,7 +120,5 @@ class Article(models.Model):
                 self.article_id = 1
             else:
                 self.article_id = Article.objects.values("article_id").order_by("-article_id").first()["article_id"] + 1
-
         super().save(*args, **kwargs)
-
 

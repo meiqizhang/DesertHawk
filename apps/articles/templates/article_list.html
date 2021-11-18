@@ -1,7 +1,51 @@
 {% load static %}
+{#<li>#}
+{#    <div class="article-item">#}
+{#        <img class="article-pic" src="{{ article.cover_url }}">#}
+{#        <div class="article-info">#}
+{#            <a class="article-title" href="/articles/p/{{ article.article_id }}.html">{{ article.title }}</a>#}
+{#            <hr>#}
+{#            <div class="article-description">{{ article.abstract }}</div>#}
+{#            <div class="article-footer">#}
+{#                <div>#}
+{#                    <i class="fa">&#xf073</i>#}
+{#                    <span>{{ article.year }}-{{ article.day }}</span>#}
+{#                </div>#}
+{#                <div>#}
+{#                    <a href="/articles/p/{{ article.article_id }}.html">阅读全文&gt;&gt;</a>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</li>#}
+
+
+<script type="text/javascript">
+    $(function () {
+        let img = $(".article-thumbnail > img")
+        let w = img.width();
+        let h = img.height();
+        let w2 = w + 20;
+        let h2 = h + 20;
+
+        img.hover(function () {
+            $(this).stop().animate({ height: h2, width: w2, left: "-10px", top: "-10px" }, 400);
+        }, function () {
+            $(this).stop().animate({ height: h, width: w, left: "0px", top: "0px" }, 400);
+        });
+    });
+</script>
+
+
 <li>
     <div class="article-item">
-        <img class="article-pic" id="image-{{ article.article_id }}" title="{{ article.title }}" src="/static/images/loading.gif">
+{#        <img class="article-pic" src="{{ article.cover_url }}">#}
+        <div class="article-thumbnail-frame" >
+            <div class="article-thumbnail">
+                <img src="{{ article.cover_url  }}"/>
+            </div>
+        </div>
+
         <div class="article-info">
             <a class="article-title" href="/articles/p/{{ article.article_id }}.html">{{ article.title }}</a>
             <hr>
@@ -18,5 +62,3 @@
         </div>
     </div>
 </li>
-
-

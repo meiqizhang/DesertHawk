@@ -1,6 +1,6 @@
-from django.urls import path, re_path
+from django.urls import path
 
-from apps.articles import views as article_views
+
 from apps.home import views
 
 app_name = 'index'

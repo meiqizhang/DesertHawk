@@ -8,16 +8,36 @@
 {% endblock %}
 
 {% block content %}
+    <script type="text/javascript">
+        $(function () {
+            let img = $(".article-top-3-thumbnail > img")
+            let w = img.width();
+            let h = img.height();
+            let w2 = w + 20;
+            let h2 = h + 20;
+
+            img.hover(function () {
+                $(this).stop().animate({ height: h2, width: w2, left: "-10px", top: "-10px" }, 400);
+            }, function () {
+                $(this).stop().animate({ height: h, width: w, left: "0px", top: "0px" }, 400);
+            });
+        });
+    </script>
     <div class="article-top-3" data-scroll-reveal="enter top">
         {% for figure_article in figure_articles  %}
             <div class="article-top-3-item">
-                <img class='article-top-3-article-pic' src="{{ figure_article.cover_pic }}">
+                <div class="article-top-3-thumbnail-frame" >
+                    <div class="article-top-3-thumbnail">
+                        <img src="{{ figure_article.cover_url  }}"/>
+                    </div>
+                </div>
+
                 <p style="text-align: center; margin-top: 10px">
                     <a href="/articles/p/{{ figure_article.article_id }}.html" style="color: rgba(52, 73, 94, 0.94); font-weight: bolder; font-size: 14px">
                         {{ figure_article.title }}
                     </a>
                 </p>
-                <div class="article-description">
+                <div class="article-description" style="margin-left: 5px">
                     {{ figure_article.abstract }}
                 </div>
             </div>

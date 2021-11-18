@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'apps.administrator',
     'apps.linking',
     'apps.live',
+    'apps.photos',
     'libs.mdeditor',
     'DesertHawk',
 ]
@@ -90,6 +91,7 @@ TEMPLATES = [
                  os.path.join(BASE_DIR, 'apps/aboutme'),
                  os.path.join(BASE_DIR, 'apps/linking'),
                  os.path.join(BASE_DIR, 'apps/live'),
+                 os.path.join(BASE_DIR, 'apps/photos'),
                  ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -204,18 +206,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'libs')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'libs'), os.path.join(BASE_DIR, 'media')]
 
 BLOG_ROOT = './'
 THEME = "gray"
 MEDIA_URL = '/media/'
-THUMB_URL = '/articles/thumb/'
+# THUMB_URL = '/articles/thumb/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 CKEDITOR_UPLOAD_PATH = ""
 
-IMAGES_URL = '/images/'
-CKEDITOR_STORAGE_BACKEND = 'DesertHawk.view.StorageObject'  # 自定义ckedit上传路径
-MKEDITOR_STORAGE_BACKEND = 'DesertHawk.view.StorageObject'  # 自定义ckedit上传路径
+# IMAGES_URL = '/images/'
+# CKEDITOR_STORAGE_BACKEND = 'DesertHawk.view.StorageObject'  # 自定义ckedit上传路径
+# MKEDITOR_STORAGE_BACKEND = 'DesertHawk.view.StorageObject'  # 自定义ckedit上传路径
 
 secret_id = os.environ["COS_SECRET_ID"]
 secret_key = os.environ["COS_SECRET_KEY"]

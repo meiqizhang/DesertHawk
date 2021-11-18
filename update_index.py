@@ -5,11 +5,9 @@ import time
 import markdown
 import markdown2
 import pymysql
-from django.conf import settings
 
-#settings.configure()
 
-from DesertHawk.settings import THUMB_URL, BASE_DIR, MEDIA_URL, BLOG_ROOT, DATABASES
+from DesertHawk.settings import BASE_DIR, MEDIA_URL, BLOG_ROOT, DATABASES
 
 def db_connect():
     database = DATABASES.get("default")

@@ -26,9 +26,11 @@ class Linking(models.Model):
     )
 
     id = models.AutoField(primary_key=True)
-    href = models.CharField(max_length=128, verbose_name="地址")
+    href = models.CharField(max_length=128, verbose_name="地址", unique=True)
     title = models.CharField(max_length=128, verbose_name="标题", default=None)
     name = models.CharField(max_length=64, verbose_name="网站名")
+    click_num = models.IntegerField(verbose_name="点击次数", default=0)
+    add_date = models.DateField(verbose_name="添加日期", auto_now=True)
     status = models.IntegerField(verbose_name='状态', choices=STATUS_CHOICES, default='1')
 
     class Meta:

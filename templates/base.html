@@ -17,7 +17,7 @@
 
     <title>
         {% block title %}
-            第耕读 - 小张个人博客 - 记录学习笔记分享生活日记的个人博客网站
+            耕读第 - 小张个人博客 - 记录学习笔记分享生活日记的个人博客网站
         {% endblock %}
     </title>
 
@@ -123,17 +123,18 @@
             //初始化echarts实例
             function draw(data) {
                 result = $.parseJSON(data);
-                visitData = []
+                let visitData = []
                 for (let i = 0; i < result.data.length; ++i) {
                     visitData.push([result.data[i].x, result.data[i].y, result.data[i].count, result.data[i].city])
                 }
-                var optionMap = {
+                let optionMap = {
                      tooltip: {
                          /*返回需要的信息*/
                          formatter: function (param) {
-                             var value = param.value;
-                             return '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 16px;padding-bottom: 7px;margin-bottom: 7px;"> ' +
-                                        value[3] + '(' + value[2] + ')' +
+                             const value = param.value;
+                             return '' +
+                                 '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 16px"> ' +
+                                 value[3] + '(' + value[2] + ')' +
                                  '</div>';
                          }
                      },
@@ -151,11 +152,11 @@
                         coordinateSystem: 'geo',
                         data: visitData,
                         symbolSize: function (data) {
-                            var size = new Array()
-                            for (var i = 0; i <= 12; i++) {
-                                size[i] = i;
+                            let size = [];
+                            for (let i = 0; i <= 12; i++) {
+                                size.push(i);
                             }
-                            var idx = parseInt(data[2] / 10 +1 );
+                            let idx = parseInt(data[2] / 10 + 1, 10);
                             if (idx > 12){
                                 idx = 12;
                             }
@@ -164,19 +165,18 @@
                         itemStyle: { //基调颜色
                             normal: {
                                 color: function (data) {
-                                    var idx = parseInt(data.data[2]);
+                                    let idx = parseInt(data.data[2], 10);
                                     idx = 130 - idx;
                                     if (idx < 0) {
                                         idx = 0;
                                     }
 
-                                    var delt = Number(idx).toString(16);
-                                    delt += "";
-                                    if (delt.length < 2) {
-                                        delt += "0";
+                                    let delta = Number(idx).toString(16);
+                                    delta += "";
+                                    if (delta.length < 2) {
+                                        delta += "0";
                                     }
-                                    var color = "#FF" + delt + delt;
-                                    return color;
+                                    return "#FF" + delta + delta;
                                 }
                             }
                         },
@@ -193,7 +193,7 @@
         <div id="site-statistic"></div>
         <p style="text-align: center">您是小站的第<span style="color: red"> {{ VISIT_COUNT }} </span>位访客，欢迎~</p>
     </div>
-    <div class="blog">
+    <div class="blog" style="">
         <div class="logo" data-scroll-reveal="enter right over 1s">
             <a><b>愿你历尽千帆，归来仍是少年</b></a>
         </div>
@@ -201,7 +201,7 @@
             <a href="{% url 'home:home' %}">
                 <span>首页</span>
             </a>
-            <a href="/aboutme/">
+            <a href="/aboutme/" class="about-me-nav">
                 <span>关于我</span>
             </a>
 
@@ -210,10 +210,14 @@
             </a>
 
             <a href="/articles/programing">
-                <span>旅行摄影</span>
+                <span>宝宝成长记</span>
             </a>
 
-            <a href="{% url 'document:list' %}">
+            <a href="/photos/">
+                <span>我的相册</span>
+            </a>
+
+            <a href="{% url 'document:list' %}" class="document-nav">
                 <span>文档资源</span>
             </a>
 
@@ -230,48 +234,60 @@
         </div>
     </div>
 </div>
-<div>
-    <hr style="border: 1px solid rgba(52, 73, 94, 0.54)">
+<div style="background-color:#2a2a32; color: white">
     <div>
         <div class="my-links">
             <span>联系我：</span>
-            <a href="https://github.com/meiqizhang/DesertHawk" target="_blank">github</a>
-            <a href="https://blog.csdn.net/zhangqi_gsts" target="_blank">csdn</a>
-            <a>QQ<img style="width:0; height: 0; position: absolute" src="https://content-image-1251916339.cos.ap-beijing.myqcloud.com/2021/11/qq-QR.png"></a>
-            <a>微信<img style="width:0; height: 0; position: absolute" src="https://content-image-1251916339.cos.ap-beijing.myqcloud.com/2021/11/wechat-QR.png"></a>
+            <a style="color: white" href="https://github.com/meiqizhang/DesertHawk" target="_blank">github</a>
+            <a style="color: white" href="https://blog.csdn.net/zhangqi_gsts" target="_blank">csdn</a>
+            <a style="color: white">QQ<img style="width:0; height: 0; position: absolute" src="https://blog-1251916339.cos.ap-beijing.myqcloud.com/cover-pic/qq-QR.png"></a>
+            <a style="color: white">微信<img style="width:0; height: 0; position: absolute" src="https://blog-1251916339.cos.ap-beijing.myqcloud.com/cover-pic/wechat-QR.png"></a>
         </div>
         <div class="out-links">
         </div>
     </div>
+    <footer style="margin-bottom: 10px">
+        <div>
+            <img src="https://blog-1251916339.cos.ap-beijing.myqcloud.com/cover-pic/flag.png" style="width: 100px; height: 70px">
+        </div>
+        <div style="margin-top: 10px">
+            <a style="color: white" href="http://beian.miit.gov.cn">粤ICP备20054363号</a> | 博客已运行<span class="run_time" style="color: white"></span>
+        </div>
+    </footer>
 </div>
-<footer style="margin-bottom: 10px">
-    <span style="color: grey">
-        <a style="color: grey" href="http://beian.miit.gov.cn">粤ICP备20054363号</a> | 博客已运行<span class="run_time"></span>
-    </span>
-</footer>
 
 
 <script>
      $(document).ready(function(){
          $.ajax({
-            type:'GET',
-            url: '/linking/list/',
-            success:function (data) {
-                for (let i in data.links) {
-                    let link = data.links[i]
-                    $(".out-links").append('<a href="' + link.href + '" target="_blank">' + link.name + '</a>')
-                }
-            },
-        });
+             type:'GET',
+             url: '/linking/list/',
+             success:function (data) {
+                 for (let i in data.links) {
+                     let link = data.links[i]
+                     $(".out-links").append('<a id=' + link.id + ' href="' + link.href + '" target="_blank">' + link.name + '</a>')
+                 }
+                 $('.out-links > a').unbind("click").click(function (){
+                     console.log($(this))
+                     $.ajax({
+                         type:'GET',
+                         url: '/linking/click/?id=' + $(this).attr("id"),
+                         success:function (data) {
+                         },
+                     });
+                     window.open($(this).attr("href"))
+                 })
+             },
+         });
 
-        $('.my-links > a').mouseenter(function (e) {
+         $('.my-links > a').mouseenter(function (e) {
             let top = $(this).offset().top;
             let left = $(this).offset().left;
             let text = $(this).text()
             if (text === 'QQ' || text === "微信") {
                 top -= 140
                 left -= 45
-                $(this).children("img").offset({ top: top, left: left}).css("width", "130px").css('height', '130px')
+                $(this).children("img").offset({ top: top, left: left}).css("width", "130px").css('height', '130px').css("-webkit-transition-duration", ".1s")
             }
         }).mouseout(function(){
              let text = $(this).text()

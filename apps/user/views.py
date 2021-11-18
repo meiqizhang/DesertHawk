@@ -19,6 +19,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from DesertHawk.settings import sms_app_id, sms_app_key
+from apps.statistic.views import add_visit
 from apps.user.models import UserProfile, SMSStatus
 from qcloudsms_py import SmsSingleSender
 
@@ -32,23 +33,6 @@ def get_client_ip(request):
     return ip
 
 
-def add_visit_history_log(func):
-    def wrapper(request, *args, **kwargs):
-        ip_str = get_client_ip(request)
-        params = '&'
-        for p in request.GET:
-            params += p + '=' + request.GET.get(p)
-
-        # if len(params) > 1:
-        #     VisitHistory(ip_str=ip_str, url=request.path + "?" + params[1:]).save()
-        # else:
-        #     VisitHistory(ip_str=ip_str, url=request.path).save()
-
-        return func(request, *args, **kwargs)
-
-    return wrapper
-
-
 def get_user_info_from_cookie(request):
     user = dict()
     user["username"] = request.COOKIES.get("username")
@@ -56,7 +40,7 @@ def get_user_info_from_cookie(request):
     user["address"] = request.COOKIES.get("address")
     return user
 
-@add_visit_history_log
+@add_visit
 def login(request):
     response = dict()
     response["status"] = "success"
@@ -85,7 +69,7 @@ def login(request):
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 # 用户注册
-@add_visit_history_log
+@add_visit
 def regist(request):
     if request.method == 'GET':
         return render(request, 'templates/register.html')
@@ -319,7 +303,7 @@ def user_center(request):
         return render(request, 'center.html', context={'user': user})
 
 
-@add_visit_history_log
+@add_visit
 def login_with_qq(request):
     # code_url = 'https://graph.qq.com/oauth2.0/authorize'
     # parm = {

@@ -1,6 +1,7 @@
 import base64
 import os
 import time
+import datetime
 
 import markdown
 import markdown2
@@ -14,165 +15,142 @@ from DesertHawk.settings import THUMB_URL, BASE_DIR, MEDIA_URL, BLOG_ROOT, DATAB
 def db_connect():
     database = DATABASES.get("default")
 
-    connect = pymysql.Connect(
+    from_cnn= pymysql.Connect(
         host=database['HOST'],
         port=int(database['PORT']),
         user=database['USER'],
         passwd=database['PASSWORD'],
-        db=database['NAME'],
+        db="zhqiBlog",
         charset='utf8',
         cursorclass=pymysql.cursors.DictCursor
     )
-    return connect
-
-def main():
-    database = DATABASES.get("default")
-    print(database)
-    connect = pymysql.Connect(
+    to_cnn= pymysql.Connect(
         host=database['HOST'],
         port=int(database['PORT']),
         user=database['USER'],
         passwd=database['PASSWORD'],
-        db=database['NAME'],
+        db="desert_hawk",
         charset='utf8',
         cursorclass=pymysql.cursors.DictCursor
     )
+    return from_cnn, to_cnn
 
+
+def migrate_tags():
+    from_cnn, to_cnn = db_connect()
+    from_cursor = from_cnn.cursor()
+    to_cursor = to_cnn.cursor()
+    from_sql = "select tags from t_article"
+    row = from_cursor.execute(from_sql)
+    records = from_cursor.fetchall()
+    all_tags = set()
+    for i in range(row):
+        tags = records[i]["tags"]
+        try:
+            tags = eval(tags)
+        except Exception as e:
+            tags = tags.split(";")
+        if isinstance(tags, list):
+            all_tags = set(list(all_tags) + tags)
+    for tag in all_tags:
+        try:
+            to_sql = "insert into t_tag (`tag`) values(%s)"
+            to_cursor.execute(to_sql, tag)
+            to_cnn.commit()
+        except Exception as e:
+            print(e)
+ 
+def migrate_article():
     # 建立游标
-    #cursor = connect.cursor()
-    #insert_content_image(connect)
+    from_cnn, to_cnn = db_connect()
+    from_cursor = from_cnn.cursor()
+    to_cursor = to_cnn.cursor()
+    
+    tag_sql = "select * from t_tag"
+    row = to_cursor.execute(tag_sql)
+    records = to_cursor.fetchall()
+    tag_id_map = dict()
+    for i in range(row):
+        idx = records[i]["id"]
+        tag = records[i]["tag"]
+        tag_id_map[tag] = idx
+ 
+    from_sql = "select * from t_article"
+    row = from_cursor.execute(from_sql)
+    records = from_cursor.fetchall()
+    for i in range(row):
+        line = records[i]
+        print(line["article_id"], line["title"])
+        to_sql = "insert t_article(`article_id`, `title`, `abstract`, `content`, `date`, `click_num`, `love_num`, `status`, `category_id`, `cover_id`)" \
+                 "values(%s, %s, %s, %s, %s, %s, '0', 'p', '1', '1')"
+
+        try:
+            to_cursor.execute(to_sql, (line["article_id"], line["title"], line["description"], line["content"], line["date"], line["click_num"]))
+            to_cnn.commit()
+        except Exception as e:
+            print(e)
+
+def migrate_ipcoordinate():
+    from_cnn, to_cnn = db_connect()
+    from_cursor = from_cnn.cursor()
+    to_cursor = to_cnn.cursor()
+    from_sql = "select * from t_site_statistic"
+    row = from_cursor.execute(from_sql)
+    records = from_cursor.fetchall()
+    for i in range(row):
+        line = records[i]
+        ip_str = line["ip_str"]
+        if ip_str.strip() == "220.114.194.2":
+            print(line)
+        else:
+            continue
+        #to_sql = "insert into t_ip_coordinate (`ip_str`, `province`, `city`, `x`, `y`) values('%s', '%s', '%s', '%s', '%s')" 
+        #args = (line["ip_str"], line["province"], line["city"], line["x"], line["y"])
+        to_sql = "insert into t_ip_coordinate (`ip_str`, `province`, `city`, `x`, `y`) values('%s', '%s', '%s', '%s', '%s')"  %  (line["ip_str"], line["province"], line["city"], line["x"], line["y"])
+        try:
+            to_cursor.execute(to_sql)
+            to_cnn.commit()
+        except Exception as e:
+            pass
+            print(e, to_sql)
+
+
+def migrate_statistic():
+    from_cnn, to_cnn = db_connect()
+    from_cursor = from_cnn.cursor()
+    to_cursor = to_cnn.cursor()
+
+    coordinate_sql = "select * from t_ip_coordinate"
+    row = to_cursor.execute(coordinate_sql)
+    records = to_cursor.fetchall()
+    coordinate_id_map = dict()
+    for i in range(row):
+        line = records[i]
+        coordinate_id_map[line["ip_str"]] = line['id']
+
+    #ips = coordinate_id_map.keys()
+    #print('220.114.194.2' in ips)
+    #print(coordinate_id_map['220.114.194.2'])
     #return
 
-    post_path = os.path.join(BLOG_ROOT, "posts")
-    print(post_path)
+    from_sql = "select * from  t_visit_history"
+    row = from_cursor.execute(from_sql)
+    records = from_cursor.fetchall()
+    for i in range(row):
+        line = records[i]
+        ip_str = line["ip_str"]
+        if ip_str not in coordinate_id_map:
+            continue
+        to_sql = "insert into t_site_statistic(`url`, `visit_time`, `coordinate_id`) values(%s, %s, %s)"
+        print(ip_str)
+        args = (line["url"], line["visit_time"], coordinate_id_map[ip_str])
+        to_cursor.execute(to_sql, args)
+        to_cnn.commit()
 
-    for fpathe, dirs, fs in os.walk(post_path):
-        for f in fs:
-            if os.path.isfile(os.path.join(fpathe, f)):
-                parse_page(fpathe.replace('\\', '/'), f, connect)
-                #exit()
-            #DATABASES
-
-def insert_content_image(connect):
-    cursor = connect.cursor()
-    path_dir = os.path.join(BLOG_ROOT, "posts/images")
-    for image in os.listdir(path_dir):
-        md5 = image.split('.')[0]
-
-        image_path = os.path.join(path_dir, image)
-        if os.path.isfile(image_path):
-            print(image_path)
-            with open(image_path, "rb") as fp:
-                blob = fp.read()
-                print(blob)
-
-                sql = "insert into t_content_image (`md5`, `image`) values (%s, %s) ON DUPLICATE KEY UPDATE `image`=%s"
-                cursor.execute(sql, (md5, blob, blob))
-                connect.commit()
-
-def parse_page(path, name, connect):
-    category = path.split('/')[-1]
-    cursor = connect.cursor()
-
-    if name.endswith('.md'):
-        with open(os.path.join(path, name), 'r', encoding='utf-8') as fp:
-            found = False
-            while fp.readable():
-                line = fp.readline().strip()
-                line = line.strip('\n')
-                if line == '---' or line == '***':
-                    found = True
-                    break
-
-            article = dict()
-            article['category'] = category
-
-            if name.endswith('.md'):
-                title = name[11:-3]
-            else:
-                title = name[11:-5]
-
-            while found and fp.readable():
-                line = fp.readline().strip()
-                line = line.strip('\n')
-                if len(line) < 1:
-                    continue
-
-                if line == '---' or line == '***':
-                    break
-
-                sp = line.find(':')
-                if sp > 0:
-                    article[line[:sp].strip(' ')] = line[sp+1:].strip(' ')
-                else:
-                    print('%s format error' % path)
-                    continue
-
-            if 'tags' in article:
-                article['tags'] = eval(article['tags'])
-                sql = 'delete from t_tag where title=%s'
-                cursor.execute(sql, (article['title']))
-                connect.commit()
-
-                for tag in article['tags']:
-                    try:
-                        sql = "INSERT INTO t_tag (`tag`, `title`) VALUES (%s, %s) "
-                        args = (tag, article['title'])
-                        cursor.execute(sql, args)
-                        connect.commit()
-                    except Exception as e:
-                        print(e)
-                        connect.rollback()
-            else:
-                article['tags'] = []
-
-            article["content"] = fp.read(0xffffffff)
-            #article['content'] = markdown2.markdown(fp.read(0xffffffff).replace("\r\n", '  \n'),
-            #                                        extras=["code-friendly"])
-            '''markdown.markdown(fp.read(0xffffffff).split("---")[2].replace("\r\n", '  \n'),
-                                     extensions=['extra',
-                                                 'codehilite',
-                                                 'toc',
-                                                 ])
-             '''
-
-            article['date'] = name[:10]
-
-            if 'title' not in article:
-                article['title'] = title
-
-            elif article['title'] != title:
-                print("title not same, %s" % title)
-
-            article['title'] = title
-
-            thumb_image = BASE_DIR + MEDIA_URL + THUMB_URL + article['title'] + '.jpg'
-
-            if not os.path.exists(thumb_image): # 图片不存在，查看分类图片
-                thumb_image = BASE_DIR + MEDIA_URL + THUMB_URL + article["category"] + '.jpg'
-                if not os.path.exists(thumb_image):  # 分类图片不存在，用默认图标
-                    thumb_image = BASE_DIR + MEDIA_URL + THUMB_URL + 'default.jpg'
-
-            try:
-                with open(thumb_image, "rb") as img:
-                    image = img.read()
-            except Exception as e:
-                print(e)
-                image = ''
-
-            sql = "insert into t_article(title, first_category, second_category, tags, description, content, `date`, image) values " \
-                  "(%s, '程序设计', %s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE " \
-                  "first_category='程序设计', second_category=%s, tags=%s, description=%s, content=%s, `date`=%s, image=%s"
-
-            args = (article['title'], article['category'], str(article['tags']), article['description'], article['content'], article['date'], image,
-                                      article['category'], str(article['tags']), article['description'], article['content'], article['date'], image)
-
-            try:
-                cursor.execute(sql, args)
-                connect.commit()
-            except Exception as e:
-                print(e)
-                connect.rollback()
+    pass
 
 if '__main__' == __name__:
-    main()
+    #migrate_tags()
+    #migrate_article()
+    #migrate_ipcoordinate()
+    migrate_statistic()

@@ -12,7 +12,6 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
-from DesertHawk.settings import cos_client
 from .configs import MDConfig
 
 # TODO 此处获取default配置，当用户设置了其他配置时，此处无效，需要进一步完善
@@ -114,17 +113,28 @@ class UploadView(generic.View):
                 })
 
         # save image
-
-        new_name = "{0}/{1}.{2}".format(time.strftime("%Y/%m/%d"), str(uuid.uuid4()).replace('-', ''), file_extension)
-
-        response = cos_client.put_object(
-            Bucket='content-image-1251916339',
-            Body=upload_image.read(),
-            Key=new_name,
-            EnableMD5=False
-        )
-
-        logging.info("upload image %s as %s to cos return %s" % (file_name, new_name, response['ETag']))
-        url = "https://content-image-1251916339.cos.ap-beijing.myqcloud.com/" + new_name
+        save_path = "{0}/".format(time.strftime("%Y/%m/%d"), str(uuid.uuid4()).replace('-', ''))
+        new_name = "{0}.{1}".format(str(uuid.uuid4()).replace('-', ''), file_extension)
+        image_buf = upload_image.read()
+        secret_id = os.environ.get("COS_SECRET_ID", None)
+        secret_key = os.environ.get("COS_SECRET_KEY", None)
+        if secret_id is None or secret_key is None:
+            image_path = settings.MEDIA_ROOT + "/blog-pic/" + save_path
+            if not os.path.exists(image_path):
+                os.makedirs(image_path)
+            with open(image_path + new_name, "wb") as fp:
+                fp.write(image_buf)
+            url = settings.MEDIA_URL + "/blog-pic/" + save_path + new_name
+        else:
+            from qcloud_cos import CosConfig, CosS3Client
+            config = CosConfig(Region='ap-beijing', SecretId=secret_id, SecretKey=secret_key)
+            cos_client = CosS3Client(config)
+            response = cos_client.put_object(
+                Bucket='blog-1251916339',
+                Body=image_buf,
+                Key='/blog-pic/' + save_path + new_name,
+                EnableMD5=False
+            )
+            url = "https://blog-1251916339.cos.ap-beijing.myqcloud.com/blog-pic/" + save_path + new_name
 
         return JsonResponse({'success': 1, 'message': "上传成功！", 'url': url})

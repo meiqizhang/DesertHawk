@@ -10,6 +10,7 @@
 }
 
 .article-top-3 {
+    padding: 10px;
     margin-top: 20px;
     margin-bottom: 80px;
     visibility: visible;
@@ -25,13 +26,36 @@
 }
 
 .article-top-3-article-pic {
-    width: 95%;
+    width: 98%;
     margin: auto;
-    height: 200px;
+    height: 240px;
     text-align: center;
     /*margin: 10px;*/
     padding: 10px;
     border-radius: 10px;
+}
+
+.article-top-3-thumbnail-frame {
+    height: 260px;
+    display: flex;
+    flex-direction: column;
+}
+.article-top-3-thumbnail {
+    width: 100%;
+    height: 240px;
+    position: relative;
+    z-index: 1000;
+    overflow: hidden;
+    border-radius: 4px;
+}
+.article-top-3-thumbnail img {
+    position: absolute;
+    width: 100%;
+    height: 240px;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+    z-index: 100;
 }
 
 .article-description {
@@ -41,6 +65,8 @@
 }
 
 .article-item {
+    margin-left: 10px;
+    margin-right: 10px;
     border-radius: 6px;
     background: rgba(215, 215, 215, 0.3);
     border: 1px solid rgba(215, 215, 215, 0.3);
@@ -55,7 +81,33 @@ ul {
 .article-pic {
     margin: 6px;
     border-radius: 4px;
-    width: 150px;
+    width: 160px;
+    height: 110px;
+}
+
+.article-thumbnail-frame {
+    width: 180px;
+    height: 130px;
+    display: flex;
+    flex-direction: column;
+}
+.article-thumbnail {
+    margin: 10px;
+    height: 110px;
+    width: 160px;
+    position: relative;
+    z-index: 1000;
+    overflow: hidden;
+    border-radius: 4px;
+}
+.article-thumbnail img {
+    position: absolute;
+    height: 110px;
+    width: 160px;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+    z-index: 100;
 }
 
 .article-info {
@@ -70,21 +122,12 @@ ul {
     justify-content: space-between;
 }
 
-@media (max-width: 580px) {
-    .article-title {
-        margin-top: 5px;
-        font-size: 14px;
-        color: rgba(52, 73, 94, 0.94);
-        font-weight: bolder;
-    }
-}
-@media (min-width: 580px) {
-    .article-title {
-        margin-top: 5px;
-        font-size: 16px;
-        color: rgba(52, 73, 94, 0.94);
-        font-weight: bolder;
-    }
+.article-title {
+    margin-top: 5px;
+    margin-left: 10px;
+    font-size: 16px;
+    color: rgba(52, 73, 94, 0.94);
+    font-weight: bolder;
 }
 
 .article-footer {

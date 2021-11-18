@@ -27,6 +27,9 @@ ul, li {
     color: #BB6622;
     font-size: 38px;
 }
+.logo > a:hover{
+    text-decoration: none;
+}
 
 .statistic-bar {
     visibility: visible;
@@ -77,15 +80,21 @@ footer {
 
 .out-links {
     margin: 15px;
+    display: flex;
+    flex-wrap: wrap;
     text-align: left
 }
 .out-links > a {
-    color: rgba(52, 73, 94, 0.94);
     padding-right: 10px;
     line-height: 23px;
+    margin-left: 10px;
+    color: rgba(42, 100, 150, 0.99)
 }
+
 .out-links > a:hover {
     color: #f3910e;
+    cursor: hand;
+    text-decoration:underline;
 }
 .my-links {
     padding-top: 10px;
@@ -95,6 +104,7 @@ footer {
 }
 .my-links > a {
     margin-right: 10px;
+    color: rgba(42, 100, 150, 0.99)
 }
 .my-links > a:hover {
     color: #f3910e;

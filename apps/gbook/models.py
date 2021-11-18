@@ -5,7 +5,7 @@ from libs.ckeditor.ckeditor.fields import RichTextField
 
 
 class GBook(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     parent_id = models.IntegerField()
     ip = models.CharField(max_length=32)
     address = models.CharField(max_length=64)
@@ -13,7 +13,7 @@ class GBook(models.Model):
     ding=models.IntegerField(default=0)
     cai=models.IntegerField(default=0)
     content=RichTextField()
-    create_time = models.CharField(max_length=64)
+    create_time = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 't_gbook'

@@ -1,73 +1,14 @@
 import json
 import logging
 
-import jieba
 import mistune
-from django import db
+import markdown
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
-from DesertHawk.settings import cos_client, JsonCustomEncoder
-from apps.articles.models import Article, Tag, Cover
-from apps.articles.stop_words import stop_words
-from apps.user.models import UserProfile
-from apps.user.views import add_visit_history_log
-
-
-@csrf_exempt
-def download_icon(request):
-    if 'title' in request.GET:
-        title = request.GET.get('title', '')
-    else:
-        title = request.POST.get('title', '')
-
-    response = dict()
-
-    record = Article.objects.raw("select id, image from t_article where title=%s", [title])
-    if len(record) > 0:
-        record = record[0]
-        image = record.image
-
-        response["status"] = "success"
-        response["image"] = image
-    else:
-        response["status"] = "error"
-
-    return HttpResponse(response["image"])
-
-
-@csrf_exempt
-def upload_icon(request):
-    title = request.POST.get("title", None)
-    if not title:
-        id = request.POST.get("id", None)
-        if id:
-            title = Article.objects.get(id=id).title
-
-    file = request.FILES.get('file')
-    image = file.read()
-    response = dict()
-
-    try:
-        with db.connection.cursor() as cur:
-            ret = cur.execute("update t_article set image=%s where title=%s", [image, title])
-            logging.info("update '%s' image return %s" % (title, ret))
-            response["status"] = "success"
-            response["msg"] = "成功"
-    except Exception as e:
-        response["status"] = "error"
-        response["msg"] = str(e)
-        logging.error("update article image failed, title=%s, e=%s" % (title, e))
-
-    imgtype = file.name.split('.')[-1]
-    ret = cos_client.put_object(
-        Bucket='article-surface-1251916339',
-        Body=image,
-        Key="%s.%s" % (title, imgtype),
-        EnableMD5=False
-    )
-    return HttpResponse(json.dumps(response), content_type="application/json")
+from apps.articles.models import Article, Tag, Cover, Category
+from apps.statistic.views import add_visit
 
 
 @csrf_exempt
@@ -112,36 +53,65 @@ class HighlightRenderer(mistune.Renderer):
     """
 
 
-@add_visit_history_log
+class CommonMarkdown:
+    @staticmethod
+    def _convert_markdown(value):
+        md = markdown.Markdown(
+            extensions=[
+                'extra',
+                'codehilite',
+                'toc',
+                'tables',
+            ]
+        )
+        body = md.convert(value)
+        toc = md.toc
+        return body, toc
+
+    @staticmethod
+    def get_markdown_with_toc(value):
+        body, toc = CommonMarkdown._convert_markdown(value)
+        return body, toc
+
+    @staticmethod
+    def get_markdown(value):
+        body, toc = CommonMarkdown._convert_markdown(value)
+        return body, toc
+
+
+@add_visit
 def detail(request):
     article_id = int(request.path.split('/')[-1].split('.')[0])
-    article = Article.objects.filter(article_id=article_id).values().first()
-    if not article:
+    article_obj = Article.objects.get(article_id=article_id)
+    if not article_obj:
         return render(request, "404.html")
     logging.debug("request #%d article" % article_id)
 
-    if 'tags' in article:
-        try:
-            article['tags'] = eval(article['tags'])
-        except Exception as e:
-            try:
-                article['tags'] = article['tags'].split(";")
-            except Exception as e:
-                article['tags'] = []
+    article_obj.click_num = article_obj.click_num + 1
+    article_obj.save()
+    tag_list = ["%s" % tag for tag in article_obj.tags.all()]
+    article = dict()
+    article["article_id"] = article_obj.article_id
+    article["title"] = article_obj.title
+    article["second_category"] = article_obj.category
+    article["first_category"] = article_obj.category.parent.name
+    article["tags"] = tag_list
+    article["abstract"] = article_obj.abstract
+    article["content"] = article_obj.content
+    article["date"] = article_obj.date
+    article["click_num"] = article_obj.click_num
+    article["love_num"] = article_obj.love_num
+    article["cover"] = article_obj.cover
 
-    Article.objects.filter(article_id=article_id).update(click_num=article["click_num"] + 1)
-
+    abouts_article = list(Article.objects.filter(tags__name__in=tag_list).values("article_id", "title").
+                          exclude(article_id=article_obj.article_id))
+    abouts_id = set()
     abouts = list()
-    if 'tags' in article:
-        for tag in article['tags']:
-            abouts += list(Tag.objects.filter(tag=tag).values_list("title", flat=True))
-
-    self_tile = article["title"]
-    abouts = sorted(list(set(abouts)))
-    while self_tile in abouts:
-        abouts.remove(self_tile)
-
-    abouts = list(Article.objects.filter(title__in=abouts).values("article_id", "title"))
+    for blog in abouts_article:
+        article_id = blog["article_id"]
+        if article_id not in abouts_id:
+            abouts.append(blog)
+            abouts_id.add(article_id)
 
     article_pre = Article.objects.filter(article_id__gt=article_id).values("article_id", "title").order_by(
         "article_id").first()
@@ -153,56 +123,57 @@ def detail(request):
     if article_next:
         article_next = {"article_id": article_next["article_id"], "title": article_next['title']}
 
-    user_id = request.session.get('user_id', '')
-    header = "/static/images/anonymous.jpg"
-
-    logging.info("get user id from session=%s" % user_id)
-    if user_id:
-        if UserProfile.objects.filter(user_id=user_id).first():
-            header = UserProfile.objects.get(user_id=user_id).header
-        else:
-            user_id = None
-
-    keywords = [w for w in jieba.cut(article['content'])]
-    article["keywords"] = list(set(keywords).difference(stop_words))  # b中有而a中没有的非常高效！
-
-    renderer = HighlightRenderer()
-    markdown = mistune.Markdown(renderer=renderer)
-    article['content'] = markdown(article['content'])
-    context = {'article': article, 'list_about': abouts, 'article_pre': article_pre,
-               'article_next': article_next, 'user': {'id': user_id, 'header': header}
-               }
+    content = article['content'].replace("\r\n", ' \n')
+    old = content
+    while True:
+        new = old.replace(" ```", "```")
+        if new == old:
+            break
+        old = new
+    content = old
+    article['content'], article["toc"] = CommonMarkdown.get_markdown(content)
+    context = {
+        'article': article,
+        'list_about': abouts,
+        'article_pre': article_pre,
+        'article_next': article_next,
+    }
     return render(request, 'detail.html', context=context)
 
 
-@add_visit_history_log
+@add_visit
 def programing(request):
     category = request.GET.get("category", None)
     tag = request.GET.get("tag", None)
     page_id = request.GET.get("page", "1")
-    articles = Article.objects.filter(status='p').order_by("-article_id").\
-        values("article_id", "title", "abstract", "date")
+    categories = list(Category.objects.filter(parent__name='程序设计').values_list("name", flat=True))
 
-    categories = set()
+    if tag is None:
+        if category is None:
+            category = "程序设计"
+            articles = Article.objects.filter(status='p', category__parent__name=category).order_by("-article_id"). \
+                values("article_id", "title", "abstract", "tags__name", "date", "category__name", "cover__pic")
+        else:
+            articles = Article.objects.filter(status='p', category__name=category).order_by("-article_id"). \
+                values("article_id", "title", "abstract", "tags__name", "date", "category__name", "cover__pic")
+    else:
+        articles = Article.objects.filter(status='p', tags__name=tag).order_by("-article_id"). \
+            values("article_id", "title", "abstract", "tags", "date", "category", "cover__pic")
+
+    # articles = Article.objects.filter(status='p', category__name="程序设计").order_by("-article_id").\
+    #     values("article_id", "title", "abstract", "date", "category", "cover__pic")
+
     for article in articles:
         article["abstract"] = article["abstract"][:70]
+        article["cover_url"] = article["cover__pic"]
         article["year"] = article["date"].strftime('%Y')
         article["day"] = article["date"].strftime('%m-%d')
 
-    if category is None and tag is None:
-        category = "程序设计"
-    else:
-        if tag is not None:
-            titles = Tag.objects.filter(tag=tag).values_list("title", flat=True)
-            articles = [x for x in articles if x["title"] in titles]
-        else:
-            articles = [x for x in articles if x["second_category"] == category]
-
     context = dict()
     context["code"] = 200
-    context["categories"] = list(categories)
+    context["categories"] = categories
     context["category"] = category
-    context["tag"] = tag
+    # context["tags"] = tags
 
     page_id = int(page_id)
     page_size = 10

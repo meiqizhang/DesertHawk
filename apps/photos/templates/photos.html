@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    我的相册
+{% endblock %}
+
+{% block mycss %}
+    {{ block.super }}
+    <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/photos.css' }}" rel="stylesheet">
+{#        <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/lanrenzhijia.css' }}" rel="stylesheet">#}
+{#    <script src="/static/js/lanrenzhijia.js"></script>#}
+{% endblock %}
+
+{% block content %}
+        <style type="text/css">
+        .photo-thumb {
+            margin: 10px;
+            width: 200px;
+            height: 120px;
+            position: relative;
+            z-index: 1000;
+            overflow: hidden;
+        }
+        .photo-thumb img {
+            position: absolute;
+            width: 200px;
+            height: 120px;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .photo-thumb-frame {
+            width: 220px;
+            height: 170px;
+            margin-top: 20px;
+            background-color: rgba(215, 215, 215, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        .photo-thumb-frame > a{
+            {#margin-top: 10px;#}
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        .photo-thumb-frame > p{
+            margin-top: 4px;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            let img = $(".photo-thumb > img")
+            let w = img.width();
+            let h = img.height();
+            let w2 = w + 30;
+            let h2 = h + 30;
+
+            img.hover(function () {
+                $(this).stop().animate({ height: h2, width: w2, left: "-15px", top: "-15px" }, 400);
+            }, function () {
+                $(this).stop().animate({ height: h, width: w, left: "0px", top: "0px" }, 400);
+            });
+        });
+    </script>
+
+    {% if category %}
+        <h2 class="category-title">{{ category }}</h2>
+    {% else %}
+        <h2 class="category-title">我的相册</h2>
+    {% endif %}
+
+    <div style="margin-bottom: 200px">
+        <div style="margin-top: 24px; width: 100%; display: flex; flex-wrap: wrap; justify-content: space-between">
+            {% if category %}
+                {% for photo in photos %}
+                    <div class="photo-thumb-frame" >
+                        <div class="photo-thumb">
+                            <img src="{{ photo.url }}"/>
+                        </div>
+{#                        <a href="/photos/{{ category.category }}">{{ category.category }}</a>#}
+                        <p>{{ photo.name }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                {% for category in categorys %}
+                    <div class="photo-thumb-frame">
+                        <div class="photo-thumb">
+                            <img src="{{ category.cover_pic }}"/>
+                        </div>
+                        <a href="/photos/album/detail/{{ category.category }}">{{ category.category }}</a>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        jQuery(document).ready(function($) {
+        })
+    </script>
+{% endblock %}
+
+
+
+

@@ -25,8 +25,6 @@ a:hover {
     text-decoration: none;
     color: #f3910e;
 }
-.clear { clear: both; }
-.blank { height: 8px; overflow: hidden; width: 100%; margin: auto; clear: both }
 
 header, article, footer {
     overflow: hidden;
@@ -42,19 +40,29 @@ header, article, footer {
     font-size: 24px;
 }
 
+.about-me-nav {
+    width: 0;
+    visibility: hidden;
+}
+.document-nav {
+    width: 0;
+    visibility: hidden;
+}
 .statistic-bar {
     visibility: hidden;
     width: 0;
 }
 .top-nav {
-    margin-left: 10px;
+    margin-right: 10px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
 }
 
 .top-nav a {
     font-size: 16px;
     font-weight: bolder;
+    margin-left: 10px;
     color: #8a6d3b;
 }
 
@@ -69,18 +77,23 @@ footer {
 }
 
 .out-links {
-    margin-bottom: 20px;
-    width: 100%;
+    margin: 15px;
+    display: flex;
+    flex-wrap: wrap;
     text-align: left
 }
+
 .out-links > a {
-    color: rgba(52, 73, 94, 0.94);
     padding-right: 10px;
     line-height: 23px;
+    margin-left: 10px;
+    color: rgba(42, 100, 150, 0.99)
 }
+
 .out-links > a:hover {
     color: #f3910e;
-    border-bottom: 1px solid #f3910e;
+    cursor: hand;
+    text-decoration:underline;
 }
 .my-links {
     padding-top: 10px;
@@ -90,8 +103,8 @@ footer {
 }
 .my-links > a {
     margin-right: 10px;
+    color: rgba(42, 100, 150, 0.99)
 }
 .my-links > a:hover {
     color: #f3910e;
-    border-bottom: 1px solid #f3910e;
 }

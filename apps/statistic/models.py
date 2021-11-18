@@ -13,7 +13,7 @@ class IpCoordinate(models.Model):
 
     class Meta:
         db_table = 't_ip_coordinate'
-        verbose_name = "城市经纬度坐标"
+        verbose_name = "IP地址经纬度坐标"
         verbose_name_plural = verbose_name
 
 

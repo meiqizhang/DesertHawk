@@ -97,14 +97,14 @@
             $('.pages').css('visibility', 'hidden')
         }
 
-        $(document).ready(function(){
-            $(".article-pic").each(function() {
+        {#$(document).ready(function(){#}
+        {#    $(".article-pic").each(function() {#}
                 {#所有的图标都是3*5#}
-                image_download_and_set($(this).attr("id"), "/articles/d_icon/?title=" + $(this).attr("title"))
-                let width =$(this).width()
-                $(this).height(width * 3 / 5)
-            })
-        })
+        {#        image_download_and_set($(this).attr("id"), "/articles/d_icon/?title=" + $(this).attr("title"))#}
+        {#        let width =$(this).width()#}
+        {#        $(this).height(width * 3 / 5)#}
+        {#    })#}
+        {#})#}
     </script>
 {% endblock %}
 

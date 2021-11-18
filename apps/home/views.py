@@ -6,7 +6,6 @@ from django.shortcuts import render
 from DesertHawk.settings import JsonCustomEncoder
 from apps.articles.models import Article
 from apps.statistic.views import add_visit
-from apps.user.views import add_visit_history_log
 
 
 @add_visit
@@ -15,7 +14,7 @@ def home(request):
     page_id = request.GET.get("page", "1")
 
     page_id = int(page_id)
-    page_size = 7
+    page_size = 13
     total_pages = int(len(articles) / page_size) + 1
 
     from_idx = page_size * (page_id - 1)
@@ -23,7 +22,7 @@ def home(request):
     articles = articles[from_idx: end_idx]
 
     for article in articles:
-        article["cover_pic"] = article["cover__pic"]
+        article["cover_url"] = article["cover__pic"]
         article["abstract"] = article["abstract"][:70]
         article["year"] = article["date"].strftime('%Y')
         article["day"] = article["date"].strftime('%m-%d')

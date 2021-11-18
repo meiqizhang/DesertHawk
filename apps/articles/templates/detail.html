@@ -12,35 +12,10 @@
 {% endblock %}
 
 {% block mycss %}
-    {{ block.super }}
-    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/prettify.js"></script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/prettify/r298/lang-css.min.js"></script>
-
-    <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/article/m.css' }}"  rel="stylesheet">
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/article/detail.css' }}"  rel="stylesheet">
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/article/code.css' }}"  rel="stylesheet">
 
     <style>
-        pre {
-        }
-
-        .prettyprint *{font-family:'courier new',monospace; font-size: 14px}
-        .prettyprint .com { color: grey; }
-        .prettyprint .lit { color: #AE81FF; }
-        .prettyprint .pun { color: saddlebrown; }
-        .prettyprint .opn,
-        .prettyprint .clo { color: #F8F8F2; }
-        .prettyprint .fun { color: #0000FF; }
-        .prettyprint .str { color: #0000FF; }
-        .prettyprint .atv { color: #E6DB74; }
-        .prettyprint .kwd,
-        .prettyprint .tag { color: #ff0000; }
-        .prettyprint .typ,
-        .prettyprint .atn,
-        .prettyprint .dec,
-        .prettyprint .var { color: blueviolet; }
-        .prettyprint .pln { color: #000000; }
-
         .comment-reply-tool {
             height: auto;
             float: right;
@@ -57,15 +32,21 @@
 
 {% block content %}
     <article>
-        <div class="infos" id="article_content">
+        <div class="infos">
             <div>
                 <span class="intitle">
                     <a class="location">您现在的位置是：</a>
                     <a class="location" href="/">网站首页</a>
-                    {% if article.first_category == '程序设计' %}
+                    {% if article.first_category == "程序设计" %}
                         <a class="location" href="/articles/programing">&gt;&nbsp;{{ article.first_category }}</a>&nbsp
-                        <a class="location" href="/articles/programing?category={{ article.second_category }}">&gt;&nbsp;{{ article.second_category }}</a>
                     {% endif %}
+                    {% if article.second_category != "" %}
+                        <a class="location" href="/articles/programing?category={{ article.second_category }}">&gt;&nbsp;{{ article.second_category }}</a>&nbsp
+                    {% endif %}
+
+{#                    {% if article.category == '程序设计' %}#}
+{#                        <a class="location" href="/articles/programing?category={{ article.second_category }}">&gt;&nbsp;{{ article.second_category }}</a>#}
+{#                    {% endif %}#}
                 </span>
 
                 <div style="text-align: center">
@@ -78,15 +59,18 @@
                 <br>
                 <div class="tags">
                     {% for tag in article.tags %}
-{#                        <a href="/articles/tag/{{ tag }}" target="_blank">{{ tag }}</a>#}
                         <a href="/articles/programing?tag={{ tag }}&page=1" target="_blank">{{ tag }}</a>
                     {% endfor %}
                 </div>
-                    <div class="news_about"><strong>简介</strong>{{ article.description }}
+                    <div class="news_about"><strong>简介</strong>{{ article.abstract }}
                 </div>
 
                 <div class="news_infos">
+                    <div class="article-toc">
+                        {{ article.toc | safe }}
+                    </div>
                     {{ article.content | safe }}
+{#                    content="{{ article.body|custom_markdown|striptags|truncatewords:1 }}#}
                 </div>
             </div>
 
@@ -330,7 +314,7 @@
             });
         }
         $(document).ready(function(){
-            prettyPrint();//代替body上的onload事件加载该方法
+            {#prettyPrint();//代替body上的onload事件加载该方法#}
             $("#commit-add-btn").unbind("click").click(function (){
                 click_add_comment_btn("{{ article.title }}");
             });
