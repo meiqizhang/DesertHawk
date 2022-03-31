@@ -27,6 +27,9 @@
             color: red;
             cursor: pointer;
         }
+        .toc ul li {
+            list-style: none;
+        }
     </style>
 {% endblock %}
 
@@ -43,10 +46,6 @@
                     {% if article.second_category != "" %}
                         <a class="location" href="/articles/programing?category={{ article.second_category }}">&gt;&nbsp;{{ article.second_category }}</a>&nbsp
                     {% endif %}
-
-{#                    {% if article.category == '程序设计' %}#}
-{#                        <a class="location" href="/articles/programing?category={{ article.second_category }}">&gt;&nbsp;{{ article.second_category }}</a>#}
-{#                    {% endif %}#}
                 </span>
 
                 <div style="text-align: center">
@@ -70,7 +69,6 @@
                         {{ article.toc | safe }}
                     </div>
                     {{ article.content | safe }}
-{#                    content="{{ article.body|custom_markdown|striptags|truncatewords:1 }}#}
                 </div>
             </div>
 
@@ -90,13 +88,11 @@
             <div class="otherlink" style="margin-top: 20px;">
                 <h2>相关文章</h2>
                 {% if list_about %}
-                    <ul>
                         {% for article_tag in list_about %}
                             <li>
                                 <a href="/articles/p/{{ article_tag.article_id }}.html" target="_blank">{{ article_tag.title }}</a>
                             </li>
                         {% endfor %}
-                    </ul>
                 {% else %}
                     <div>还没有其他相关文章哟~</div>
                 {% endif %}
@@ -104,12 +100,6 @@
         </div>
         <aside>
             <div style="margin: 32px">
-{#                {% if user.id %}#}
-{#                    <img src="{{ user.header }}" style="width: 48px;height:48px; border-radius:50%;">#}
-{#                {% else %}#}
-{#                    {% include "login.html" %}#}
-{#                {% endif %}#}
-{#                <br>#}
                 {% include "comment.html" %}
                 <span>
                     <button id="commit-add-btn" class="btn btn-primary" style="width:80px; height:30px; margin-top: 10px;">提交评论</button>
@@ -121,9 +111,6 @@
     </article>
 
     <script>
-       // hljs.initHighlightingOnLoad();
-        //hljs.initLineNumbersOnLoad();
-
         var comment_reply_ckedits = [];
         function click_comment_reply_btn(comment_id) {
             var status = comment_reply_ckedits[comment_id];
@@ -319,6 +306,7 @@
                 click_add_comment_btn("{{ article.title }}");
             });
             list_comments("{{ article.title }}");
+            $('.statistic-bar').css('visibility', 'hidden') // 文章详情页不显示访客地图
         })
         </script>
 {% endblock %}

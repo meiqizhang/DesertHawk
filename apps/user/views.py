@@ -18,10 +18,9 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from django.urls import reverse
 
-from DesertHawk.settings import sms_app_id, sms_app_key
 from apps.statistic.views import add_visit
 from apps.user.models import UserProfile, SMSStatus
-from qcloudsms_py import SmsSingleSender
+# from qcloudsms_py import SmsSingleSender
 
 
 def get_client_ip(request):

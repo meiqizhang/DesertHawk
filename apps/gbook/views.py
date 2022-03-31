@@ -22,7 +22,7 @@ def list(request):
         response["msg"] = "ok"
         response["gbook"] = []
 
-        records = GBook.objects.filter().order_by("id").values()
+        records = GBook.objects.filter(status='p').order_by("id").values()
         if records:
             for r in records:
                 r["create_time"] = r["create_time"].strftime('%Y-%m-%d %H:%M')

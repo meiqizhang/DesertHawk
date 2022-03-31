@@ -6,7 +6,6 @@
 
 {% block mycss %}
     {{ block.super }}
-    <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/learn.css' }}"  rel="stylesheet">
 <style>
     .document {
     }
@@ -16,6 +15,20 @@
     .document > h5 > a:hover {
         color: blue;
         text-decoration: underline;
+    }
+    .document-title {
+        margin-top: 40px;
+        font-size: 22px;
+        color: white;
+        background: #a49e3c;
+        padding: 10px 0;
+        width: 200px;
+        text-align: center;
+        border-radius: 0 30px 30px 0;
+        box-shadow: #21566f 1px 1px 1px;
+        border-left: #dae1e4 6px solid;
+        display:block;
+        text-shadow: rgba(7, 84, 152, 0.71) 1px 1px 1px;
     }
 </style>
 {% endblock %}
@@ -42,19 +55,9 @@
     <article>
         <aside>
         <div class="my-container">
-            <h2 class="ctitle"><b>站内文档</b></h2>
+            <h2 class="document-title"><b>站内文档</b></h2>
             <br>
-{% comment %}            <ul>
-               {% for doc in documents %}
-                   <li>
-                        <div class="document">
-                            <h5><a href="{{ doc.url }}" target="_blank" onclick="click_download('{{ doc.name }}')">{{ doc.name }}
-                                &nbsp;({{ doc.download_count }})</a></h5>
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>{% endcomment %}
-            <table border="0" style="margin-left: 60px">
+            <table style="margin-left: 60px">
                 <tr>
                     <th>文档名</th>
                     <th style="padding-left: 60px">下载次数</th>

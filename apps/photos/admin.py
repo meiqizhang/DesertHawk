@@ -7,7 +7,7 @@ from apps.photos.models import Photo, PhotoCategory
 
 
 class PhotoCategoryAdmin(admin.ModelAdmin):
-    list_display = ["id", "category", "cover_pic"]
+    list_display = ["id", "category", "permission", "cover_pic"]
 
     def cover_pic(self, obj):
         return mark_safe('<img src="%s" style="width: 150px; height: 80px"/>' % (obj.cover.pic))

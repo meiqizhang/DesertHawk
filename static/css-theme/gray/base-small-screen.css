@@ -14,9 +14,9 @@ body {
     width: 100%;
 }
 
-ul, li {
-    list-style: none;
-}
+/*ul, li {*/
+/*    list-style: none;*/
+/*}*/
 
 a:link, a:visited, a:active {
     text-decoration: none;

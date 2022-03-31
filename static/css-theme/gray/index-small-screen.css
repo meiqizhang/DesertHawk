@@ -185,3 +185,7 @@ ul {
     background-color: #bbbbbb;
     border: 1px solid #bbbbbb;
 }
+
+.read-more {
+    display: none;
+}

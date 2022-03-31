@@ -13,14 +13,20 @@ from io import BytesIO
 
 
 class PhotoCategory(models.Model):
+    PERMISSION_CHOICES = (
+        (0, '隐藏'),
+        (1, '公开'),
+    )
+
     id = models.AutoField(primary_key=True)
     category = models.CharField(verbose_name="分类", max_length=32, default=None)
     description = models.CharField(verbose_name="描述", max_length=512, default="")
+    permission = models.IntegerField(verbose_name='权限', choices=PERMISSION_CHOICES, default=1)
     cover = models.ForeignKey(Cover, verbose_name='相册封面', default=None, on_delete=models.PROTECT)
 
     class Meta:
         db_table = 't_photo_category'
-        verbose_name = '相册分类'
+        verbose_name = '相册名称'
         verbose_name_plural = verbose_name
 
     def __str__(self):
@@ -34,12 +40,24 @@ class PhotoStorage(FileSystemStorage):
             image_buf = content.read(content.size)
         else:
             image_buf = content.file.getvalue()
+        preview_image = Image.open(BytesIO(image_buf))
 
-        thumb_img = Image.open(BytesIO(image_buf))
-        thumb_img.thumbnail((200, 150), Image.ANTIALIAS)
+        # 高度和宽度至少有一个小于1024
+        while True:
+            height = preview_image.height
+            width = preview_image.width
+            preview_image.thumbnail((height * 0.8, width * 0.8), Image.ANTIALIAS)
+            if preview_image.height <= 1024 or preview_image.width <= 1024:
+                break
+        img_byte = io.BytesIO()
+        preview_image.save(img_byte, format='PNG')
+        preview_content = img_byte.getvalue()
+
+        thumb_image = Image.open(BytesIO(image_buf))
+        thumb_image.thumbnail((200, 150), Image.ANTIALIAS)
 
         img_byte = io.BytesIO()
-        thumb_img.save(img_byte, format='PNG')
+        thumb_image.save(img_byte, format='PNG')
         thumb_content = img_byte.getvalue()
 
         secret_id = os.environ.get("COS_SECRET_ID", None)
@@ -50,6 +68,12 @@ class PhotoStorage(FileSystemStorage):
                 os.makedirs(original_path)
             with open(original_path + filename, "wb") as fp:
                 fp.write(image_buf)
+
+            preview_path = MEDIA_ROOT + "/photos/preview/"
+            if not os.path.exists(preview_path):
+                os.makedirs(preview_path)
+            with open(preview_path + filename, "wb") as fp:
+                fp.write(preview_content)
 
             thumbnail_path = MEDIA_ROOT + "/photos/thumbnail/"
             if not os.path.exists(thumbnail_path):
@@ -71,6 +95,13 @@ class PhotoStorage(FileSystemStorage):
 
             response = cos_client.put_object(
                 Bucket='blog-1251916339',
+                Body=preview_content,
+                Key='/photos/preview/' + filename,
+                EnableMD5=False
+            )
+
+            response = cos_client.put_object(
+                Bucket='blog-1251916339',
                 Body=thumb_content,
                 Key='/photos/thumbnail/' + filename,
                 EnableMD5=False
@@ -81,10 +112,10 @@ class PhotoStorage(FileSystemStorage):
 class Photo(models.Model):
     id = models.AutoField(primary_key=True)
     category = models.ForeignKey('PhotoCategory', verbose_name="分类", max_length=32, default=None, on_delete=models.PROTECT)
-    photo = models.ImageField(verbose_name="照片", default=None, storage=PhotoStorage())
+    photo = models.ImageField(verbose_name="照片", default=None, max_length=1024, storage=PhotoStorage())
 
     class Meta:
         db_table = 't_photos'
-        verbose_name = '我的相册'
+        verbose_name = '相册照片'
         verbose_name_plural = verbose_name
 

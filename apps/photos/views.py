@@ -8,9 +8,10 @@ from apps.statistic.views import add_visit
 
 @add_visit
 def album(request):
-    categorys = list(PhotoCategory.objects.values("id", "category", "cover__pic").annotate(cover_pic=F("cover__pic")))
+    categories = list(PhotoCategory.objects.filter(permission=1).values("id", "category", "cover__pic").
+                      annotate(cover_pic=F("cover__pic")))
     context = {
-        "categorys": categorys,
+        "categories": categories
     }
     return render(request, "photos.html", context=context)
 
@@ -22,8 +23,7 @@ def detail(request):
 
     for photo in photos:
         photo["name"] = photo["url"].split("/")[-1]
-        if photo["name"].startswith("thumb-"):
-            photo["name"] = photo["name"][6:]
+        photo["original_url"] = photo["url"].replace('/thumbnail/', '/preview/')
 
     context = {
         "category": category,

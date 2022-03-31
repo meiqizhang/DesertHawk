@@ -18,6 +18,11 @@ CREATE TABLE `t_comment` (
 
 
 class Comment(models.Model):
+    STATUS_CHOICES = (
+        ('p', '公开'),
+        ('h', '隐藏'),
+    )
+
     ip = models.CharField(max_length=32, verbose_name="ip地址")
     address = models.CharField(max_length=64, verbose_name="ip地址所在地区")
     title = models.CharField(max_length=128, verbose_name="文章标题")
@@ -25,6 +30,7 @@ class Comment(models.Model):
     user_name = models.CharField(max_length=32, verbose_name="用户")
     ding = models.IntegerField(default=0)
     cai = models.IntegerField(default=0)
+    status = models.CharField(verbose_name='评论状态', max_length=1, choices=STATUS_CHOICES, default='p')
     content = RichTextField(verbose_name="评论内容")
     create_time = models.CharField(max_length=32, verbose_name="创建时间")
 

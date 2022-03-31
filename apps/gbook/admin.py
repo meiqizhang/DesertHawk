@@ -5,6 +5,7 @@ from apps.gbook.models import GBook
 
 
 class GBookAdmin(admin.ModelAdmin):
-    list_display = ["user_name", "address", "content", "create_time"]
+    list_display = ["status", "address", "content", "create_time"]
+
 
 admin.site.register(GBook, GBookAdmin)

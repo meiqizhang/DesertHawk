@@ -7,24 +7,27 @@
 {% block mycss %}
     {{ block.super }}
     <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/photos.css' }}" rel="stylesheet">
-{#        <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/lanrenzhijia.css' }}" rel="stylesheet">#}
-{#    <script src="/static/js/lanrenzhijia.js"></script>#}
+    <link href="{% static 'css-theme/' %}{{ THEME }}{{ '/viewer.min.css' }}" rel="stylesheet">
 {% endblock %}
+
 
 {% block content %}
         <style type="text/css">
         .photo-thumb {
-            margin: 10px;
+            margin-top: 10px;
+            margin-left: 10px;
+            margin-right: 10px;
             width: 200px;
-            height: 120px;
+            height: 170px;
             position: relative;
             z-index: 1000;
             overflow: hidden;
+            border-radius: 5px;
         }
         .photo-thumb img {
             position: absolute;
             width: 200px;
-            height: 120px;
+            height: 170px;
             top: 0;
             left: 0;
             cursor: pointer;
@@ -40,8 +43,6 @@
             flex-direction: column;
         }
         .photo-thumb-frame > a{
-            {#margin-top: 10px;#}
-            margin-bottom: 5px;
             text-align: center;
         }
         .photo-thumb-frame > p{
@@ -78,27 +79,40 @@
             {% if category %}
                 {% for photo in photos %}
                     <div class="photo-thumb-frame" >
-                        <div class="photo-thumb">
-                            <img src="{{ photo.url }}"/>
+                        <div class="photo-thumb photo-original" id="{{ photo.name }}" style="margin-bottom: 10px">
+                            <img src="{{ photo.url }}" data-original="{{ photo.original_url}}"/>
                         </div>
-{#                        <a href="/photos/{{ category.category }}">{{ category.category }}</a>#}
-                        <p>{{ photo.name }}</p>
                     </div>
                 {% endfor %}
             {% else %}
-                {% for category in categorys %}
+                {% for category in categories %}
                     <div class="photo-thumb-frame">
                         <div class="photo-thumb">
                             <img src="{{ category.cover_pic }}"/>
                         </div>
-                        <a href="/photos/album/detail/{{ category.category }}">{{ category.category }}</a>
+                        <p href="/photos/album/detail/{{ category.category }}">{{ category.category }}</p>
                     </div>
                 {% endfor %}
             {% endif %}
         </div>
     </div>
+    <script src="{% static 'js/viewer.min.js' %}"></script>
     <script>
         jQuery(document).ready(function($) {
+            $('.photo-thumb-frame').unbind('click').bind('click', function (){
+                //<a href="/photos/album/detail/{{ category.category }}">{{ category.category }}</a>
+                let href = $(this).children('p').attr('href');
+                if (href.indexOf('album') > 0) { // 是相册
+                    window.location.href = href;
+                } else { // 是照片
+
+                }
+            })
+            $('.photo-original').each(function (idx){
+                var viewer = new Viewer(document.getElementById($(this).attr("id")), {
+                    url: 'data-original'
+                });
+            })
         })
     </script>
 {% endblock %}

@@ -152,7 +152,7 @@ def programing(request):
         if category is None:
             category = "程序设计"
             articles = Article.objects.filter(status='p', category__parent__name=category).order_by("-article_id"). \
-                values("article_id", "title", "abstract", "tags__name", "date", "category__name", "cover__pic")
+                values("article_id", "title", "abstract", "tags__name", "date", "category__name", "cover__pic").distinct()
         else:
             articles = Article.objects.filter(status='p', category__name=category).order_by("-article_id"). \
                 values("article_id", "title", "abstract", "tags__name", "date", "category__name", "cover__pic")
@@ -160,8 +160,13 @@ def programing(request):
         articles = Article.objects.filter(status='p', tags__name=tag).order_by("-article_id"). \
             values("article_id", "title", "abstract", "tags", "date", "category", "cover__pic")
 
-    # articles = Article.objects.filter(status='p', category__name="程序设计").order_by("-article_id").\
-    #     values("article_id", "title", "abstract", "date", "category", "cover__pic")
+    articles_id_set = set(x["article_id"] for x in articles)
+    tmp_articles = list()
+    for article in articles:
+        if article["article_id"] in articles_id_set:
+            tmp_articles.append(article)
+            articles_id_set.remove(article["article_id"])
+    articles = tmp_articles
 
     for article in articles:
         article["abstract"] = article["abstract"][:70]
@@ -173,7 +178,6 @@ def programing(request):
     context["code"] = 200
     context["categories"] = categories
     context["category"] = category
-    # context["tags"] = tags
 
     page_id = int(page_id)
     page_size = 10
@@ -187,4 +191,6 @@ def programing(request):
     context["total_pages"] = total_pages
     context["category"] = category
     context["articles"] = articles
+    print(articles)
+
     return render(request, "programing.html", context=context)

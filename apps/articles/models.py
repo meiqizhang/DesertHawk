@@ -45,7 +45,6 @@ class MyStorage(FileSystemStorage):
 
         secret_id = os.environ.get("COS_SECRET_ID", None)
         secret_key = os.environ.get("COS_SECRET_KEY", None)
-        secret_id = None
         if secret_id is None or secret_key is None:
             cover_path = settings.MEDIA_ROOT + "/cover-pic/"
             if not os.path.exists(cover_path):
@@ -69,7 +68,7 @@ class MyStorage(FileSystemStorage):
 class Cover(models.Model):
     id = models.AutoField(primary_key=True)
     category = models.CharField(verbose_name="分类", max_length=32, default=None)
-    pic = models.ImageField(verbose_name="封面图片", default=None, storage=MyStorage())
+    pic = models.ImageField(verbose_name="封面图片", default=None, max_length=1024, storage=MyStorage())
 
     class Meta:
         db_table = 't_cover'

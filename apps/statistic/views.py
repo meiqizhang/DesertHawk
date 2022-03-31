@@ -1,5 +1,7 @@
+import datetime
 import json
 import logging
+import time
 
 import requests
 from django.db.models import Count
@@ -64,7 +66,7 @@ def add_visit(func):
     return wrapper
 
 
-def get_statistic(request):
+def get_statistic_ex(request):
     statistic = SiteStatistic.objects.values("coordinate__x", "coordinate__y",
                                              "coordinate__province", "coordinate__city"). \
         annotate(count=Count("coordinate__id")).all()
@@ -76,4 +78,41 @@ def get_statistic(request):
     response = dict()
     response['status'] = 'success'
     response['data'] = list(statistic)
+    return HttpResponse(json.dumps(response))
+
+
+def get_statistic(request):
+    statistic = SiteStatistic.objects.values("coordinate_id", "visit_time", "coordinate__x", "coordinate__y",
+                                             "coordinate__province", "coordinate__city")
+    # 连续一小时内的同一个IP算一次访问
+    result = list()
+    last_time = None
+    last_coordinate_id = None
+    for st in statistic:
+        st["x"] = st["coordinate__x"]
+        st["y"] = st["coordinate__y"]
+        st["city"] = st["coordinate__city"]
+
+        visit_date = datetime.datetime.strptime(str(st["visit_time"])[:19], "%Y-%m-%d %H:%M:%S")
+        visit_time = time.mktime(visit_date.timetuple())
+
+        if last_time is not None:
+            if st["coordinate_id"] == last_coordinate_id and visit_time - last_time < 3600:
+                continue
+            else:
+                result.append(st)
+                last_time = visit_time
+                last_coordinate_id = st["coordinate_id"]
+        else:
+            result.append(st)
+            last_time = visit_time
+            last_coordinate_id = st["coordinate_id"]
+
+    for res in result:
+        del res["visit_time"]
+
+    response = dict()
+    response['status'] = 'success'
+    response['data'] = list(result)
+    print(len(result))
     return HttpResponse(json.dumps(response))

@@ -16,8 +16,6 @@ import os
 
 import logging  # 引入logging模块
 
-from qcloud_cos import CosConfig, CosS3Client
-
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(filename)s [line:%(lineno)d] - %(levelname)s: %(message)s')
 
@@ -116,11 +114,11 @@ WSGI_APPLICATION = 'DesertHawk.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'desert_hawk',
-        'USER': 'root',
-        'PASSWORD': '123456',
-        'HOST': '127.0.0.1',
-        'PORT': '3306'
+        'NAME': os.environ.get('BLOG_DB_NAME', 'blogTest'),
+        'USER': os.environ.get('BLOG_DB_USER', 'root'),
+        'PASSWORD': os.environ.get('BLOG_DB_PASSWORD', '123456'),
+        'HOST': os.environ.get('BLOG_DB_HOST', '127.0.0.1'),
+        'PORT': os.environ.get('BLOG_DB_PORT', '3306')
     }
 }
 
@@ -205,32 +203,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/site-static/'
+# 执行manage.py collectstatic，将STATICFILES_DIRS中的所有文件夹中的文件及各APP中static中的文件都复制到 STATIC_ROOT
+STATIC_ROOT = os.path.join(BASE_DIR, 'site-static')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'libs'), os.path.join(BASE_DIR, 'media')]
 
-BLOG_ROOT = './'
 THEME = "gray"
 MEDIA_URL = '/media/'
-# THUMB_URL = '/articles/thumb/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 CKEDITOR_UPLOAD_PATH = ""
 
-# IMAGES_URL = '/images/'
 # CKEDITOR_STORAGE_BACKEND = 'DesertHawk.view.StorageObject'  # 自定义ckedit上传路径
 # MKEDITOR_STORAGE_BACKEND = 'DesertHawk.view.StorageObject'  # 自定义ckedit上传路径
-
-secret_id = os.environ["COS_SECRET_ID"]
-secret_key = os.environ["COS_SECRET_KEY"]
-
-sms_app_id = os.environ["SMS_APP_ID"]
-sms_app_key = os.environ["SMS_APP_KEY"]
-
-region = 'ap-beijing'  # 替换为用户的 Region
-token = None  # 使用临时密钥需要传入 Token，默认为空，可不填
-scheme = 'http'  # 指定使用 http/https 协议来访问 COS，默认为 https，可不填
-config = CosConfig(Region=region, SecretId=secret_id, SecretKey=secret_key, Token=token, Scheme=scheme)
-# 2. 获取客户端对象
-cos_client = CosS3Client(config)
 
 
 class JsonCustomEncoder(json.JSONEncoder):

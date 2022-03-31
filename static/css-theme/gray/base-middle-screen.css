@@ -10,9 +10,9 @@ body {
     background: no-repeat center top #F5F5F5;
 }
 
-ul, li {
-    list-style: none;
-}
+/*ul, li {*/
+/*    list-style: none;*/
+/*}*/
 
 .blog {
     width: 80%;

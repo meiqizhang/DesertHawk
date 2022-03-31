@@ -50,7 +50,7 @@ def lists(request):
 
     response["comments"] = list()
 
-    comments = Comment.objects.filter(title=title).values()
+    comments = Comment.objects.filter(title=title, status='p').values()
     for c in comments:
         response["comments"].append(c)
 
